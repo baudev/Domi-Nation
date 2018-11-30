@@ -1,9 +1,6 @@
 language: java
 jdk:
 - oraclejdk8
-env:
-  global:
-    - CODECOV_TOKEN=:uuid-repo-token
 script:
   - gradle check
   - gradle junitPlatformTest
