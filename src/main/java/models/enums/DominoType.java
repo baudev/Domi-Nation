@@ -2,11 +2,11 @@ package models.enums;
 
 public enum DominoType {
 
-    FIELDS,
-    FOREST,
-    SEA,
+    CHAMPS,
+    FORET,
+    MER,
     PRAIRIE,
     MINE,
-    MOUNTAIN
+    MONTAGNE
 
 }
