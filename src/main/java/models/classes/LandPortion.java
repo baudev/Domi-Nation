@@ -1,5 +1,7 @@
 package models.classes;
 
+import exceptions.MaxCrownsLandPortionExceeded;
+import helpers.Config;
 import models.enums.LandPortionType;
 
 public class LandPortion {
@@ -19,9 +21,9 @@ public class LandPortion {
      * @param numberCrowns
      * @param landPortionType
      */
-    public LandPortion(int numberCrowns, LandPortionType landPortionType) {
-        this.numberCrowns = numberCrowns;
-        this.landPortionType = landPortionType;
+    public LandPortion(int numberCrowns, LandPortionType landPortionType) throws MaxCrownsLandPortionExceeded {
+        this.setNumberCrowns(numberCrowns);
+        this.setLandPortionType(landPortionType);
     }
 
     /**
@@ -34,7 +36,11 @@ public class LandPortion {
         return numberCrowns;
     }
 
-    public void setNumberCrowns(int numberCrowns) {
+    public void setNumberCrowns(int numberCrowns) throws MaxCrownsLandPortionExceeded {
+        // we check if the number of crowns is correct
+        if(numberCrowns > Integer.valueOf(Config.getValue("LandPortionMaxCrowns"))){
+            throw new MaxCrownsLandPortionExceeded();
+        }
         this.numberCrowns = numberCrowns;
     }
 
