@@ -1,6 +1,6 @@
 package models.enums;
 
-public enum DominoType {
+public enum LandPortionType {
 
     CHAMPS,
     FORET,
