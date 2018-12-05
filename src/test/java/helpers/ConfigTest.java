@@ -5,6 +5,7 @@ import mockit.MockUp;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -35,5 +36,12 @@ class ConfigTest {
                 ()->{
                     Config.getValue("test");
                 }, "Should throw an exception as the configuration file is not found");
+    }
+
+    @Test
+    void getPropertiesShouldReturnProperties() {
+        Properties properties = new Properties();
+        Config.setProperties(properties);
+        assertSame(properties, Config.getProperties());
     }
 }
