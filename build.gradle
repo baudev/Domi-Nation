@@ -25,14 +25,16 @@ repositories {
 
 dependencies {
     testCompile(
-            'org.junit.jupiter:junit-jupiter-api:5.1.0'
+            'org.junit.jupiter:junit-jupiter-api:5.1.0',
+            'org.jmockit:jmockit:1.41',
     )
     testRuntime(
             'org.junit.jupiter:junit-jupiter-engine:5.1.0',
-            'org.junit.vintage:junit-vintage-engine:5.1.0',
-            'org.junit.platform:junit-platform-launcher:1.1.0',
-            'org.junit.platform:junit-platform-runner:1.1.0'
     )
+}
+
+test {
+    jvmArgs "-javaagent:${classpath.find { it.name.contains("jmockit") }.absolutePath}"
 }
 
 project.afterEvaluate {
