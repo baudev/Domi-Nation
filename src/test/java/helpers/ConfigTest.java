@@ -9,7 +9,7 @@ import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ConfigTest {
+class ConfigTest extends Config {
 
     @Test
     void getInexistantValueShouldReturnNull() {

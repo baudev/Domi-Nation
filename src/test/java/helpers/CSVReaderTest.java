@@ -11,7 +11,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class CSVReaderTest {
+class CSVReaderTest extends CSVReader {
 
     @Test
     void getDominoesShouldReturnNotEmptyDominoList() throws IOException, InvalidDominoesCSVFile {
