@@ -30,4 +30,17 @@ public class Config {
         properties.load(inputStream);
     }
 
+    /**
+     *
+     * GETTERS AND SETTERS
+     *
+     */
+
+    public static Properties getProperties() {
+        return properties;
+    }
+
+    public static void setProperties(Properties properties) {
+        Config.properties = properties;
+    }
 }
