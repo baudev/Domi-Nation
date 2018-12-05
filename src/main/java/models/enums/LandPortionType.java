@@ -7,6 +7,6 @@ public enum LandPortionType {
     MER,
     PRAIRIE,
     MINE,
-    MONTAGNE
+    MONTAGNE;
 
 }

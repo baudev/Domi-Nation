@@ -29,7 +29,10 @@ dependencies {
             'org.jmockit:jmockit:1.41',
     )
     testRuntime(
-            'org.junit.jupiter:junit-jupiter-engine:5.1.0',
+            'org.junit.jupiter:junit-jupiter-engine:5.1.0'
+    )
+    compile(
+            'com.opencsv:opencsv:4.1'
     )
 }
 
