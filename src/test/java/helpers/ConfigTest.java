@@ -43,5 +43,6 @@ class ConfigTest {
         Properties properties = new Properties();
         Config.setProperties(properties);
         assertSame(properties, Config.getProperties());
+        Config.setProperties(null); // really important!
     }
 }

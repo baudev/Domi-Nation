@@ -3,7 +3,6 @@ jdk:
 - oraclejdk8
 script:
   - gradle check
-  - gradle junitPlatformTest
   - gradle junitPlatformJacocoReport
 after_success:
   - bash <(curl -s https://codecov.io/bash) -t $CODECOV_TOKEN
