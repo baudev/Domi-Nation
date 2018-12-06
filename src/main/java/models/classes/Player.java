@@ -22,7 +22,7 @@ public class Player {
     }
 
     /**
-     * 
+     *
      * GETTERS AND SETTERS
      *
      */
