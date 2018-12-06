@@ -7,7 +7,7 @@ public class King {
     private PlayerColor color;
 
     public King(PlayerColor color) {
-        this.color = color;
+        this.setColor(color);
     }
 
     /**
