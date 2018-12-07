@@ -22,6 +22,10 @@ public class Game {
         this.dominoes = dominoes;
     }
 
+    public void addDomino(Domino domino) {
+        this.dominoes.add(domino);
+    }
+
     public List<Player> getPlayers() {
         return players;
     }
@@ -29,4 +33,10 @@ public class Game {
     public void setPlayers(List<Player> players) {
         this.players = players;
     }
+
+    public void addPlayer(Player player) {
+        this.players.add(player);
+    }
 }
+
+
