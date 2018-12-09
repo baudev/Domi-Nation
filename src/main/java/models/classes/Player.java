@@ -4,6 +4,7 @@ import models.enums.PlayerColor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class Player {
 
@@ -73,5 +74,20 @@ public class Player {
 
     public void setPlayerColor(PlayerColor playerColor) {
         this.playerColor = playerColor;
+    }
+
+
+    public void chooseStartTile(ArrayList<StartTile> startTiles){
+        Scanner scan = new Scanner(System.in);
+        System.out.println("Choisissez votre tuile de départ :");
+        for(int i=0;i<startTiles.size();i++){                       // menu
+            System.out.println("Tapez " + i + "pour choisir la tuile " + startTiles.get(i));
+        }
+        int numeroChoisi = scan.nextInt();
+        scan.nextLine();
+        this.setStartTile(startTiles.get(numeroChoisi));          // we set the tile that was chosen
+        startTiles.remove(numeroChoisi);                          // we remove the tile in the list
+
+
     }
 }
