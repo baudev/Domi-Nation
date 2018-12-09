@@ -13,6 +13,7 @@ public class Player {
     private Castle castle;
     private StartTile startTile;
     private PlayerColor playerColor;
+    private Scanner scan = new Scanner(System.in);
 
     // TODO Add user board and other useful attributes
 
@@ -76,20 +77,35 @@ public class Player {
         this.playerColor = playerColor;
     }
 
+    public void chooseColor(ArrayList<PlayerColor> playerColors){
+
+        System.out.println("Choisissez votre couleur :");
+        for(int i=0;i<playerColors.size();i++){                       // menu
+            System.out.println("Tapez " + i + " pour choisir la couleur " + playerColors.get(i));
+        }
+        int numeroChoisi = scan.nextInt();
+        scan.nextLine();
+        this.setPlayerColor(playerColors.get(numeroChoisi));          //  set the color that was chosen
+        playerColors.remove(numeroChoisi);                          //  remove the color in the list
+
+
+    }
+
+
 
     public void chooseStartTile(ArrayList<StartTile> startTiles){
         Scanner scan = new Scanner(System.in);
         System.out.println("Choisissez votre tuile de départ :");
         for(int i=0;i<startTiles.size();i++){                       // menu
-            System.out.println("Tapez " + i + "pour choisir la tuile " + startTiles.get(i));
+            System.out.println("Tapez " + i + " pour choisir la tuile : " + startTiles.get(i));
         }
         int numeroChoisi = scan.nextInt();
         scan.nextLine();
         this.setStartTile(startTiles.get(numeroChoisi));          //  set the tile that was chosen
-        startTiles.remove(numeroChoisi);                          //  remove the tile in the list
-
-
+        startTiles.remove(numeroChoisi);                          //  remove the tile in the liste
     }
 
-    
+
+
+
 }
