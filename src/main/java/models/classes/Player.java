@@ -85,9 +85,11 @@ public class Player {
         }
         int numeroChoisi = scan.nextInt();
         scan.nextLine();
-        this.setStartTile(startTiles.get(numeroChoisi));          // we set the tile that was chosen
-        startTiles.remove(numeroChoisi);                          // we remove the tile in the list
+        this.setStartTile(startTiles.get(numeroChoisi));          //  set the tile that was chosen
+        startTiles.remove(numeroChoisi);                          //  remove the tile in the list
 
 
     }
+
+    
 }
