@@ -4,7 +4,6 @@ import models.enums.PlayerColor;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class Player {
 
@@ -13,7 +12,6 @@ public class Player {
     private Castle castle;
     private StartTile startTile;
     private PlayerColor playerColor;
-    private Scanner scan = new Scanner(System.in);
 
     // TODO Add user board and other useful attributes
 
@@ -21,6 +19,26 @@ public class Player {
         this.setPlayerColor(playerColor);
         this.dominoes = new ArrayList<>();
         this.kings = new ArrayList<>();
+    }
+
+    /**
+     * Select the player's color
+     * @param playerColors
+     * @param playerColor
+     */
+    public void chooseColor(ArrayList<PlayerColor> playerColors, PlayerColor playerColor){
+        this.setPlayerColor(playerColor);   //  set the color that was chosen
+        playerColors.remove(playerColor);   //  remove the color in the list
+    }
+
+    /**
+     * Select the player's start tile
+     * @param startTiles
+     * @param startTile
+     */
+    public void chooseStartTile(ArrayList<StartTile> startTiles, StartTile startTile){
+        this.setStartTile(startTile);   //  set the tile that was chosen
+        startTiles.remove(startTile);   //  remove the tile in the liste
     }
 
     /**
@@ -76,36 +94,5 @@ public class Player {
     public void setPlayerColor(PlayerColor playerColor) {
         this.playerColor = playerColor;
     }
-
-    public void chooseColor(ArrayList<PlayerColor> playerColors){
-
-        System.out.println("Choisissez votre couleur :");
-        for(int i=0;i<playerColors.size();i++){                       // menu
-            System.out.println("Tapez " + i + " pour choisir la couleur " + playerColors.get(i));
-        }
-        int numeroChoisi = scan.nextInt();
-        scan.nextLine();
-        this.setPlayerColor(playerColors.get(numeroChoisi));          //  set the color that was chosen
-        playerColors.remove(numeroChoisi);                          //  remove the color in the list
-
-
-    }
-
-
-
-    public void chooseStartTile(ArrayList<StartTile> startTiles){
-        Scanner scan = new Scanner(System.in);
-        System.out.println("Choisissez votre tuile de départ :");
-        for(int i=0;i<startTiles.size();i++){                       // menu
-            System.out.println("Tapez " + i + " pour choisir la tuile : " + startTiles.get(i));
-        }
-        int numeroChoisi = scan.nextInt();
-        scan.nextLine();
-        this.setStartTile(startTiles.get(numeroChoisi));          //  set the tile that was chosen
-        startTiles.remove(numeroChoisi);                          //  remove the tile in the liste
-    }
-
-
-
 
 }
