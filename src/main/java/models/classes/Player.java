@@ -105,6 +105,16 @@ public class Player {
         startTiles.remove(numeroChoisi);                          //  remove the tile in the liste
     }
 
+    public void assignKings(int nbPlayer) {
+        if (nbPlayer>2){
+            this.kings.add(new King(this.playerColor));}
+        else {
+            for(int i=0;i<2;i++){
+                this.kings.add(new King(this.playerColor));}
+            }
+        }
+            
+    }
 
 
 
