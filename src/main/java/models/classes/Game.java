@@ -1,6 +1,8 @@
 package models.classes;
 
-import views.templates.GameMode;
+
+
+import models.enums.GameMode;
 
 import java.util.List;
 
