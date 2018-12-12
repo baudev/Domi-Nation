@@ -1,11 +1,14 @@
 package models.classes;
 
+import views.templates.GameMode;
+
 import java.util.List;
 
 public class Game {
 
     private List<Domino> dominoes;
     private List<Player> players;
+    private GameMode gameMode;
 
 
     /**
@@ -36,6 +39,14 @@ public class Game {
 
     public void addPlayer(Player player) {
         this.players.add(player);
+    }
+
+    public GameMode getGameMode() {
+        return gameMode;
+    }
+
+    public void setGameMode(GameMode gameMode) {
+        this.gameMode = gameMode;
     }
 }
 
