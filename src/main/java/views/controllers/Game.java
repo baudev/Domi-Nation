@@ -13,7 +13,8 @@ public class Game {
         root.getChildren().add(new GameMode(new OnGameModeClickListener() {
             @Override
             public void onGameModeClickListener(models.enums.GameMode gameMode) { // define the callback for each GameMode button
-                // TODO select game mode and pass to the next step
+                models.classes.Game game = new models.classes.Game(); // we create an instance of the game
+                controllers.Game.setGameMode(game, gameMode); // we set the gameMode of the game
             }
         }));
     }
