@@ -11,8 +11,6 @@ public class Player {
     private PlayerColor playerColor;
     private Board board;
 
-    // TODO Add user board and other useful attributes
-
     public Player(PlayerColor playerColor) {
         this.setPlayerColor(playerColor);
         this.kings = new ArrayList<>();

@@ -1,8 +1,11 @@
 package views.controllers;
 
 import javafx.scene.Group;
+import models.classes.Player;
 import models.interfaces.OnGameModeClickListener;
+import models.interfaces.OnPlayerNumberClickListener;
 import views.templates.GameMode;
+import views.templates.NumberPlayer;
 
 public class Game {
 
@@ -33,8 +36,17 @@ public class Game {
     /**
      * Ask the number of players
      */
-    private static void askNumberPlayer() {
-        
+    private void askNumberPlayer() {
+        NumberPlayer numberPlayerView = new NumberPlayer();
+        numberPlayerView.setOnPlayerNumberClickListener(new OnPlayerNumberClickListener() {
+            @Override
+            public void onPlayerNumberClickListener(models.enums.NumberPlayer playerNumber) {
+                for(int i=0; i < playerNumber.getValue(); i++) {
+                    // for each player we ask their color
+                }
+            }
+        });
+        this.getRoot().getChildren().add(numberPlayerView);
     }
 
     /**
