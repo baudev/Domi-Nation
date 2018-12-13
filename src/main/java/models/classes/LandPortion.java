@@ -17,6 +17,11 @@ public class LandPortion {
     private LandPortionType landPortionType;
 
     /**
+     * Position of the land portion
+     */
+    private Position position;
+
+    /**
      * Constructor
      * @param numberCrowns
      * @param landPortionType
@@ -50,5 +55,13 @@ public class LandPortion {
 
     public void setLandPortionType(LandPortionType landPortionType) {
         this.landPortionType = landPortionType;
+    }
+
+    public Position getPosition() {
+        return position;
+    }
+
+    public void setPosition(Position position) {
+        this.position = position;
     }
 }

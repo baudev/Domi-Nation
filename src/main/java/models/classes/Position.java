@@ -4,6 +4,10 @@ public class Position {
 
     private int x, y;
 
+    public Position() {
+
+    }
+
     public Position(int x, int y) {
         this.setX(x);
         this.setY(y);
@@ -20,6 +24,7 @@ public class Position {
     }
 
     public void setX(int x) {
+        // TODO check value according to the applied rules
         this.x = x;
     }
 
@@ -28,6 +33,7 @@ public class Position {
     }
 
     public void setY(int y) {
+        // TODO check value according to the applied rules
         this.y = y;
     }
 }
