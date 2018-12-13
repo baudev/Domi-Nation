@@ -14,12 +14,9 @@ import models.interfaces.OnGameModeClickListener;
 
 public class GameMode extends Parent {
 
-    private final OnGameModeClickListener listener;
+    private OnGameModeClickListener onGameModeClickListener;
 
-    public GameMode(OnGameModeClickListener listener) {
-        // Define callback listeners
-        this.listener = listener;
-
+    public GameMode() {
         // Define layout
         GridPane gridPane = new GridPane();
 
@@ -39,7 +36,7 @@ public class GameMode extends Parent {
             button.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) { // when the user click on the following button
-                    listener.onGameModeClickListener(gameMode); // transmit the event to the view controller callback
+                    getOnGameModeClickListener().onGameModeClickListener(gameMode); // transmit the event to the view controller callback
                 }
             });
 
@@ -58,7 +55,11 @@ public class GameMode extends Parent {
      *
      */
 
-    public OnGameModeClickListener getListener() {
-        return listener;
+    public OnGameModeClickListener getOnGameModeClickListener() {
+        return onGameModeClickListener;
+    }
+
+    public void setOnGameModeClickListener(OnGameModeClickListener onGameModeClickListener) {
+        this.onGameModeClickListener = onGameModeClickListener;
     }
 }
