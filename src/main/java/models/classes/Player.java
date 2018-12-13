@@ -7,18 +7,16 @@ import java.util.List;
 
 public class Player {
 
-    private List<Domino> dominoes;
     private List<King> kings;
-    private Castle castle;
-    private StartTile startTile;
     private PlayerColor playerColor;
+    private Board board;
 
     // TODO Add user board and other useful attributes
 
     public Player(PlayerColor playerColor) {
         this.setPlayerColor(playerColor);
-        this.dominoes = new ArrayList<>();
         this.kings = new ArrayList<>();
+        this.board = new Board();
     }
 
     /**
@@ -26,18 +24,6 @@ public class Player {
      * GETTERS AND SETTERS
      *
      */
-
-    public List<Domino> getDominoes() {
-        return dominoes;
-    }
-
-    public void setDominoes(List<Domino> dominoes) {
-        this.dominoes = dominoes;
-    }
-
-    public void addDomino(Domino domino) {
-        this.dominoes.add(domino);
-    }
 
     public List<King> getKings() {
         return kings;
@@ -51,27 +37,19 @@ public class Player {
         this.kings.add(king);
     }
 
-    public Castle getCastle() {
-        return castle;
-    }
-
-    public void setCastle(Castle castle) {
-        this.castle = castle;
-    }
-
-    public StartTile getStartTile() {
-        return startTile;
-    }
-
-    public void setStartTile(StartTile startTile) {
-        this.startTile = startTile;
-    }
-
     public PlayerColor getPlayerColor() {
         return playerColor;
     }
 
     public void setPlayerColor(PlayerColor playerColor) {
         this.playerColor = playerColor;
+    }
+
+    public Board getBoard() {
+        return board;
+    }
+
+    public void setBoard(Board board) {
+        this.board = board;
     }
 }
