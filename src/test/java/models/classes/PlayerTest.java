@@ -21,21 +21,6 @@ class PlayerTest {
     }
 
     @Test
-    void getDominoes() {
-        player.setDominoes(new ArrayList<>());
-        assertEquals(0, player.getDominoes().size());
-    }
-
-    @Test
-    void addDomino() throws MaxCrownsLandPortionExceeded {
-        player.setDominoes(new ArrayList<>());
-        LandPortion landPortionLeft = new LandPortion(Integer.valueOf(Config.getValue("LandPortionMaxCrowns")), LandPortionType.CHAMPS);
-        LandPortion landPortionRight = new LandPortion(Integer.valueOf(Config.getValue("LandPortionMaxCrowns")) - 1, LandPortionType.MINE);
-        player.addDomino(new Domino(landPortionLeft, landPortionRight, 50));
-        assertEquals(1, player.getDominoes().size());
-    }
-
-    @Test
     void getKings() {
         player.setKings(new ArrayList<>());
         assertEquals(0, player.getKings().size());
@@ -49,24 +34,10 @@ class PlayerTest {
     }
 
     @Test
-    void getCastle() {
-        Castle castle = new Castle(PlayerColor.BLUE);
-        player.setCastle(castle);
-        assertSame(castle, player.getCastle());
-    }
-
-    @Test
     void getPlayerColor() {
         PlayerColor playerColor = PlayerColor.BLUE;
         player.setPlayerColor(playerColor);
         assertSame(playerColor, player.getPlayerColor());
-    }
-
-    @Test
-    void getStartTile() throws MaxCrownsLandPortionExceeded {
-        StartTile startTile = new StartTile();
-        player.setStartTile(startTile);
-        assertSame(startTile, player.getStartTile());
     }
 
 }
