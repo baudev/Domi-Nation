@@ -9,34 +9,36 @@ import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
-import models.enums.PlayerNumber;
-import models.interfaces.OnPlayerNumberClickListener;
+import models.enums.PlayerColor;
+import models.interfaces.OnPlayerColorClickListener;
 
-public class NumberPlayer extends Parent {
+import java.util.List;
 
-    private OnPlayerNumberClickListener onPlayerNumberClickListener;
+public class ColorPlayer extends Parent {
 
-    public NumberPlayer() {
+    private OnPlayerColorClickListener onPlayerColorClickListener;
+
+    public ColorPlayer(List<PlayerColor> playerColorList, int playerNumber) {
         // Define layout
         GridPane gridPane = new GridPane();
 
         // Define title
         Text text = new Text();
-        text.setText("Select the number of players");
+        text.setText("Player " + playerNumber + ", select a color");
         gridPane.add(text, 1, 0);
 
         // Add the buttons of each possibilities
         int i = 0;
-        for(PlayerNumber numberPlayer : PlayerNumber.values()){
+        for(models.enums.PlayerColor playerColor : playerColorList){
             Button button = new Button();
-            button.setText(String.valueOf(numberPlayer.getValue()));
+            button.setText(String.valueOf(playerColor.toString()));
             button.setLayoutX(10);
             button.setLayoutY(10);
 
             button.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) { // when the user click on the following button
-                    getOnPlayerNumberClickListener().onPlayerNumberClickListener(numberPlayer); // transmit the event to the view controller callback
+                    getOnPlayerColorClickListener().onPlayerColorClickListener(playerColor); // transmit the event to the view controller callback
                 }
             });
 
@@ -55,11 +57,11 @@ public class NumberPlayer extends Parent {
      *
      */
 
-    public OnPlayerNumberClickListener getOnPlayerNumberClickListener() {
-        return onPlayerNumberClickListener;
+    public OnPlayerColorClickListener getOnPlayerColorClickListener() {
+        return onPlayerColorClickListener;
     }
 
-    public void setOnPlayerNumberClickListener(OnPlayerNumberClickListener onPlayerNumberClickListener) {
-        this.onPlayerNumberClickListener = onPlayerNumberClickListener;
+    public void setOnPlayerColorClickListener(OnPlayerColorClickListener onPlayerColorClickListener) {
+        this.onPlayerColorClickListener = onPlayerColorClickListener;
     }
 }

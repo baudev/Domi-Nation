@@ -4,6 +4,7 @@ package models.classes;
 
 import models.enums.GameMode;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Game {
@@ -11,6 +12,11 @@ public class Game {
     private List<Domino> dominoes;
     private List<Player> players;
     private GameMode gameMode;
+
+    public Game() {
+        this.setDominoes(new ArrayList<>());
+        this.setPlayers(new ArrayList<>());
+    }
 
 
     /**

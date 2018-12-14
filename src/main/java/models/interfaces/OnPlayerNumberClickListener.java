@@ -1,9 +1,9 @@
 package models.interfaces;
 
-import models.enums.NumberPlayer;
+import models.enums.PlayerNumber;
 
 public interface OnPlayerNumberClickListener {
 
-    void onPlayerNumberClickListener(NumberPlayer playerNumber);
+    void onPlayerNumberClickListener(PlayerNumber playerNumber);
 
 }

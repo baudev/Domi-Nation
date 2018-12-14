@@ -1,6 +1,6 @@
 package models.enums;
 
-public enum NumberPlayer {
+public enum PlayerNumber {
 
     TWO(2),
     THREE(3),
@@ -8,7 +8,7 @@ public enum NumberPlayer {
 
     private final int numberPlayer;
 
-    NumberPlayer(int numberPlayer) {
+    PlayerNumber(int numberPlayer) {
         this.numberPlayer = numberPlayer;
     }
 

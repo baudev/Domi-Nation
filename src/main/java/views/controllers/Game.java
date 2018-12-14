@@ -1,11 +1,17 @@
 package views.controllers;
 
+import exceptions.PlayerColorAlreadyUsed;
 import javafx.scene.Group;
-import models.classes.Player;
+import models.enums.PlayerColor;
+import models.enums.PlayerNumber;
 import models.interfaces.OnGameModeClickListener;
+import models.interfaces.OnPlayerColorClickListener;
 import models.interfaces.OnPlayerNumberClickListener;
+import views.templates.ColorPlayer;
 import views.templates.GameMode;
 import views.templates.NumberPlayer;
+
+import java.util.List;
 
 public class Game {
 
@@ -40,13 +46,44 @@ public class Game {
         NumberPlayer numberPlayerView = new NumberPlayer();
         numberPlayerView.setOnPlayerNumberClickListener(new OnPlayerNumberClickListener() {
             @Override
-            public void onPlayerNumberClickListener(models.enums.NumberPlayer playerNumber) {
-                for(int i=0; i < playerNumber.getValue(); i++) {
-                    // for each player we ask their color
-                }
+            public void onPlayerNumberClickListener(PlayerNumber playerNumber) {
+                // we reset the view
+                root.getChildren().remove(numberPlayerView);
+                askPlayerColor(playerNumber.getValue());
             }
         });
         this.getRoot().getChildren().add(numberPlayerView);
+    }
+
+
+    private void askPlayerColor(int currentPlayerNumber) {
+        // we get all unused playerColors
+        List<PlayerColor> freePlayerColorList = controllers.Game.getFreePlayerColors(game);
+        // we ask the color to the current player
+        ColorPlayer colorPlayerView = new ColorPlayer(freePlayerColorList, currentPlayerNumber);
+        colorPlayerView.setOnPlayerColorClickListener(new OnPlayerColorClickListener() {
+            @Override
+            public void onPlayerColorClickListener(PlayerColor playerColor) {
+                System.out.println(playerColor);
+                // we create a player with the selected color
+                try {
+                    controllers.Game.createPlayerWithColor(game, playerColor);
+                    // we reset the view for next step
+                    root.getChildren().remove(colorPlayerView);
+                    if(currentPlayerNumber <= 1) {
+                        // we ask their wanted color to each player. We can start the game
+                    } else {
+                        // we have not asked to each player their wanted color
+                        askPlayerColor(currentPlayerNumber - 1);
+                    }
+                } catch (PlayerColorAlreadyUsed playerColorAlreadyUsed) {
+                    // the color is already taken, weird case
+                    // we ask again
+                    System.out.println("Error, color already taken");
+                }
+            }
+        });
+        root.getChildren().add(colorPlayerView);
     }
 
     /**
