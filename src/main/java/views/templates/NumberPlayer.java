@@ -10,7 +10,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import models.enums.PlayerNumber;
-import models.interfaces.OnPlayerNumberClickListener;
+import views.interfaces.OnPlayerNumberClickListener;
 
 public class NumberPlayer extends Parent {
 

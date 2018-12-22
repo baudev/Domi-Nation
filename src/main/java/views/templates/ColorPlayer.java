@@ -10,7 +10,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import models.enums.PlayerColor;
-import models.interfaces.OnPlayerColorClickListener;
+import views.interfaces.OnPlayerColorClickListener;
 
 import java.util.List;
 

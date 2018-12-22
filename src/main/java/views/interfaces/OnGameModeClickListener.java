@@ -1,4 +1,4 @@
-package models.interfaces;
+package views.interfaces;
 
 import models.enums.GameMode;
 

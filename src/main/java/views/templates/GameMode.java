@@ -1,6 +1,5 @@
 package views.templates;
 
-import helpers.Config;
 import helpers.Screen;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -10,7 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
-import models.interfaces.OnGameModeClickListener;
+import views.interfaces.OnGameModeClickListener;
 
 public class GameMode extends Parent {
 
