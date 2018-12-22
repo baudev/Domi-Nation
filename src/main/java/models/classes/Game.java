@@ -2,9 +2,12 @@ package models.classes;
 
 
 
+import exceptions.PlayerColorAlreadyUsed;
 import models.enums.GameMode;
+import models.enums.PlayerColor;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Game {
@@ -16,6 +19,41 @@ public class Game {
     public Game() {
         this.setDominoes(new ArrayList<>());
         this.setPlayers(new ArrayList<>());
+    }
+
+
+    /**
+     * Return all unused player colors
+     * @return
+     */
+    public List<PlayerColor> getFreePlayerColors() {
+        // we add all possible PlayerColors
+        List<PlayerColor> playerColorList = new ArrayList<>(Arrays.asList(PlayerColor.values()));
+        // we check if some players has not already taken some colors
+        for (Player player : this.getPlayers()) {
+            playerColorList.remove(player.getPlayerColor()); // we remove the used color
+        }
+        return playerColorList;
+    }
+
+    /**
+     * Create a player in the game passed in parameter
+     * @param playerColor
+     */
+    public void createPlayerWithColor(PlayerColor playerColor) throws PlayerColorAlreadyUsed {
+        // we check if the color has not already been taken
+        boolean alreadyTaken = false;
+        for (Player player : this.getPlayers()) {
+            if (player.getPlayerColor().equals(playerColor)) {
+                alreadyTaken = true; // another player has the wanted color
+            }
+        }
+        if(!alreadyTaken) { // the color is not already used, we create a new player with this color
+            Player player = new Player(playerColor);
+            this.addPlayer(player);
+        } else {
+            throw new PlayerColorAlreadyUsed(); // the color has already been taken, normally the button with this color should not appear on the user's screen
+        }
     }
 
 

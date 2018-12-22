@@ -29,7 +29,7 @@ public class Game {
             @Override
             public void onGameModeClickListener(models.enums.GameMode gameMode) {
                 game = new models.classes.Game(); // we create an instance of the game
-                controllers.Game.setGameMode(game, gameMode); // we set the gameMode of the game
+                game.setGameMode(gameMode);  // we set the gameMode of the game
                 // we remove the current view
                 root.getChildren().remove(gameModeView);
                 // ask the number of players
@@ -58,7 +58,7 @@ public class Game {
 
     private void askPlayerColor(int currentPlayerNumber) {
         // we get all unused playerColors
-        List<PlayerColor> freePlayerColorList = controllers.Game.getFreePlayerColors(game);
+        List<PlayerColor> freePlayerColorList = game.getFreePlayerColors();
         // we ask the color to the current player
         ColorPlayer colorPlayerView = new ColorPlayer(freePlayerColorList, currentPlayerNumber);
         colorPlayerView.setOnPlayerColorClickListener(new OnPlayerColorClickListener() {
@@ -67,7 +67,7 @@ public class Game {
                 System.out.println(playerColor);
                 // we create a player with the selected color
                 try {
-                    controllers.Game.createPlayerWithColor(game, playerColor);
+                    game.createPlayerWithColor(playerColor);
                     // we reset the view for next step
                     root.getChildren().remove(colorPlayerView);
                     if(currentPlayerNumber <= 1) {
