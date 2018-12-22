@@ -8,6 +8,7 @@ import models.enums.PlayerColor;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class Game {
@@ -54,6 +55,23 @@ public class Game {
         } else {
             throw new PlayerColorAlreadyUsed(); // the color has already been taken, normally the button with this color should not appear on the user's screen
         }
+    }
+
+    /**
+     * Generate the dominoes for the current game
+     */
+    public void generateDominoes() {
+        int numberDominoesToRemove = 0;
+        switch (this.getPlayers().size()){
+            case 2:
+                numberDominoesToRemove = 24;
+                break;
+            case 3:
+                numberDominoesToRemove = 12;
+                break;
+        }
+        Collections.shuffle(this.dominoes); // we shuffle the list
+        this.dominoes.subList(0, this.dominoes.size() - numberDominoesToRemove).clear(); // we just get a sub part of the list
     }
 
 
