@@ -24,6 +24,13 @@ public class GameViewController {
      */
     public GameViewController(Group root) {
         this.setRoot(root); // set the root group as a class attribute
+        askGameMode();
+    }
+
+    /**
+     * Ask which game mode should be played
+     */
+    private void askGameMode() {
         GameModeView gameModeView = new GameModeView();
         gameModeView.setOnGameModeClickListener(new OnGameModeClickListener() {
             @Override
