@@ -5,7 +5,7 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import views.controllers.Game;
+import views.controllers.GameViewController;
 
 public class Main extends Application {
 
@@ -26,6 +26,6 @@ public class Main extends Application {
         stage.setWidth(Screen.getXMax());
         stage.setHeight(Screen.getYMax());
         stage.show(); // show the stage
-        new Game(root); // new Game view controller
+        new GameViewController(root); // new GameViewController view controller
     }
 }

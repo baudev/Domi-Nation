@@ -14,11 +14,11 @@ import views.interfaces.OnPlayerColorClickListener;
 
 import java.util.List;
 
-public class ColorPlayer extends Parent {
+public class ColorPlayerView extends Parent {
 
     private OnPlayerColorClickListener onPlayerColorClickListener;
 
-    public ColorPlayer(List<PlayerColor> playerColorList, int playerNumber) {
+    public ColorPlayerView(List<PlayerColor> playerColorList, int playerNumber) {
         // Define layout
         GridPane gridPane = new GridPane();
 

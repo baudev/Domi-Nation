@@ -12,11 +12,11 @@ import javafx.scene.text.Text;
 import models.enums.PlayerNumber;
 import views.interfaces.OnPlayerNumberClickListener;
 
-public class NumberPlayer extends Parent {
+public class NumberPlayerView extends Parent {
 
     private OnPlayerNumberClickListener onPlayerNumberClickListener;
 
-    public NumberPlayer() {
+    public NumberPlayerView() {
         // Define layout
         GridPane gridPane = new GridPane();
 

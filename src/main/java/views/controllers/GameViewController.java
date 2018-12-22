@@ -7,24 +7,24 @@ import models.enums.PlayerNumber;
 import views.interfaces.OnGameModeClickListener;
 import views.interfaces.OnPlayerColorClickListener;
 import views.interfaces.OnPlayerNumberClickListener;
-import views.templates.ColorPlayer;
-import views.templates.GameMode;
-import views.templates.NumberPlayer;
+import views.templates.ColorPlayerView;
+import views.templates.GameModeView;
+import views.templates.NumberPlayerView;
 
 import java.util.List;
 
-public class Game {
+public class GameViewController {
 
     private Group root;
     private models.classes.Game game;
 
     /**
-     * Start the Game view controller which start by asking the game mode
+     * Start the GameViewController view controller which start by asking the game mode
      * @param root
      */
-    public Game(Group root) {
+    public GameViewController(Group root) {
         this.setRoot(root); // set the root group as a class attribute
-        GameMode gameModeView = new GameMode();
+        GameModeView gameModeView = new GameModeView();
         gameModeView.setOnGameModeClickListener(new OnGameModeClickListener() {
             @Override
             public void onGameModeClickListener(models.enums.GameMode gameMode) {
@@ -43,7 +43,7 @@ public class Game {
      * Ask the number of players
      */
     private void askNumberPlayer() {
-        NumberPlayer numberPlayerView = new NumberPlayer();
+        NumberPlayerView numberPlayerView = new NumberPlayerView();
         numberPlayerView.setOnPlayerNumberClickListener(new OnPlayerNumberClickListener() {
             @Override
             public void onPlayerNumberClickListener(PlayerNumber playerNumber) {
@@ -60,7 +60,7 @@ public class Game {
         // we get all unused playerColors
         List<PlayerColor> freePlayerColorList = game.getFreePlayerColors();
         // we ask the color to the current player
-        ColorPlayer colorPlayerView = new ColorPlayer(freePlayerColorList, currentPlayerNumber);
+        ColorPlayerView colorPlayerView = new ColorPlayerView(freePlayerColorList, currentPlayerNumber);
         colorPlayerView.setOnPlayerColorClickListener(new OnPlayerColorClickListener() {
             @Override
             public void onPlayerColorClickListener(PlayerColor playerColor) {

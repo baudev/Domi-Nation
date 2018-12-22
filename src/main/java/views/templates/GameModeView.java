@@ -11,11 +11,11 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import views.interfaces.OnGameModeClickListener;
 
-public class GameMode extends Parent {
+public class GameModeView extends Parent {
 
     private OnGameModeClickListener onGameModeClickListener;
 
-    public GameMode() {
+    public GameModeView() {
         // Define layout
         GridPane gridPane = new GridPane();
 
