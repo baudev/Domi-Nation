@@ -18,6 +18,12 @@ import java.util.Map;
 
 public class CSVReader {
 
+    /**
+     * Return a list of all dominoes stored in the csv file
+     * @return
+     * @throws IOException
+     * @throws InvalidDominoesCSVFile
+     */
     public static List<Domino> getDominoes() throws IOException, InvalidDominoesCSVFile {
         Reader reader = Files.newBufferedReader(Paths.get("src/main/resources/dominos.csv"));
         com.opencsv.CSVReader csvReader = new CSVReaderBuilder(reader).withSkipLines(1).build();
