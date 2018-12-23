@@ -1,5 +1,7 @@
 package models.classes;
 
+import java.util.Objects;
+
 public class Position {
 
     private int x, y;
@@ -11,6 +13,20 @@ public class Position {
     public Position(int x, int y) {
         this.setX(x);
         this.setY(y);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.getX(),this.getY());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Position) {
+            Position connectionObj = (Position) obj;
+            return (this.getX() == connectionObj.getX() && this.getY() == connectionObj.getY());
+        }
+        return false;
     }
 
     /**
