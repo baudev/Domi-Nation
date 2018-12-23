@@ -110,6 +110,18 @@ public class Game {
         }
     }
 
+    /**
+     * Return the number of kings in the game
+     * @return
+     */
+    public int numberKingsInGame() {
+        int numberKings = 0;
+        for(Player player : this.getPlayers()) {
+            numberKings += player.getKings().size();
+        }
+        return numberKings;
+    }
+
 
     /**
      *

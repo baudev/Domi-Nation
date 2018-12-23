@@ -2,6 +2,7 @@ package views.controllers;
 
 import exceptions.PlayerColorAlreadyUsed;
 import javafx.scene.Group;
+import models.classes.Game;
 import models.enums.GameMode;
 import models.enums.PlayerColor;
 import models.enums.PlayerNumber;
@@ -17,7 +18,7 @@ import java.util.List;
 public class GameViewController {
 
     private Group root;
-    private models.classes.Game game;
+    private Game game;
 
     /**
      * Start the GameViewController view controller which start by asking the game mode
@@ -32,11 +33,12 @@ public class GameViewController {
      * Ask which game mode should be played
      */
     private void askGameMode() {
-        game = new models.classes.Game(); // we create an instance of the game
+        game = new Game(); // we create an instance of the game
         GameModeView gameModeView = new GameModeView();
         gameModeView.setOnGameModeClickListener(new OnGameModeClickListener() {
             @Override
-            public void onGameModeClickListener(models.enums.GameMode gameMode) {
+            public void onGameModeClickListener(GameMode gameMode) {
+                // TODO if DYNASTY, count the number of rounds
                 game.setGameMode(gameMode);  // we set the gameMode of the game
                 // we remove the current view
                 root.getChildren().remove(gameModeView);
@@ -112,11 +114,11 @@ public class GameViewController {
         this.root = root;
     }
 
-    public models.classes.Game getGame() {
+    public Game getGame() {
         return game;
     }
 
-    public void setGame(models.classes.Game game) {
+    public void setGame(Game game) {
         this.game = game;
     }
 }
