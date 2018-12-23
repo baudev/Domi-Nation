@@ -5,9 +5,11 @@ import models.enums.PlayerColor;
 public class Castle {
 
     private PlayerColor color;
+    private Position position;
 
-    public Castle(PlayerColor color) {
+    public Castle(PlayerColor color, Position position) {
         this.setColor(color);
+        this.setPosition(position);
     }
 
     /**
@@ -23,4 +25,11 @@ public class Castle {
         this.color = color;
     }
 
+    public Position getPosition() {
+        return position;
+    }
+
+    public void setPosition(Position position) {
+        this.position = position;
+    }
 }

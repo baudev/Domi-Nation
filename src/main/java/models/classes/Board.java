@@ -9,6 +9,7 @@ public class Board {
     private Castle castle;
     private StartTile startTile;
 
+
     public Board() {
         this.dominoes = new ArrayList<>();
     }

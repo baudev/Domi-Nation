@@ -8,8 +8,9 @@ public class StartTile extends LandPortion {
     /**
      * Constructor
      */
-    public StartTile() throws MaxCrownsLandPortionExceeded {
+    public StartTile(Position position) throws MaxCrownsLandPortionExceeded {
         super(0, LandPortionType.TOUS);
+        this.setPosition(position);
     }
 
 }

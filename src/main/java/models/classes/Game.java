@@ -2,10 +2,13 @@ package models.classes;
 
 
 
+import exceptions.InvalidDominoesCSVFile;
 import exceptions.PlayerColorAlreadyUsed;
+import helpers.CSVReader;
 import models.enums.GameMode;
 import models.enums.PlayerColor;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -18,7 +21,6 @@ public class Game {
     private GameMode gameMode;
 
     public Game() {
-        this.setDominoes(new ArrayList<>());
         this.setPlayers(new ArrayList<>());
     }
 
@@ -60,7 +62,8 @@ public class Game {
     /**
      * Generate the dominoes for the current game
      */
-    public void generateDominoes() {
+    public void generateDominoes() throws IOException, InvalidDominoesCSVFile {
+        this.setDominoes(CSVReader.getDominoes()); // we get all the dominoes stored in the CSV file
         int numberDominoesToRemove = 0;
         switch (this.getPlayers().size()){
             case 2:
