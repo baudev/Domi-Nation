@@ -82,11 +82,31 @@ public class Game {
         this.dominoes.subList(0, this.dominoes.size() - numberDominoesToRemove).clear(); // we just get a sub part of the list
     }
 
+    /**
+     * Initiate all player attributes such as their boards or kings
+     * @throws MaxCrownsLandPortionExceeded
+     */
     public void initiatePlayers() throws MaxCrownsLandPortionExceeded {
-        // for each player we generate his grid
+        // for each player we generate his grid and his kings
         for(Player player : this.getPlayers()) {
+            // we generate the board
             player.setBoard(new Board(this.getGameMode(), player.getPlayerColor())); // generate the board with castle and startTile
-            // TODO generate kings of the player
+            // we generate the good number of kings
+            int numberOfKings = 0;
+            switch (this.getPlayers().size()){
+                case 2:
+                    numberOfKings = 2;
+                    break;
+                case 3:
+                case 4:
+                    numberOfKings = 1;
+                    break;
+                default:
+                    // TODO throw exception
+            }
+            for(int i = 0; i < numberOfKings; i++){
+                player.addKing(new King(player.getPlayerColor()));
+            }
         }
     }
 
