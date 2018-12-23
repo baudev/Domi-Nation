@@ -12,7 +12,7 @@ class CastleTest {
 
     @BeforeAll
     private static void beforeAll() {
-        castle = new Castle(PlayerColor.BLUE);
+        castle = new Castle(PlayerColor.BLUE, new Position(0, 0));
     }
 
     @Test
