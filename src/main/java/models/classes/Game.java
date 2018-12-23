@@ -74,6 +74,10 @@ public class Game {
                 numberDominoesToRemove = 12;
                 break;
         }
+        // if the gameMode is great duel, then all dominoes should be used
+        if(this.getGameMode().equals(GameMode.THEGREATDUEL)) {
+            numberDominoesToRemove = 0;
+        }
         Collections.shuffle(this.dominoes); // we shuffle the list
         this.dominoes.subList(0, this.dominoes.size() - numberDominoesToRemove).clear(); // we just get a sub part of the list
     }

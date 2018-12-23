@@ -2,6 +2,7 @@ package views.controllers;
 
 import exceptions.PlayerColorAlreadyUsed;
 import javafx.scene.Group;
+import models.enums.GameMode;
 import models.enums.PlayerColor;
 import models.enums.PlayerNumber;
 import views.interfaces.OnGameModeClickListener;
@@ -31,11 +32,11 @@ public class GameViewController {
      * Ask which game mode should be played
      */
     private void askGameMode() {
+        game = new models.classes.Game(); // we create an instance of the game
         GameModeView gameModeView = new GameModeView();
         gameModeView.setOnGameModeClickListener(new OnGameModeClickListener() {
             @Override
             public void onGameModeClickListener(models.enums.GameMode gameMode) {
-                game = new models.classes.Game(); // we create an instance of the game
                 game.setGameMode(gameMode);  // we set the gameMode of the game
                 // we remove the current view
                 root.getChildren().remove(gameModeView);
@@ -50,16 +51,21 @@ public class GameViewController {
      * Ask the number of players
      */
     private void askNumberPlayer() {
-        NumberPlayerView numberPlayerView = new NumberPlayerView();
-        numberPlayerView.setOnPlayerNumberClickListener(new OnPlayerNumberClickListener() {
-            @Override
-            public void onPlayerNumberClickListener(PlayerNumber playerNumber) {
-                // we reset the view
-                root.getChildren().remove(numberPlayerView);
-                askPlayerColor(playerNumber.getValue());
-            }
-        });
-        this.getRoot().getChildren().add(numberPlayerView);
+        // if the gameMode is great duel, then the number of players is 2
+        if(game.getGameMode().equals(GameMode.THEGREATDUEL)){
+            askPlayerColor(PlayerNumber.TWO.getValue());
+        } else { // if the gameMode is another one, we ask the number of players
+            NumberPlayerView numberPlayerView = new NumberPlayerView();
+            numberPlayerView.setOnPlayerNumberClickListener(new OnPlayerNumberClickListener() {
+                @Override
+                public void onPlayerNumberClickListener(PlayerNumber playerNumber) {
+                    // we reset the view
+                    root.getChildren().remove(numberPlayerView);
+                    askPlayerColor(playerNumber.getValue());
+                }
+            });
+            this.getRoot().getChildren().add(numberPlayerView);
+        }
     }
 
 
