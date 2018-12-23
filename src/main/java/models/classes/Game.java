@@ -79,7 +79,9 @@ public class Game {
             numberDominoesToRemove = 0;
         }
         Collections.shuffle(this.dominoes); // we shuffle the list
-        this.dominoes.subList(0, this.dominoes.size() - numberDominoesToRemove).clear(); // we just get a sub part of the list
+        if(numberDominoesToRemove > 0) {
+            this.dominoes.subList(this.dominoes.size() - numberDominoesToRemove, this.dominoes.size()).clear(); // we just get a sub part of the list
+        }
     }
 
     /**
