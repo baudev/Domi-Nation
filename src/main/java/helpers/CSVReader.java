@@ -3,6 +3,7 @@ package helpers;
 import com.opencsv.CSVReaderBuilder;
 import exceptions.InvalidDominoesCSVFile;
 import models.classes.Domino;
+import models.classes.DominoesList;
 import models.classes.LandPortion;
 import models.enums.CSVDominoesHeader;
 import models.enums.LandPortionType;
@@ -24,11 +25,11 @@ public class CSVReader {
      * @throws IOException
      * @throws InvalidDominoesCSVFile
      */
-    public static List<Domino> getDominoes() throws IOException, InvalidDominoesCSVFile {
+    public static DominoesList getDominoes() throws IOException, InvalidDominoesCSVFile {
         Reader reader = Files.newBufferedReader(Paths.get("src/main/resources/dominos.csv"));
         com.opencsv.CSVReader csvReader = new CSVReaderBuilder(reader).withSkipLines(1).build();
         List<String[]> records = csvReader.readAll();
-        List<Domino> dominoes = new ArrayList<>();
+        DominoesList dominoes = new DominoesList();
         for (String[] record : records) {
             try {
                 int crownsPortion1 = Integer.valueOf(record[CSVDominoesHeader.NUMBER_CROWNS_PORTION_1.ordinal()]);

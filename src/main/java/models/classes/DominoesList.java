@@ -8,7 +8,7 @@ public class DominoesList extends ArrayList<Domino> {
      * Sort all Dominoes by their numbers
      * @return
      */
-    public List<Domino> sortByNumber() {
+    public DominoesList sortByNumber() {
         this.sort(new Comparator<Domino>() {
             @Override
             public int compare(Domino o1, Domino o2) {

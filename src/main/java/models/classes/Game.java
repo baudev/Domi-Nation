@@ -17,7 +17,7 @@ import java.util.List;
 
 public class Game {
 
-    private List<Domino> dominoes;
+    private DominoesList dominoes;
     private List<Player> players;
     private GameMode gameMode;
 
@@ -117,14 +117,14 @@ public class Game {
      * @param number
      * @return
      */
-    public List<Domino> pickDominoes(int number) {
+    public DominoesList pickDominoes(int number) {
         // we select a part of the class dominoes array
         // TODO check if the number asked is not superior to the amount of dominoes
-        List<Domino> dominoesPicked = new ArrayList<>(this.getDominoes().subList(0, number));
+        DominoesList dominoesPicked = (DominoesList) new ArrayList<Domino>(this.getDominoes().subList(0, number));
         // we remove it from the class array
         this.getDominoes().subList(0, number).clear();
-        // we return it
-        return dominoesPicked;
+        // we sort and return them
+        return dominoesPicked.sortByNumber();
     }
 
     /**
@@ -146,11 +146,11 @@ public class Game {
      *
      */
 
-    public List<Domino> getDominoes() {
+    public DominoesList getDominoes() {
         return dominoes;
     }
 
-    public void setDominoes(List<Domino> dominoes) {
+    public void setDominoes(DominoesList dominoes) {
         this.dominoes = dominoes;
     }
 
