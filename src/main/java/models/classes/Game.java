@@ -113,6 +113,21 @@ public class Game {
     }
 
     /**
+     * Pick a number of dominoes
+     * @param number
+     * @return
+     */
+    public List<Domino> pickDominoes(int number) {
+        // we select a part of the class dominoes array
+        // TODO check if the number asked is not superior to the amount of dominoes
+        List<Domino> dominoesPicked = new ArrayList<>(this.getDominoes().subList(0, number));
+        // we remove it from the class array
+        this.getDominoes().subList(0, number).clear();
+        // we return it
+        return dominoesPicked;
+    }
+
+    /**
      * Return the number of kings in the game
      * @return
      */
