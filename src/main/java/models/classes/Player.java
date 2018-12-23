@@ -13,8 +13,6 @@ public class Player {
 
     public Player(PlayerColor playerColor) {
         this.setPlayerColor(playerColor);
-        this.kings = new ArrayList<>();
-        this.board = new Board();
     }
 
     /**

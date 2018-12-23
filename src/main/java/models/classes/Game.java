@@ -3,6 +3,7 @@ package models.classes;
 
 
 import exceptions.InvalidDominoesCSVFile;
+import exceptions.MaxCrownsLandPortionExceeded;
 import exceptions.PlayerColorAlreadyUsed;
 import helpers.CSVReader;
 import models.enums.GameMode;
@@ -75,6 +76,14 @@ public class Game {
         }
         Collections.shuffle(this.dominoes); // we shuffle the list
         this.dominoes.subList(0, this.dominoes.size() - numberDominoesToRemove).clear(); // we just get a sub part of the list
+    }
+
+    public void initiatePlayers() throws MaxCrownsLandPortionExceeded {
+        // for each player we generate his grid
+        for(Player player : this.getPlayers()) {
+            player.setBoard(new Board(this.getGameMode(), player.getPlayerColor())); // generate the board with castle and startTile
+            // TODO generate kings of the player
+        }
     }
 
 
