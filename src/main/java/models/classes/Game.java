@@ -104,7 +104,8 @@ public class Game {
                     numberOfKings = 1;
                     break;
                 default:
-                    // TODO throw exception
+                    // TODO throw exception ?
+                    break;
             }
             for(int i = 0; i < numberOfKings; i++){
                 player.addKing(new King(player.getPlayerColor()));
@@ -120,11 +121,11 @@ public class Game {
     public DominoesList pickDominoes(int number) {
         // we select a part of the class dominoes array
         // TODO check if the number asked is not superior to the amount of dominoes
-        DominoesList dominoesPicked = (DominoesList) new ArrayList<Domino>(this.getDominoes().subList(0, number));
+        DominoesList dominoesPicked = new DominoesList(this.getDominoes().subList(0, number));
         // we remove it from the class array
         this.getDominoes().subList(0, number).clear();
         // we sort and return them
-        return dominoesPicked.sortByNumber();
+        return dominoesPicked;
     }
 
     /**
@@ -139,7 +140,7 @@ public class Game {
         return numberKings;
     }
 
-
+    
     /**
      *
      * GETTERS AND SETTERS
