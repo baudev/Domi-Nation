@@ -1,5 +1,6 @@
 package helpers;
 
+import mockit.Expectations;
 import mockit.Mock;
 import mockit.MockUp;
 import org.junit.jupiter.api.Test;
@@ -23,12 +24,15 @@ class ConfigTest extends Config {
 
     @Test
     void loadInexistantFileConfiguration() {
-        new MockUp<Config>() {
-            @Mock
-            private void loadConfigurationFile() throws IOException {
-                throw new IOException("File configuration not found");
-            }
-        };
+
+        new Expectations() {{
+            new MockUp<Config>() {
+                @Mock
+                private void loadConfigurationFile() {
+                    result = new IOException("File configuration not found");
+                }
+            };
+        }};
 
         Config.setProperties(null);
 
