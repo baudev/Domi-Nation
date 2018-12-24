@@ -16,8 +16,13 @@ class CastleTest {
     }
 
     @Test
-    void getColor() {
+    void getColorShouldReturnBlue() {
         assertEquals(PlayerColor.BLUE, castle.getColor());
+    }
+
+    @Test
+    void getPositionShouldReturnPosition00() {
+        assertEquals(new Position(0, 0), castle.getPosition());
     }
 
 }
