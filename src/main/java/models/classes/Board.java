@@ -5,6 +5,7 @@ import models.enums.GameMode;
 import models.enums.PlayerColor;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -16,12 +17,12 @@ public class Board {
     private Map<Position, LandPortion> grid;
 
     public Board(GameMode gameMode, PlayerColor playerColor) throws MaxCrownsLandPortionExceeded {
-        this.setDominoes(new ArrayList<>()); // we set en ampty ArrayList for the dominoes
-        this.setStartTile(new StartTile()); // create the startTile
+        this.setDominoes(new ArrayList<>()); // we set en empty ArrayList for the dominoes
+        this.setGrid(new HashMap<Position, LandPortion>());
         this.generateGrid(gameMode, playerColor); // generate the grid with the different elements such as castle of startTile
     }
 
-    private void generateGrid(GameMode gameMode, PlayerColor playerColor) {
+    private void generateGrid(GameMode gameMode, PlayerColor playerColor) throws MaxCrownsLandPortionExceeded {
         int sizeGrid;
         switch (gameMode) {
             case THEGREATDUEL:
@@ -38,7 +39,9 @@ public class Board {
                 this.getGrid().put(new Position(i, j), null);
             }
         }
+        this.setStartTile(new StartTile());
         // we put the startTile to the center of the grid
+        this.getStartTile().setPosition(new Position(sizeGrid, sizeGrid));
         this.getGrid().put(new Position(sizeGrid, sizeGrid), this.getStartTile());
         // we generate the castle
         this.setCastle(new Castle(playerColor, new Position(sizeGrid, sizeGrid)));

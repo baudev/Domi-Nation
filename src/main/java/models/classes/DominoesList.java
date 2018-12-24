@@ -4,6 +4,14 @@ import java.util.*;
 
 public class DominoesList extends ArrayList<Domino> {
 
+    public DominoesList() {
+
+    }
+
+    public DominoesList(List<Domino> subList) {
+        this.addAll(subList);
+    }
+
     /**
      * Sort all Dominoes by their numbers
      * @return
