@@ -68,7 +68,7 @@ project.afterEvaluate {
                 doFirst {
                     try {
                         classDirectories = files(classDirectories.files.collect {
-                            fileTree(dir: it, exclude: 'views/**')
+                            fileTree(dir: it, excludes: ['views/**', '**/Screen.class'])
                         })
                     } catch (e) {
                         println "jacoco: no exclusion patterns due to ${e.message}"
