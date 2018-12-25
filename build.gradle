@@ -65,6 +65,15 @@ project.afterEvaluate {
                 onlyIf = {
                     true
                 }
+                doFirst {
+                    try {
+                        classDirectories = files(classDirectories.files.collect {
+                            fileTree(dir: it, exclude: 'views/**')
+                        })
+                    } catch (e) {
+                        println "jacoco: no exclusion patterns due to ${e.message}"
+                    }
+                }
             })
 }
 
