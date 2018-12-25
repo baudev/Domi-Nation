@@ -22,12 +22,12 @@ public class Screen {
         return primaryScreenBounds.getMaxY();
     }
 
-    public static double percentageToXDimension(int percentage) {
+    public static double percentageToXDimension(double percentage) {
         // TODO check that the value is inferior or equal to 100%
         return percentage*(getXMax()-getXMin())/100;
     }
 
-    public static double percentageToYDimension(int percentage) {
+    public static double percentageToYDimension(double percentage) {
         // TODO check that the value is inferior or equal to 100%
         return percentage*(getYMax()-getYMin())/100;
     }
