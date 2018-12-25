@@ -13,11 +13,14 @@ public class LandPortionView extends Parent {
     private LandPortion landPortion;
 
     public LandPortionView(LandPortion landPortion) {
-        this.landPortion = landPortion;
+        this.setLandPortion(landPortion);
         addPortionType();
         addCrowns();
     }
 
+    /**
+     * Add color corresponding to the PortionType
+     */
     private void addPortionType() {
         Rectangle rectangle = new Rectangle();
         rectangle.setFill(landPortion.getLandPortionType().getValue()); // set color
@@ -26,6 +29,9 @@ public class LandPortionView extends Parent {
         this.getChildren().add(rectangle);
     }
 
+    /**
+     * Add corresponding number of crowns to the LandPortion
+     */
     private void addCrowns() {
         for(int i = 0; i < landPortion.getNumberCrowns(); i++) {
             Circle circle = new Circle();
@@ -36,6 +42,12 @@ public class LandPortionView extends Parent {
             this.getChildren().add(circle);
         }
     }
+
+    /**
+     *
+     *  GETTERS AND SETTERs
+     *
+     */
 
     public LandPortion getLandPortion() {
         return landPortion;
