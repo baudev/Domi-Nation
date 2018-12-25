@@ -1,6 +1,6 @@
 package models.classes;
 
-import com.sun.org.apache.xpath.internal.operations.String;
+import models.enums.PlayerColor;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -26,7 +26,7 @@ class PositionTest {
     @Test
     void shouldNotBeEquals() {
         Position position = new Position(1, 2);
-        assertNotEquals(position, new String());
+        assertNotEquals(position, new King(PlayerColor.BLUE));
     }
 
 }
