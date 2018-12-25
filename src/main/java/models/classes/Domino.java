@@ -1,10 +1,12 @@
 package models.classes;
 
+import views.templates.DominoView;
+
 public class Domino {
 
     private LandPortion leftPortion;
     private LandPortion rightPortion;
-
+    private DominoView dominoView;
     private int number;
 
     /**
@@ -46,5 +48,16 @@ public class Domino {
 
     public void setNumber(int number) {
         this.number = number;
+    }
+
+    public DominoView getDominoView() {
+        if(dominoView == null) {
+            this.setDominoView(new DominoView(this));
+        }
+        return dominoView;
+    }
+
+    public void setDominoView(DominoView dominoView) {
+        this.dominoView = dominoView;
     }
 }
