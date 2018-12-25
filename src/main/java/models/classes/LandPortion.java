@@ -3,6 +3,7 @@ package models.classes;
 import exceptions.MaxCrownsLandPortionExceeded;
 import helpers.Config;
 import models.enums.LandPortionType;
+import views.templates.LandPortionView;
 
 public class LandPortion {
 
@@ -15,6 +16,11 @@ public class LandPortion {
      * Land type of the portion
      */
     private LandPortionType landPortionType;
+
+    /**
+     * The view corresponding to the entitty
+     */
+    private LandPortionView landPortionView;
 
     /**
      * Position of the land portion
@@ -63,5 +69,17 @@ public class LandPortion {
 
     public void setPosition(Position position) {
         this.position = position;
+    }
+
+    public LandPortionView getLandPortionView() {
+        if(landPortionView == null) {
+            // we generate a new view
+            this.setLandPortionView(new LandPortionView(this));
+        }
+        return landPortionView;
+    }
+
+    public void setLandPortionView(LandPortionView landPortionView) {
+        this.landPortionView = landPortionView;
     }
 }
