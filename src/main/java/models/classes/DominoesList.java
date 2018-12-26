@@ -1,8 +1,12 @@
 package models.classes;
 
+import views.templates.DominoesListView;
+
 import java.util.*;
 
 public class DominoesList extends ArrayList<Domino> {
+
+    private DominoesListView dominoesListView;
 
     public DominoesList() {
 
@@ -29,4 +33,20 @@ public class DominoesList extends ArrayList<Domino> {
         return this;
     }
 
+    /**
+     *
+     * GETTERS AND SETTERS
+     *
+     */
+
+    public DominoesListView getDominoesListView() {
+        if(dominoesListView == null) {
+            this.setDominoesListView(new DominoesListView(this));
+        }
+        return dominoesListView;
+    }
+
+    public void setDominoesListView(DominoesListView dominoesListView) {
+        this.dominoesListView = dominoesListView;
+    }
 }
