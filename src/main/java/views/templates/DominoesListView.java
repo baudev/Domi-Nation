@@ -11,6 +11,7 @@ public class DominoesListView extends Parent {
     public DominoesListView(DominoesList dominoesList) {
         this.dominoesList = dominoesList;
         generateDominoesList();
+        center();
     }
 
     private void generateDominoesList() {
@@ -33,5 +34,10 @@ public class DominoesListView extends Parent {
             DominoView dominoView = this.dominoesList.get(i).getDominoView();
             dominoView.showNumberFace();
         }
+    }
+
+    public void center() {
+        this.setTranslateX(Screen.percentageToXDimension(50 - 8.5 * dominoesList.size() / 2));
+        this.setTranslateY(Screen.percentageToYDimension(50 - 5));
     }
 }
