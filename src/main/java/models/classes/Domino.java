@@ -7,6 +7,7 @@ public class Domino {
     private LandPortion leftPortion;
     private LandPortion rightPortion;
     private DominoView dominoView;
+    private King king;
     private int number;
 
     /**
@@ -59,5 +60,13 @@ public class Domino {
 
     public void setDominoView(DominoView dominoView) {
         this.dominoView = dominoView;
+    }
+
+    public King getKing() {
+        return king;
+    }
+
+    public void setKing(King king) {
+        this.king = king;
     }
 }

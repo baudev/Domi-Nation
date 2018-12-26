@@ -6,10 +6,12 @@ import views.templates.KingView;
 public class King {
 
     private PlayerColor color;
+    private boolean isPlaced;
     private KingView kingView;
 
     public King(PlayerColor color) {
         this.setColor(color);
+        this.setPlaced(false);
     }
 
     /**
@@ -34,5 +36,13 @@ public class King {
 
     public void setKingView(KingView kingView) {
         this.kingView = kingView;
+    }
+
+    public boolean isPlaced() {
+        return isPlaced;
+    }
+
+    public void setPlaced(boolean placed) {
+        isPlaced = placed;
     }
 }
