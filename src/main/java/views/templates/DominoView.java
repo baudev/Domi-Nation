@@ -1,11 +1,14 @@
 package views.templates;
 
 import helpers.Screen;
+import javafx.event.EventHandler;
 import javafx.scene.Parent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import models.classes.Domino;
+import views.interfaces.OnDominoClickListener;
 
 public class DominoView extends Parent {
 
@@ -13,10 +16,18 @@ public class DominoView extends Parent {
     private Text textNumber;
     private Rectangle rectangleNumber;
 
+    private OnDominoClickListener onDominoClickListener;
+
     public DominoView(Domino domino) {
         this.setDomino(domino);
         generatePortionsFace();
         generateNumberFace();
+        this.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                getOnDominoClickListener().onDominoClickListener(domino); // onClick the domino
+            }
+        });
     }
 
     /**
@@ -47,6 +58,8 @@ public class DominoView extends Parent {
         this.getTextNumber().setY(Screen.percentageToYDimension(3.5));
         this.getChildren().add(this.getTextNumber());
     }
+
+    // TODO Make animations for the following showing/hiding methods
 
     /**
      * Show the Portions face of the domino
@@ -111,5 +124,13 @@ public class DominoView extends Parent {
 
     public void setRectangleNumber(Rectangle rectangleNumber) {
         this.rectangleNumber = rectangleNumber;
+    }
+
+    public OnDominoClickListener getOnDominoClickListener() {
+        return onDominoClickListener;
+    }
+
+    public void setOnDominoClickListener(OnDominoClickListener onDominoClickListener) {
+        this.onDominoClickListener = onDominoClickListener;
     }
 }
