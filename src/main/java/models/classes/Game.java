@@ -6,6 +6,7 @@ import exceptions.InvalidDominoesCSVFile;
 import exceptions.MaxCrownsLandPortionExceeded;
 import exceptions.PlayerColorAlreadyUsed;
 import helpers.CSVReader;
+import helpers.Function;
 import models.enums.GameMode;
 import models.enums.PlayerColor;
 
@@ -19,6 +20,7 @@ public class Game {
 
     private DominoesList dominoes;
     private List<Player> players;
+    private List<PlayerColor> playerTurns;
     private GameMode gameMode;
 
     public Game() {
@@ -140,6 +142,43 @@ public class Game {
         return numberKings;
     }
 
+    /**
+     * Return the next player
+     * @return
+     */
+    public Player nextPlayer() {
+        // if the nextPlayer order is not defined
+        if(this.getPlayerTurns() == null) {
+            this.setPlayerTurns(new ArrayList<>());
+        }
+        // if the nextPlayer should be randomly chose
+        if(this.getPlayerTurns().size() < this.getPlayers().size()) {
+            ArrayList<Player> possiblePlayers = new ArrayList<Player>(this.getPlayers());
+            for(PlayerColor playerColor : this.getPlayerTurns()) {
+                for(Player player : possiblePlayers) {
+                    if(player.getPlayerColor().equals(playerColor)){
+                        // we remove it
+                        possiblePlayers.remove(player);
+                    }
+                }
+            }
+            Player player = possiblePlayers.get(Function.randInt(0, possiblePlayers.size() - 1));
+            this.getPlayerTurns().add(player.getPlayerColor()); // we note that the player has been chosen
+            return player;
+        } else {
+            // the order is already defined
+            PlayerColor playerColor = this.getPlayerTurns().get(0); // we retrieve the next Player
+            this.getPlayerTurns().remove(playerColor); // we remove it from the beginning
+            this.getPlayerTurns().add(playerColor); // and add it at the end of the array
+            for(Player player : this.getPlayers()) {
+                if(player.getPlayerColor().equals(playerColor)){
+                    return player; // it's the nextPlayer as he match with the next PlayerColor
+                }
+            }
+        }
+        return null; // TODO can't happen. Should throw an exception ?
+    }
+
     
     /**
      *
@@ -177,6 +216,14 @@ public class Game {
 
     public void setGameMode(GameMode gameMode) {
         this.gameMode = gameMode;
+    }
+
+    public List<PlayerColor> getPlayerTurns() {
+        return playerTurns;
+    }
+
+    public void setPlayerTurns(List<PlayerColor> playerTurns) {
+        this.playerTurns = playerTurns;
     }
 }
 
