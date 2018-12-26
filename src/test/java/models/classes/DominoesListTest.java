@@ -12,8 +12,10 @@ class DominoesListTest {
     void shouldReturnDominoesSortByTheirNumber() throws MaxCrownsLandPortionExceeded {
         Domino domino1 = new Domino(new LandPortion(1, LandPortionType.CHAMPS), new LandPortion(1, LandPortionType.MINE), 1);
         Domino domino2 = new Domino(new LandPortion(1, LandPortionType.CHAMPS), new LandPortion(1, LandPortionType.MINE), 3);
+        Domino domino3 = new Domino(new LandPortion(1, LandPortionType.CHAMPS), new LandPortion(1, LandPortionType.MINE), 3); // with the same number
         DominoesList dominoesList = new DominoesList();
         dominoesList.add(domino2);
+        dominoesList.add(domino3);
         dominoesList.add(domino1);
 
         dominoesList.sortByNumber();
