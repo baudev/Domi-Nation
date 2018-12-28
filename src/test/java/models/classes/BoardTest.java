@@ -6,6 +6,7 @@ import mockit.MockUp;
 import models.enums.GameMode;
 import models.enums.LandPortionType;
 import models.enums.PlayerColor;
+import models.enums.Rotation;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import views.templates.DominoView;
@@ -59,5 +60,21 @@ class BoardTest {
         assertTrue(positionList.contains(new Position(3, 7)));
         assertTrue(positionList.contains(new Position(7, 7)));
         assertTrue(positionList.contains(new Position(7, 3)));
+    }
+
+    @Test
+    void isPossibleToPlaceHorizontalDominoNearStartTile() throws MaxCrownsLandPortionExceeded {
+        Board board = new Board(GameMode.CLASSIC, PlayerColor.YELLOW);
+        Domino domino = new Domino(new LandPortion(1, LandPortionType.CHAMPS), new LandPortion(1, LandPortionType.MINE), 1);
+        domino.setRotation(Rotation.INVERSE);
+        assertTrue(board.isPossibleToPlaceDomino(new Position(5 - 2, 5), new Position(5 - 1, 5), domino));
+    }
+
+    @Test
+    void isPossibleToPlaceVerticalDominoNearStartTile() throws MaxCrownsLandPortionExceeded {
+        Board board = new Board(GameMode.CLASSIC, PlayerColor.YELLOW);
+        Domino domino = new Domino(new LandPortion(1, LandPortionType.CHAMPS), new LandPortion(1, LandPortionType.MINE), 1);
+        domino.setRotation(Rotation.LEFT);
+        assertTrue(board.isPossibleToPlaceDomino(new Position(5, 5 + 2), new Position(5, 5 + 1), domino));
     }
 }

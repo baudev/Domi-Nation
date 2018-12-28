@@ -2,6 +2,7 @@ package models.classes;
 
 import exceptions.MaxCrownsLandPortionExceeded;
 import models.enums.GameMode;
+import models.enums.LandPortionType;
 import models.enums.PlayerColor;
 
 import java.util.ArrayList;
@@ -30,6 +31,155 @@ public class Board {
         this.getStartTile().setPosition(new Position(maxGridSize, maxGridSize));
         // we generate the castle
         this.setCastle(new Castle(playerColor, new Position(maxGridSize, maxGridSize)));
+    }
+
+    public boolean isPossibleToPlaceDomino(Position position1, Position position2, Domino domino) {
+        if(this.getLandPortion(position1) != null || this.getLandPortion(position2) != null) {
+            return false; // there is already a tile
+        }
+        List<Position> maxGridSize = this.calculateMaxGridSize();
+        if(!maxGridSize.contains(position1) || !maxGridSize.contains(position2)) { // the position are not in the possibilities of the maxGrid
+            return false;
+        }
+        if(position1.equals(position2)) {
+            return false;
+        }
+        if(position1.getX() != position2.getX() && position1.getY() != position2.getY()) {
+            return false;
+        }
+        if(position1.getY() != position2.getY() && domino.isHorizontal()) {
+            return false;
+        }
+        if(position1.getX() != position2.getX() && !domino.isHorizontal()) {
+            return false;
+        }
+        if((position1.getX() == position2.getX() && position1.getX() > position2.getX()) || (position1.getY() == position2.getY() && position1.getY() < position2.getY())) { // we swap the objects
+            Position position_temp = new Position(position1.getX(), position1.getY());
+            position1 = new Position(position2.getX(), position2.getY());
+            position2 = new Position(position_temp.getX(), position_temp.getY());
+        }
+        if(domino.isHorizontal()) {
+            LandPortion landPortion1ToCompare = null;
+            LandPortion landPortion2ToCompare = null;
+            switch (domino.getRotation()) {
+                case NORMAL:
+                    landPortion1ToCompare = domino.getLeftPortion();
+                    landPortion2ToCompare = domino.getRightPortion();
+                    break;
+                case INVERSE:
+                    landPortion1ToCompare = domino.getRightPortion();
+                    landPortion2ToCompare = domino.getLeftPortion();
+                    break;
+            }
+            LandPortion leftLandPortionToCheck1 = this.getLandPortion(new Position(position1.getX() - 1, position1.getY()));
+            LandPortion upLandPortionToCheck1 = this.getLandPortion(new Position(position1.getX(), position1.getY() + 1));
+            LandPortion lowLandPortionToCheck1 = this.getLandPortion(new Position(position1.getX(), position1.getY() - 1));
+            if(leftLandPortionToCheck1 != null) {
+                if(leftLandPortionToCheck1.getLandPortionType() != landPortion1ToCompare.getLandPortionType() && leftLandPortionToCheck1.getLandPortionType() != LandPortionType.TOUS) {
+                    return false;
+                }
+            }
+            if(upLandPortionToCheck1 != null) {
+                if(upLandPortionToCheck1.getLandPortionType() != landPortion1ToCompare.getLandPortionType() && upLandPortionToCheck1.getLandPortionType() != LandPortionType.TOUS) {
+                    return false;
+                }
+            }
+            if(lowLandPortionToCheck1 != null) {
+                if(lowLandPortionToCheck1.getLandPortionType() != landPortion1ToCompare.getLandPortionType() && lowLandPortionToCheck1.getLandPortionType() != LandPortionType.TOUS) {
+                    return false;
+                }
+            }
+            LandPortion rightLandPortionToCheck2 = this.getLandPortion(new Position(position2.getX() + 1, position2.getY()));
+            LandPortion upLandPortionToCheck2 = this.getLandPortion(new Position(position2.getX(), position2.getY() + 1));
+            LandPortion lowLandPortionToCheck2 = this.getLandPortion(new Position(position2.getX(), position2.getY() - 1));
+            if(rightLandPortionToCheck2 != null) {
+                if(rightLandPortionToCheck2.getLandPortionType() != landPortion2ToCompare.getLandPortionType() && rightLandPortionToCheck2.getLandPortionType() != LandPortionType.TOUS) {
+                    return false;
+                }
+            }
+            if(upLandPortionToCheck2 != null) {
+                if(upLandPortionToCheck2.getLandPortionType() != landPortion2ToCompare.getLandPortionType() && upLandPortionToCheck2.getLandPortionType() != LandPortionType.TOUS) {
+                    return false;
+                }
+            }
+            if(lowLandPortionToCheck2 != null) {
+                if(lowLandPortionToCheck2.getLandPortionType() != landPortion2ToCompare.getLandPortionType() && lowLandPortionToCheck2.getLandPortionType() != LandPortionType.TOUS) {
+                    return false;
+                }
+            }
+            return true;
+        } else {
+            LandPortion landPortion1ToCompare = null;
+            LandPortion landPortion2ToCompare = null;
+            switch (domino.getRotation()) {
+                case RIGHT:
+                    landPortion1ToCompare = domino.getLeftPortion();
+                    landPortion2ToCompare = domino.getRightPortion();
+                    break;
+                case LEFT:
+                    landPortion1ToCompare = domino.getRightPortion();
+                    landPortion2ToCompare = domino.getLeftPortion();
+                    break;
+            }
+            LandPortion leftLandPortionToCheck1 = this.getLandPortion(new Position(position1.getX() - 1, position1.getY()));
+            LandPortion rightLandPortionToCheck1 = this.getLandPortion(new Position(position1.getX() + 1, position1.getY()));
+            LandPortion upLandPortionToCheck1 = this.getLandPortion(new Position(position1.getX(), position1.getY() + 1));
+            if(leftLandPortionToCheck1 != null) {
+                if(leftLandPortionToCheck1.getLandPortionType() != landPortion1ToCompare.getLandPortionType() && leftLandPortionToCheck1.getLandPortionType() != LandPortionType.TOUS) {
+                    return false;
+                }
+            }
+            if(rightLandPortionToCheck1 != null) {
+                if(rightLandPortionToCheck1.getLandPortionType() != landPortion1ToCompare.getLandPortionType() && rightLandPortionToCheck1.getLandPortionType() != LandPortionType.TOUS) {
+                    return false;
+                }
+            }
+            if(upLandPortionToCheck1 != null) {
+                if(upLandPortionToCheck1.getLandPortionType() != landPortion1ToCompare.getLandPortionType() && upLandPortionToCheck1.getLandPortionType() != LandPortionType.TOUS) {
+                    return false;
+                }
+            }
+            LandPortion rightLandPortionToCheck2 = this.getLandPortion(new Position(position2.getX() + 1, position2.getY()));
+            LandPortion leftLandPortionToCheck2 = this.getLandPortion(new Position(position2.getX() - 1, position2.getY()));
+            LandPortion lowLandPortionToCheck2 = this.getLandPortion(new Position(position2.getX(), position2.getY() - 1));
+            if(rightLandPortionToCheck2 != null) {
+                if(rightLandPortionToCheck2.getLandPortionType() != landPortion2ToCompare.getLandPortionType() && rightLandPortionToCheck2.getLandPortionType() != LandPortionType.TOUS) {
+                    return false;
+                }
+            }
+            if(leftLandPortionToCheck2 != null) {
+                if(leftLandPortionToCheck2.getLandPortionType() != landPortion2ToCompare.getLandPortionType() && leftLandPortionToCheck2.getLandPortionType() != LandPortionType.TOUS) {
+                    return false;
+                }
+            }
+            if(lowLandPortionToCheck2 != null) {
+                if(lowLandPortionToCheck2.getLandPortionType() != landPortion2ToCompare.getLandPortionType() && lowLandPortionToCheck2.getLandPortionType() != LandPortionType.TOUS) {
+                    return false;
+                }
+            }
+            return true;
+        }
+    }
+
+    /**
+     * Return the LandPortion situated on the position given as parameter.
+     * @param position
+     * @return LandPortion|null
+     */
+    private LandPortion getLandPortion(Position position) {
+        if(position.getX() == this.getMaxGridSize() && position.getY() == this.getMaxGridSize()) {
+            return getStartTile();
+        } else {
+            for(Domino domino : this.getDominoes()) {
+                if(position.getX() == domino.getLeftPortion().getPosition().getX() && position.getY() == domino.getLeftPortion().getPosition().getY()) {
+                    return domino.getLeftPortion();
+                }
+                if(position.getX() == domino.getRightPortion().getPosition().getX() && position.getY() == domino.getRightPortion().getPosition().getY()) {
+                    return domino.getRightPortion();
+                }
+            }
+        }
+        return null;
     }
 
     public List<Position> calculateMaxGridSize() {
