@@ -31,6 +31,22 @@ public class Player {
     }
 
     /**
+     * Return the domino of the player with the corresponding king passed as parameter
+     * @param king
+     * @return
+     */
+    public Domino getDominoWithKing(King king) {
+        for(Domino domino : this.getBoard().getDominoes()) {
+            if(domino.getKing() != null) {
+                if(domino.getKing() == king) {
+                    return domino;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
      *
      * GETTERS AND SETTERS
      *
