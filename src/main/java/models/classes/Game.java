@@ -2,29 +2,31 @@ package models.classes;
 
 
 
-import exceptions.InvalidDominoesCSVFile;
-import exceptions.MaxCrownsLandPortionExceeded;
-import exceptions.PlayerColorAlreadyUsed;
+import exceptions.*;
 import helpers.CSVReader;
 import helpers.Function;
 import models.enums.GameMode;
 import models.enums.PlayerColor;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class Game {
 
     private DominoesList dominoes;
+    private List<DominoesList> pickedDominoes;
     private List<Player> players;
-    private List<PlayerColor> playerTurns;
+    private List<Map<Player, Integer>> playerTurns;
+    private int turnNumber;
+    private Player currentPlayer;
     private GameMode gameMode;
 
     public Game() {
         this.setPlayers(new ArrayList<>());
+        this.setPlayerTurns(new ArrayList<>());
+        this.getPlayerTurns().add(new HashMap<>()); // to complete the index 0
+        this.getPlayerTurns().add(new HashMap<>()); // to complete the index 1
+        this.setPickedDominoes(new ArrayList<>());
     }
 
 
@@ -118,16 +120,44 @@ public class Game {
     /**
      * Pick a number of dominoes
      * @param number
+     * @throws NoMoreDominoInGameStack
+     * @throws NotEnoughDominoesInGameStack
+     */
+    public void pickDominoes(int number) throws NoMoreDominoInGameStack, NotEnoughDominoesInGameStack {
+        // we select a part of the class dominoes array
+        DominoesList dominoesPicked;
+        try {
+             dominoesPicked = new DominoesList(this.getDominoes().subList(0, number));
+            // we remove it from the class array
+            this.getDominoes().subList(0, number).clear();
+            // we add the DominoesList to the Picked Dominoes list
+            this.getPickedDominoes().add(dominoesPicked);
+        } catch (IndexOutOfBoundsException e) {
+            if(this.getDominoes().size() == 0) {
+                throw new NoMoreDominoInGameStack(); // there is no more Domino in game to be picked
+            } else {
+                dominoesPicked = new DominoesList(this.getDominoes());
+                this.getDominoes().clear();
+                // we add the DominoesList to the Picked Dominoes list
+                this.getPickedDominoes().add(dominoesPicked);
+                throw new NotEnoughDominoesInGameStack(); // there is not enough dominoes asked to be picked
+            }
+        }
+    }
+
+    /**
+     * Check if all dominoes in the DominoesList selected from the PickedDominoesList have a king
+     * @param indexList
      * @return
      */
-    public DominoesList pickDominoes(int number) {
-        // we select a part of the class dominoes array
-        // TODO check if the number asked is not superior to the amount of dominoes
-        DominoesList dominoesPicked = new DominoesList(this.getDominoes().subList(0, number));
-        // we remove it from the class array
-        this.getDominoes().subList(0, number).clear();
-        // we sort and return them
-        return dominoesPicked;
+    public boolean isAllPickedDominoesListHaveKings(int indexList) {
+        DominoesList dominoesList = this.getPickedDominoes().get(indexList);
+        for(Domino domino : dominoesList) {
+            if(domino.getKing() == null) { // there is at least one domino that has no king yet
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -143,40 +173,69 @@ public class Game {
     }
 
     /**
-     * Return the next player
-     * @return
+     * Return the next King and set the current player
      */
-    public Player nextPlayer() {
-        // if the nextPlayer order is not defined
-        if(this.getPlayerTurns() == null) {
-            this.setPlayerTurns(new ArrayList<>());
-        }
-        // if the nextPlayer should be randomly chose
-        if(this.getPlayerTurns().size() < this.getPlayers().size()) {
-            ArrayList<Player> possiblePlayers = new ArrayList<Player>(this.getPlayers());
-            for(PlayerColor playerColor : this.getPlayerTurns()) {
-                for(Player player : possiblePlayers) {
-                    if(player.getPlayerColor().equals(playerColor)){
-                        // we remove it
-                        possiblePlayers.remove(player);
+
+    public King nextKing() {
+        List<King> notPlacedKingList = this.getNotPlacedKings();
+        if(this.getTurnNumber() == 1) { // it's the first turn
+            King nextKing = notPlacedKingList.get(Function.randInt(0, notPlacedKingList.size() - 1)); // we take the king randomly
+            for (Player player : this.getPlayers()) {
+                for (King king : player.getKings()) {
+                    if (king == nextKing) {
+                        this.setCurrentPlayer(player);
                     }
                 }
             }
-            Player player = possiblePlayers.get(Function.randInt(0, possiblePlayers.size() - 1));
-            this.getPlayerTurns().add(player.getPlayerColor()); // we note that the player has been chosen
-            return player;
-        } else {
-            // the order is already defined
-            PlayerColor playerColor = this.getPlayerTurns().get(0); // we retrieve the next Player
-            this.getPlayerTurns().remove(playerColor); // we remove it from the beginning
-            this.getPlayerTurns().add(playerColor); // and add it at the end of the array
-            for(Player player : this.getPlayers()) {
-                if(player.getPlayerColor().equals(playerColor)){
-                    return player; // it's the nextPlayer as he match with the next PlayerColor
+            return nextKing;
+        } else { // it's no more the first turn
+            System.out.println("Turn number : " + this.getTurnNumber());
+            System.out.println("Turns size : " + this.getPlayerTurns().size());
+            Map<Player, Integer> playersTurn = this.getPlayerTurns().get(this.getTurnNumber()); // we take the firstPlayer
+            System.out.println("PlayersTrn: " + playersTurn.size());
+            Player player = null;
+            int smallValue = 48;
+            for (Map.Entry<Player, Integer> entry : playersTurn.entrySet())
+            {
+                if(entry.getValue() <= smallValue) {
+                    smallValue = entry.getValue();
+                    player = entry.getKey();
                 }
             }
+            this.setCurrentPlayer(player);
+            if(player.getNotPlacedKings().size() == 0) { // all kings are placed, we mark all of them as no more placed anymore
+                for (King king : player.getKings()) {
+                    king.setPlaced(false);
+                }
+            }
+            if(player.getNotPlacedKings().size() == 1) { // after this king, the player would have placed all his kings, then we add the player to the end of the queue
+                playersTurn.remove(player); // we remove it from the list
+
+            }
+            return player.getNotPlacedKings().get(0);
         }
-        return null; // TODO can't happen. Should throw an exception ?
+    }
+
+    public void playerHasSelectedDomino() {
+        if(this.getTurnNumber() + 1 >= this.getPlayerTurns().size()) {
+            this.getPlayerTurns().add(new HashMap<>()); // we create the list for the next turn
+        }
+        Map<Player, Integer> nextTurnPlayerTurns = this.getPlayerTurns().get(this.getTurnNumber() + 1);
+        nextTurnPlayerTurns.put(this.getCurrentPlayer(), this.getCurrentPlayer().getSmallestNumberOfUnPlacedDominoes()); // update the value
+        System.out.println("size after has : " + nextTurnPlayerTurns.size());
+        System.out.println("number is : " + this.getCurrentPlayer().getSmallestNumberOfUnPlacedDominoes());
+    }
+
+    /**
+     * Return List of all not placed kings
+     * @return
+     */
+    private List<King> getNotPlacedKings() {
+        List<King> notPlacedKings = new ArrayList();
+        for(Player player : this.getPlayers()) {
+            notPlacedKings.addAll(player.getNotPlacedKings());
+        }
+        return notPlacedKings;
     }
 
     
@@ -218,12 +277,36 @@ public class Game {
         this.gameMode = gameMode;
     }
 
-    public List<PlayerColor> getPlayerTurns() {
+    public Player getCurrentPlayer() {
+        return currentPlayer;
+    }
+
+    public void setCurrentPlayer(Player currentPlayer) {
+        this.currentPlayer = currentPlayer;
+    }
+
+    public List<Map<Player, Integer>> getPlayerTurns() {
         return playerTurns;
     }
 
-    public void setPlayerTurns(List<PlayerColor> playerTurns) {
+    public void setPlayerTurns(List<Map<Player, Integer>> playerTurns) {
         this.playerTurns = playerTurns;
+    }
+
+    public int getTurnNumber() {
+        return turnNumber;
+    }
+
+    public void setTurnNumber(int turnNumber) {
+        this.turnNumber = turnNumber;
+    }
+
+    public List<DominoesList> getPickedDominoes() {
+        return pickedDominoes;
+    }
+
+    public void setPickedDominoes(List<DominoesList> pickedDominoes) {
+        this.pickedDominoes = pickedDominoes;
     }
 }
 
