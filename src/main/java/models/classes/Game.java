@@ -189,10 +189,7 @@ public class Game {
             }
             return nextKing;
         } else { // it's no more the first turn
-            System.out.println("Turn number : " + this.getTurnNumber());
-            System.out.println("Turns size : " + this.getPlayerTurns().size());
             Map<Player, Integer> playersTurn = this.getPlayerTurns().get(this.getTurnNumber()); // we take the firstPlayer
-            System.out.println("PlayersTrn: " + playersTurn.size());
             Player player = null;
             int smallValue = 48;
             for (Map.Entry<Player, Integer> entry : playersTurn.entrySet())
@@ -216,14 +213,15 @@ public class Game {
         }
     }
 
+    /**
+     * This function must be called when a player has over his turn. It edits the turns List for next turns.
+     */
     public void playerHasSelectedDomino() {
         if(this.getTurnNumber() + 1 >= this.getPlayerTurns().size()) {
             this.getPlayerTurns().add(new HashMap<>()); // we create the list for the next turn
         }
         Map<Player, Integer> nextTurnPlayerTurns = this.getPlayerTurns().get(this.getTurnNumber() + 1);
         nextTurnPlayerTurns.put(this.getCurrentPlayer(), this.getCurrentPlayer().getSmallestNumberOfUnPlacedDominoes()); // update the value
-        System.out.println("size after has : " + nextTurnPlayerTurns.size());
-        System.out.println("number is : " + this.getCurrentPlayer().getSmallestNumberOfUnPlacedDominoes());
     }
 
     /**
