@@ -47,6 +47,20 @@ public class Player {
     }
 
     /**
+     * Return the smallest domino number value of unplaced ones
+     * @return
+     */
+    public int getSmallestNumberOfUnPlacedDominoes() {
+        int smallValue = 48;
+        for(Domino domino : getBoard().getDominoes()) {
+            if(domino.getNumber() < smallValue) {
+                smallValue = domino.getNumber();
+            }
+        }
+        return smallValue;
+    }
+
+    /**
      *
      * GETTERS AND SETTERS
      *
