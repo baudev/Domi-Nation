@@ -17,6 +17,20 @@ public class Player {
     }
 
     /**
+     * Return all not placed kings
+     * @return
+     */
+    public List<King> getNotPlacedKings() {
+        List<King> kingList = new ArrayList<>();
+        for(King king : this.getKings()) {
+            if(!king.isPlaced()) {
+                kingList.add(king);
+            }
+        }
+        return kingList;
+    }
+
+    /**
      *
      * GETTERS AND SETTERS
      *
