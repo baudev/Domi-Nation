@@ -137,14 +137,13 @@ public class GameViewController {
         }
         DominoesList newDominoesList = this.getGame().getPickedDominoes().get(this.getGame().getPickedDominoes().size() - 1);
         newDominoesList.sortByNumber(); // we order them by the number
-        playTurnPlayer();
+        playTurnPlayer(); // !! BEFORE DOMINO VIEW GENERATION !!
         this.getRoot().getChildren().add(newDominoesList.getDominoesListView());
-        // TODO
-        // TODO
+        newDominoesList.getDominoesListView().setLowerPosition();
         // we translate by x the precedent row of dominoes
         if(this.getGame().getTurnNumber() > 1) {
             DominoesList previousDominoesList = this.getGame().getPickedDominoes().get(this.getGame().getPickedDominoes().size() - 2);
-            previousDominoesList.getDominoesListView().setTranslateY(Screen.percentageToYDimension(40));
+            previousDominoesList.getDominoesListView().setUpperPosition();
         }
         newDominoesList.getDominoesListView().showPortionsFaces();
     }
@@ -160,7 +159,6 @@ public class GameViewController {
                     if(domino.getKing() != null || king.isPlaced()) {
                         // we do nothing
                     } else {
-                        System.out.println("Domino number : " + domino.getNumber());
                         domino.setKing(king);
                         // TODO simplify next operations
                         if(getGame().getTurnNumber() == 1) {
