@@ -2,11 +2,15 @@ package views.controllers;
 
 import exceptions.*;
 import helpers.Screen;
+import javafx.event.EventHandler;
 import javafx.scene.Group;
+import javafx.scene.control.Button;
+import javafx.scene.input.MouseEvent;
 import models.classes.*;
 import models.enums.GameMode;
 import models.enums.PlayerColor;
 import models.enums.PlayerNumber;
+import models.enums.Rotation;
 import views.interfaces.OnDominoClickListener;
 import views.interfaces.OnGameModeClickListener;
 import views.interfaces.OnPlayerColorClickListener;
@@ -24,6 +28,8 @@ public class GameViewController {
 
     private Group root;
     private Game game;
+
+    private Button buttonRotation;
 
     /**
      * Start the GameViewController view controller which start by asking the game mode
@@ -169,9 +175,13 @@ public class GameViewController {
                             // we get the domino on which the king was
                             Domino previousDomino = getGame().getCurrentPlayer().getDominoWithKing(king);
                             previousDomino.setKing(null); // !! BEFORE SETTING POSITION OF THE PREVIOUS DOMINO !!
+
+                            showRotationButton(previousDomino);
+
                             // set the position
                             previousDomino.getLeftPortion().setPosition(new Position(1, 1));
                             previousDomino.getRightPortion().setPosition(new Position(1, 2));
+
 
                             getGame().getCurrentPlayer().getBoard().addDomino(domino);
                             newDominoesList.remove(domino);
@@ -194,6 +204,31 @@ public class GameViewController {
     }
 
     /**
+     * Show a button to make rotate a domino
+     * @param domino
+     */
+    public void showRotationButton(Domino domino) {
+        setButtonRotation(new Button());
+        getButtonRotation().setLayoutX(Screen.percentageToXDimension(48));
+        getButtonRotation().setLayoutY(Screen.percentageToYDimension(60));
+        getButtonRotation().setText("Rotate");
+        getRoot().getChildren().add(getButtonRotation());
+        getButtonRotation().setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                domino.setRotation(Rotation.getCorrespondingRotation(domino.getRotation().getDegree() + 90));
+            }
+        });
+    }
+
+    /**
+     * Hide the domino rotation button
+     */
+    public void hideRotationButton() {
+        getRoot().getChildren().remove(getButtonRotation());
+    }
+
+    /**
      *
      * GETTERS AND SETTERS
      *
@@ -212,5 +247,13 @@ public class GameViewController {
 
     public void setGame(Game game) {
         this.game = game;
+    }
+
+    public Button getButtonRotation() {
+        return buttonRotation;
+    }
+
+    public void setButtonRotation(Button buttonRotation) {
+        this.buttonRotation = buttonRotation;
     }
 }
