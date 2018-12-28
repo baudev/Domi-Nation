@@ -1,5 +1,6 @@
 package models.classes;
 
+import models.enums.Rotation;
 import views.templates.DominoView;
 
 public class Domino {
@@ -9,6 +10,7 @@ public class Domino {
     private DominoView dominoView;
     private King king;
     private int number;
+    private Rotation rotation;
 
     /**
      * Constructor
@@ -20,6 +22,7 @@ public class Domino {
         this.setLeftPortion(leftPortion);
         this.setRightPortion(rightPortion);
         this.setNumber(number);
+        this.setRotation(Rotation.NORMAL);
     }
 
     /**
@@ -72,5 +75,13 @@ public class Domino {
             king.setPlaced(true); // the domino is now placed
             this.getDominoView().addKing(); // add the king to the view
         }
+    }
+
+    public Rotation getRotation() {
+        return rotation;
+    }
+
+    public void setRotation(Rotation rotation) {
+        this.rotation = rotation;
     }
 }
