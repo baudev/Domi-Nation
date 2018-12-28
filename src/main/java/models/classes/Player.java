@@ -53,8 +53,10 @@ public class Player {
     public int getSmallestNumberOfUnPlacedDominoes() {
         int smallValue = 48;
         for(Domino domino : getBoard().getDominoes()) {
-            if(domino.getNumber() < smallValue) {
-                smallValue = domino.getNumber();
+            if(domino.getRightPortion().getPosition() == null && domino.getLeftPortion().getPosition() == null) {
+                if (domino.getNumber() <= smallValue) {
+                    smallValue = domino.getNumber();
+                }
             }
         }
         return smallValue;
