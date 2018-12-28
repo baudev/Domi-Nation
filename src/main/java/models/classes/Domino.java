@@ -83,5 +83,8 @@ public class Domino {
 
     public void setRotation(Rotation rotation) {
         this.rotation = rotation;
+        if(rotation != null) { // we make rotate the view
+            this.getDominoView().setRotate(rotation.getDegree());
+        }
     }
 }
