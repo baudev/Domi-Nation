@@ -26,6 +26,19 @@ public class Domino {
     }
 
     /**
+     * Return if the Domino is horizontal or not
+     * @return
+     */
+    public boolean isHorizontal() {
+        switch (this.getRotation()) {
+            case NORMAL:
+            case INVERSE:
+                return true;
+        }
+        return false;
+    }
+
+    /**
      *
      * GETTERS AND SETTERS
      *
