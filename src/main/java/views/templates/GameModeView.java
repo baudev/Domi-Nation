@@ -39,6 +39,30 @@ public class GameModeView extends Parent {
                 }
             });
 
+            button.setOnMouseEntered(new EventHandler<MouseEvent>() {
+                public void handle(MouseEvent me) {
+
+                }
+            });
+            button.setOnMouseExited(new EventHandler<MouseEvent>() {
+                public void handle(MouseEvent me) {
+
+                }
+            });
+            button.setOnMousePressed(new EventHandler<MouseEvent>() {
+                public void handle(MouseEvent me) {
+                    button.setTranslateY(2);
+
+                }
+            });
+            button.setOnMouseReleased(new EventHandler<MouseEvent>() {
+                public void handle(MouseEvent me) {
+                    button.setTranslateY(-2);
+                }
+            });
+
+
+
             gridPane.add(button, i, 1); // add the button to the layout
             i++;
         }
