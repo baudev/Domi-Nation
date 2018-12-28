@@ -33,6 +33,13 @@ public class Board {
         this.setCastle(new Castle(playerColor, new Position(maxGridSize, maxGridSize)));
     }
 
+    /**
+     * Check if it's possible to place the domino pass as parameter to the position1 and position2 according to its rotation
+     * @param position1
+     * @param position2
+     * @param domino
+     * @return
+     */
     public boolean isPossibleToPlaceDomino(Position position1, Position position2, Domino domino) {
         if(this.getLandPortion(position1) != null || this.getLandPortion(position2) != null) {
             return false; // there is already a tile
@@ -58,7 +65,7 @@ public class Board {
             position1 = new Position(position2.getX(), position2.getY());
             position2 = new Position(position_temp.getX(), position_temp.getY());
         }
-        if(domino.isHorizontal()) {
+        if(domino.isHorizontal()) { // TODO useless condition
             LandPortion landPortion1ToCompare = null;
             LandPortion landPortion2ToCompare = null;
             switch (domino.getRotation()) {
@@ -182,7 +189,111 @@ public class Board {
         return null;
     }
 
+    /**
+     * Return all empty places according to the domino rotation and LandPortionType of the two LandPortions.
+     * @param domino
+     * @return
+     */
+    public List<List<Position>> getEmptyPlaces(Domino domino) {
+        List<List<Position>> listEmptyPlaces = new ArrayList<>();
+        List<Position> sameTypePortion1PositionList = new ArrayList<>();
+        List<Position> sameTypePortion2PositionList = new ArrayList<>();
+        switch (domino.getRotation()) {
+            case NORMAL:
+            case RIGHT:
+                sameTypePortion1PositionList = this.getAllTilesOfType(domino.getLeftPortion().getLandPortionType());
+                sameTypePortion2PositionList = this.getAllTilesOfType(domino.getRightPortion().getLandPortionType());
+                break;
+            case INVERSE:
+            case LEFT:
+                sameTypePortion1PositionList = this.getAllTilesOfType(domino.getRightPortion().getLandPortionType());
+                sameTypePortion2PositionList = this.getAllTilesOfType(domino.getLeftPortion().getLandPortionType());
+                break;
+        }
+        List<Position> maxGridSize = this.calculateMaxGridSize();
+        switch (domino.getRotation()) {
+            case NORMAL:
+            case INVERSE:
+                for (Position position : sameTypePortion1PositionList) {
+                    Position right1Position = new Position(position.getX() + 1, position.getY());
+                    Position right2Position = new Position(position.getX() + 2, position.getY());
+                    if (maxGridSize.contains(right1Position) && maxGridSize.contains(right2Position)) { // TODO make redundent code in a function ? Make comprehension harder...
+                        if (this.getLandPortion(right1Position) == null && this.getLandPortion(right2Position) == null) {
+                            List<Position> tempList = new ArrayList<>();
+                            tempList.add(right1Position);
+                            tempList.add(right2Position);
+                            listEmptyPlaces.add(tempList);
+                        }
+                    }
+                }
+                for (Position position : sameTypePortion2PositionList) {
+                    Position left1Position = new Position(position.getX() - 2, position.getY());
+                    Position left2Position = new Position(position.getX() - 1, position.getY());
+                    if (maxGridSize.contains(left1Position) && maxGridSize.contains(left2Position)) {
+                        if (this.getLandPortion(left1Position) == null && this.getLandPortion(left2Position) == null) {
+                            List<Position> tempList = new ArrayList<>();
+                            tempList.add(left1Position);
+                            tempList.add(left2Position);
+                            listEmptyPlaces.add(tempList);
+                        }
+                    }
+                }
+                break;
+            case RIGHT:
+            case LEFT:
+                for (Position position : sameTypePortion1PositionList) {
+                    Position right1Position = new Position(position.getX(), position.getY() - 1);
+                    Position right2Position = new Position(position.getX(), position.getY() - 2);
+                    if (maxGridSize.contains(right1Position) && maxGridSize.contains(right2Position)) {
+                        if (this.getLandPortion(right1Position) == null && this.getLandPortion(right2Position) == null) {
+                            List<Position> tempList = new ArrayList<>();
+                            tempList.add(right1Position);
+                            tempList.add(right2Position);
+                            listEmptyPlaces.add(tempList);
+                        }
+                    }
+                }
+                for (Position position : sameTypePortion2PositionList) {
+                    Position left1Position = new Position(position.getX(), position.getY() + 2);
+                    Position left2Position = new Position(position.getX(), position.getY() + 1);
+                    if (maxGridSize.contains(left1Position) && maxGridSize.contains(left2Position)) {
+                        if (this.getLandPortion(left1Position) == null && this.getLandPortion(left2Position) == null) {
+                            List<Position> tempList = new ArrayList<>();
+                            tempList.add(left1Position);
+                            tempList.add(left2Position);
+                            listEmptyPlaces.add(tempList);
+                        }
+                    }
+                }
+        }
+        return listEmptyPlaces;
+    }
+
+    /**
+     * Return a list of all positions having LandPortion with the same type passed as parameter
+     * @param landPortionType
+     * @return
+     */
+    private List<Position> getAllTilesOfType(LandPortionType landPortionType) {
+        List<Position> positionList = new ArrayList<>();
+        positionList.add(this.getStartTile().getPosition());
+        for(Domino domino : this.getDominoes()) {
+            if(domino.getLeftPortion().getLandPortionType() == landPortionType) {
+                positionList.add(domino.getLeftPortion().getPosition());
+            }
+            if(domino.getRightPortion().getLandPortionType() == landPortionType) {
+                positionList.add(domino.getRightPortion().getPosition());
+            }
+        }
+        return positionList;
+    }
+
+    /**
+     * Calculate the maxGridSize possible while respecting all rules
+     * @return
+     */
     public List<Position> calculateMaxGridSize() {
+        // TODO optimize with saving results
         // we calculate the xMin Position
         Position xMin;
         Position xExtremeLeft = this.mostLeftPosition();
