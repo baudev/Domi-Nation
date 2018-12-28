@@ -5,9 +5,7 @@ import models.enums.GameMode;
 import models.enums.PlayerColor;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class Board {
 
@@ -32,6 +30,67 @@ public class Board {
         this.getStartTile().setPosition(new Position(maxGridSize, maxGridSize));
         // we generate the castle
         this.setCastle(new Castle(playerColor, new Position(maxGridSize, maxGridSize)));
+    }
+
+    public List<Position> calculateMaxGridSize() {
+        // we calculate the xMin Position
+        Position xMin;
+        Position xExtremeLeft = this.mostLeftPosition();
+        if(xExtremeLeft.getX() - 2 >= 1 && this.mostRightPosition().getX() - xExtremeLeft.getX() - 2 <= this.getMaxGridSize()) {
+            xExtremeLeft.setX(xExtremeLeft.getX() - 2);
+            xMin = xExtremeLeft;
+        } else if(xExtremeLeft.getX() - 1 >= 1 && this.mostRightPosition().getX() - xExtremeLeft.getX() - 1 <= this.getMaxGridSize()) {
+            xExtremeLeft.setX(xExtremeLeft.getX() - 1);
+            xMin = xExtremeLeft;
+        } else {
+            xMin = xExtremeLeft;
+        }
+
+        // we calculate the xMax Position
+        Position xMax;
+        Position xExtremeRight = this.mostRightPosition();
+        if(xExtremeRight.getX() + 2 <= 2 * getMaxGridSize() - 1 && xExtremeRight.getX() + 2 - this.mostLeftPosition().getX() <= this.getMaxGridSize()) {
+            xExtremeRight.setX(xExtremeRight.getX() + 2);
+            xMax = xExtremeRight;
+        } else if(xExtremeRight.getX() + 1 <= 2 * getMaxGridSize() - 1 && xExtremeRight.getX() + 2 - this.mostLeftPosition().getX() <= this.getMaxGridSize()) {
+            xExtremeRight.setX(xExtremeRight.getX() + 1);
+            xMax = xExtremeRight;
+        } else {
+            xMax = xExtremeRight;
+        }
+
+        // we calculate the yMax Position
+        Position yMax;
+        Position yExtremeUp = this.upperPosition();
+        if(yExtremeUp.getY() + 2 <= 2 * getMaxGridSize() - 1 && yExtremeUp.getY() + 2 - this.lowerPosition().getY() <= this.getMaxGridSize()) {
+            yExtremeUp.setY(yExtremeUp.getY() + 2);
+            yMax = yExtremeUp;
+        } else if(yExtremeUp.getY() + 1 <= 2 * getMaxGridSize() - 1 && yExtremeUp.getY() + 1 - this.lowerPosition().getY() <= this.getMaxGridSize()) {
+            yExtremeUp.setY(yExtremeUp.getY() + 1);
+            yMax = yExtremeUp;
+        } else {
+            yMax = yExtremeUp;
+        }
+
+        // we calculate the yMax Position
+        Position yMin;
+        Position yExtremeLow = this.lowerPosition();
+        if(yExtremeLow.getY() - 2 >= 1 && this.upperPosition().getY() - yExtremeLow.getY() - 2 <= this.getMaxGridSize()) {
+            yExtremeLow.setY(yExtremeLow.getY() - 2);
+            yMin = yExtremeLow;
+        } else if(yExtremeLow.getY() - 1 >= 1 && this.upperPosition().getY() - yExtremeLow.getY() - 1 <= this.getMaxGridSize()) {
+            yExtremeLow.setY(yExtremeLow.getY() - 1);
+            yMin = yExtremeLow;
+        } else {
+            yMin = yExtremeLow;
+        }
+        List<Position> positionList = new ArrayList<>();
+        for(int i = xMin.getX(); i <= xMax.getX(); i++) {
+            for(int j = yMin.getY(); j <= yMax.getY(); j++) {
+                positionList.add(new Position(i, j));
+            }
+        }
+        return positionList;
     }
 
     /**
@@ -72,7 +131,7 @@ public class Board {
      * Return the upper position
      * @return
      */
-    private Position UpperPosition() {
+    private Position upperPosition() {
         Position upperPosition = new Position(this.getMaxGridSize(), this.getMaxGridSize());
         for(Domino domino : this.getDominoes()) {
             if(domino.getLeftPortion().getPosition().getY() > upperPosition.getY()) {
@@ -89,7 +148,7 @@ public class Board {
      * Return the lower position
      * @return
      */
-    private Position LowerPosition() {
+    private Position lowerPosition() {
         Position lowerPosition = new Position(this.getMaxGridSize(), this.getMaxGridSize());
         for(Domino domino : this.getDominoes()) {
             if(domino.getLeftPortion().getPosition().getY() < lowerPosition.getY()) {

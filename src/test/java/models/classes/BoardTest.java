@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import views.templates.DominoView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -48,5 +49,15 @@ class BoardTest {
         Domino domino = new Domino(new LandPortion(1, LandPortionType.CHAMPS), new LandPortion(1, LandPortionType.MINE), 1);
         board.addDomino(domino);
         assertSame(domino, board.getDominoes().get(0));
+    }
+
+    @Test
+    void calculateEmptyGridSizeInNormalGameMode() throws MaxCrownsLandPortionExceeded {
+        Board board = new Board(GameMode.CLASSIC, PlayerColor.PINK);
+        List<Position> positionList = board.calculateMaxGridSize();
+        assertTrue(positionList.contains(new Position(3, 3)));
+        assertTrue(positionList.contains(new Position(3, 7)));
+        assertTrue(positionList.contains(new Position(7, 7)));
+        assertTrue(positionList.contains(new Position(7, 3)));
     }
 }
