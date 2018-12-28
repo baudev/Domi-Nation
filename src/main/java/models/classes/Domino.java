@@ -68,5 +68,9 @@ public class Domino {
 
     public void setKing(King king) {
         this.king = king;
+        if(king != null) {
+            king.setPlaced(true); // the domino is now placed
+            this.getDominoView().addKing(); // add the king to the view
+        }
     }
 }
