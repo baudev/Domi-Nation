@@ -40,7 +40,6 @@ public class Board {
      * @param domino
      * @return
      */
-    // TODO simplify this function by regrouping the switch case
     public boolean isPossibleToPlaceDomino(Position position1, Position position2, Domino domino) {
         if(this.getLandPortion(position1) != null || this.getLandPortion(position2) != null) {
             return false; // there is already a tile
@@ -84,25 +83,25 @@ public class Board {
             LandPortion leftLandPortionToCheck1 = this.getLandPortion(new Position(position1.getX() - 1, position1.getY()));
             LandPortion upLandPortionToCheck1 = this.getLandPortion(new Position(position1.getX(), position1.getY() + 1));
             LandPortion lowLandPortionToCheck1 = this.getLandPortion(new Position(position1.getX(), position1.getY() - 1));
-            if(!isConnectable(landPortion1ToCompare, leftLandPortionToCheck1)){
+            if(!isConnectible(landPortion1ToCompare, leftLandPortionToCheck1)){
                 return false;
             }
-            if(!isConnectable(landPortion1ToCompare, upLandPortionToCheck1)){
+            if(!isConnectible(landPortion1ToCompare, upLandPortionToCheck1)){
                 return false;
             }
-            if(!isConnectable(landPortion1ToCompare, lowLandPortionToCheck1)){
+            if(!isConnectible(landPortion1ToCompare, lowLandPortionToCheck1)){
                 return false;
             }
             LandPortion rightLandPortionToCheck2 = this.getLandPortion(new Position(position2.getX() + 1, position2.getY()));
             LandPortion upLandPortionToCheck2 = this.getLandPortion(new Position(position2.getX(), position2.getY() + 1));
             LandPortion lowLandPortionToCheck2 = this.getLandPortion(new Position(position2.getX(), position2.getY() - 1));
-            if(!isConnectable(landPortion2ToCompare, rightLandPortionToCheck2)){
+            if(!isConnectible(landPortion2ToCompare, rightLandPortionToCheck2)){
                 return false;
             }
-            if(!isConnectable(landPortion2ToCompare, upLandPortionToCheck2)){
+            if(!isConnectible(landPortion2ToCompare, upLandPortionToCheck2)){
                 return false;
             }
-            if(!isConnectable(landPortion2ToCompare, lowLandPortionToCheck2)){
+            if(!isConnectible(landPortion2ToCompare, lowLandPortionToCheck2)){
                 return false;
             }
             return true;
@@ -110,25 +109,25 @@ public class Board {
             LandPortion leftLandPortionToCheck1 = this.getLandPortion(new Position(position1.getX() - 1, position1.getY()));
             LandPortion rightLandPortionToCheck1 = this.getLandPortion(new Position(position1.getX() + 1, position1.getY()));
             LandPortion upLandPortionToCheck1 = this.getLandPortion(new Position(position1.getX(), position1.getY() + 1));
-            if(!isConnectable(landPortion1ToCompare, leftLandPortionToCheck1)){
+            if(!isConnectible(landPortion1ToCompare, leftLandPortionToCheck1)){
                 return false;
             }
-            if(!isConnectable(landPortion1ToCompare, rightLandPortionToCheck1)){
+            if(!isConnectible(landPortion1ToCompare, rightLandPortionToCheck1)){
                 return false;
             }
-            if(!isConnectable(landPortion1ToCompare, upLandPortionToCheck1)){
+            if(!isConnectible(landPortion1ToCompare, upLandPortionToCheck1)){
                 return false;
             }
             LandPortion rightLandPortionToCheck2 = this.getLandPortion(new Position(position2.getX() + 1, position2.getY()));
             LandPortion leftLandPortionToCheck2 = this.getLandPortion(new Position(position2.getX() - 1, position2.getY()));
             LandPortion lowLandPortionToCheck2 = this.getLandPortion(new Position(position2.getX(), position2.getY() - 1));
-            if(!isConnectable(landPortion2ToCompare, rightLandPortionToCheck2)){
+            if(!isConnectible(landPortion2ToCompare, rightLandPortionToCheck2)){
                 return false;
             }
-            if(!isConnectable(landPortion2ToCompare, leftLandPortionToCheck2)){
+            if(!isConnectible(landPortion2ToCompare, leftLandPortionToCheck2)){
                 return false;
             }
-            if(!isConnectable(landPortion2ToCompare, lowLandPortionToCheck2)){
+            if(!isConnectible(landPortion2ToCompare, lowLandPortionToCheck2)){
                 return false;
             }
             return true;
@@ -141,7 +140,7 @@ public class Board {
      * @param landPortionAlreadyExisting
      * @return
      */
-    private static boolean isConnectable(LandPortion landPortionToConnect, LandPortion landPortionAlreadyExisting) {
+    private static boolean isConnectible(LandPortion landPortionToConnect, LandPortion landPortionAlreadyExisting) {
         if(landPortionToConnect != null && landPortionAlreadyExisting != null) {
             if(landPortionAlreadyExisting.getLandPortionType() != landPortionToConnect.getLandPortionType() && landPortionAlreadyExisting.getLandPortionType() != LandPortionType.TOUS) {
                 return false;
