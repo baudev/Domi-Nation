@@ -40,4 +40,12 @@ public class DominoesListView extends Parent {
         this.setTranslateX(Screen.percentageToXDimension(50 - 8.5 * dominoesList.size() / 2));
         this.setTranslateY(Screen.percentageToYDimension(50 - 5));
     }
+
+    public void setLowerPosition() {
+        this.setTranslateY(Screen.percentageToYDimension(50 - 5 - 4));
+    }
+
+    public void setUpperPosition() {
+        this.setTranslateY(Screen.percentageToYDimension(50 - 5 + 4));
+    }
 }
