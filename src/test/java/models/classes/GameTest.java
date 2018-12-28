@@ -1,8 +1,6 @@
 package models.classes;
 
-import exceptions.InvalidDominoesCSVFile;
-import exceptions.MaxCrownsLandPortionExceeded;
-import exceptions.PlayerColorAlreadyUsed;
+import exceptions.*;
 import models.enums.GameMode;
 import models.enums.LandPortionType;
 import models.enums.PlayerColor;
@@ -135,12 +133,12 @@ class GameTest {
     }
 
     @Test
-    void pick4DominoesOf48ShouldRemain42() throws IOException, InvalidDominoesCSVFile {
+    void pick4DominoesOf48ShouldRemain42() throws IOException, InvalidDominoesCSVFile, NotEnoughDominoesInGameStack, NoMoreDominoInGameStack {
         Game game = new Game();
         game.setGameMode(GameMode.THEGREATDUEL);
         game.generateDominoes();
-        DominoesList dominoesList = game.pickDominoes(4);
-        assertEquals(4, dominoesList.size());
+        game.pickDominoes(4);
+        assertEquals(4, game.getPickedDominoes().get(game.getPickedDominoes().size() - 1).size());
         assertEquals(48 - 4, game.getDominoes().size());
     }
 
