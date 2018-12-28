@@ -2,7 +2,9 @@ package views.templates;
 
 import helpers.Screen;
 import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -96,6 +98,9 @@ public class DominoView extends Parent {
         this.getDomino().getRightPortion().getLandPortionView().setOpacity(0);
     }
 
+    /**
+     * Add KingView to the DominoView
+     */
     public void addKing() {
         if(this.getDomino().getKing() != null) {
             // the add the king on the view
@@ -105,7 +110,6 @@ public class DominoView extends Parent {
             this.getChildren().add(kingView);
         }
     }
-
 
     /**
      *

@@ -1,8 +1,13 @@
 package views.templates;
 
 import helpers.Screen;
+import javafx.event.EventHandler;
 import javafx.scene.Parent;
+import javafx.scene.control.Button;
+import javafx.scene.input.MouseEvent;
+import models.classes.Domino;
 import models.classes.DominoesList;
+import models.enums.Rotation;
 
 public class DominoesListView extends Parent {
 
