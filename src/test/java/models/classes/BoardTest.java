@@ -1,16 +1,29 @@
 package models.classes;
 
 import exceptions.MaxCrownsLandPortionExceeded;
+import mockit.Mock;
+import mockit.MockUp;
 import models.enums.GameMode;
 import models.enums.LandPortionType;
 import models.enums.PlayerColor;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import views.templates.DominoView;
 
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class BoardTest {
+
+    @BeforeAll
+    private static void beforeAll() {
+        new MockUp<DominoView>() {
+            @Mock
+            public void $init(Domino domino) {
+            }
+        };
+    }
 
     @Test
     void setGreatDuelShouldReturnBoardOfSize7AndCastleAndStartTileMustBeCentered() throws MaxCrownsLandPortionExceeded {

@@ -9,8 +9,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import views.templates.DominoView;
 
-import java.io.IOException;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class DominoTest {
@@ -20,9 +18,6 @@ class DominoTest {
 
     @BeforeAll
     private static void beforeAll() throws MaxCrownsLandPortionExceeded {
-        landPortionLeft = new LandPortion(Integer.valueOf(Config.getValue("LandPortionMaxCrowns")), LandPortionType.CHAMPS);
-        landPortionRight = new LandPortion(Integer.valueOf(Config.getValue("LandPortionMaxCrowns")) - 1, LandPortionType.MINE);
-        domino = new Domino(landPortionLeft, landPortionRight, 50);
 
         // Mock the DominoView class
         new MockUp<DominoView>() {
@@ -30,6 +25,10 @@ class DominoTest {
             public void $init(Domino domino) {
             }
         };
+
+        landPortionLeft = new LandPortion(Integer.valueOf(Config.getValue("LandPortionMaxCrowns")), LandPortionType.CHAMPS);
+        landPortionRight = new LandPortion(Integer.valueOf(Config.getValue("LandPortionMaxCrowns")) - 1, LandPortionType.MINE);
+        domino = new Domino(landPortionLeft, landPortionRight, 50);
     }
 
     @Test

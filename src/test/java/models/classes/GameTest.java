@@ -1,17 +1,33 @@
 package models.classes;
 
 import exceptions.*;
+import mockit.Mock;
+import mockit.MockUp;
 import models.enums.GameMode;
 import models.enums.LandPortionType;
 import models.enums.PlayerColor;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
+import views.templates.DominoView;
 
 import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class GameTest {
+
+    @BeforeAll
+    private static void beforeAll() {
+
+        // Mock the DominoView class
+        new MockUp<DominoView>() {
+            @Mock
+            public void $init(Domino domino) {
+            }
+        };
+
+    }
 
     @Test
     void getFreePlayerColorsShouldReturn3() {

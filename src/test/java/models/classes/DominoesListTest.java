@@ -1,12 +1,25 @@
 package models.classes;
 
 import exceptions.MaxCrownsLandPortionExceeded;
+import mockit.Mock;
+import mockit.MockUp;
 import models.enums.LandPortionType;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import views.templates.DominoView;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class DominoesListTest {
+
+    @BeforeAll
+    private static void beforeAll() {
+        new MockUp<DominoView>() {
+            @Mock
+            public void $init(Domino domino) {
+            }
+        };
+    }
 
     @Test
     void shouldReturnDominoesSortByTheirNumber() throws MaxCrownsLandPortionExceeded {

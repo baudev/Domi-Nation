@@ -3,7 +3,10 @@ package helpers;
 import exceptions.InvalidDominoesCSVFile;
 import mockit.Mock;
 import mockit.MockUp;
+import models.classes.Domino;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import views.templates.DominoView;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,6 +15,15 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class CSVReaderTest extends CSVReader {
+
+    @BeforeAll
+    private static void beforeAll() {
+        new MockUp<DominoView>() {
+            @Mock
+            public void $init(Domino domino) {
+            }
+        };
+    }
 
     @Test
     void getDominoesShouldReturnNotEmptyDominoList() throws IOException, InvalidDominoesCSVFile {
