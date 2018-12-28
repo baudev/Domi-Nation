@@ -40,6 +40,7 @@ public class Board {
      * @param domino
      * @return
      */
+    // TODO simplify this function by regrouping the switch case
     public boolean isPossibleToPlaceDomino(Position position1, Position position2, Domino domino) {
         if(this.getLandPortion(position1) != null || this.getLandPortion(position2) != null) {
             return false; // there is already a tile
@@ -190,11 +191,28 @@ public class Board {
     }
 
     /**
+     * Return all possibilities
+     * @param domino
+     * @return
+     */
+    public List<List<Position>> getPossibilities(Domino domino) {
+        List<List<Position>> listEmptyPlaces = this.getEmptyPlaces(domino);
+        List<List<Position>> listToDelete = new ArrayList<>();
+        for(List<Position> listPosition : listEmptyPlaces) {
+            if(!this.isPossibleToPlaceDomino(listPosition.get(0), listPosition.get(1), domino)) { // we remove the position as a possibility
+                listToDelete.add(listPosition);
+            }
+        }
+        listEmptyPlaces.removeAll(listToDelete);
+        return listEmptyPlaces;
+    }
+
+    /**
      * Return all empty places according to the domino rotation and LandPortionType of the two LandPortions.
      * @param domino
      * @return
      */
-    public List<List<Position>> getEmptyPlaces(Domino domino) {
+    private List<List<Position>> getEmptyPlaces(Domino domino) {
         List<List<Position>> listEmptyPlaces = new ArrayList<>();
         List<Position> sameTypePortion1PositionList = new ArrayList<>();
         List<Position> sameTypePortion2PositionList = new ArrayList<>();
@@ -296,7 +314,7 @@ public class Board {
         // TODO optimize with saving results
         // we calculate the xMin Position
         Position xMin;
-        Position xExtremeLeft = this.mostLeftPosition();
+        Position xExtremeLeft = new Position(this.mostLeftPosition().getX(), this.mostLeftPosition().getY());
         if(xExtremeLeft.getX() - 2 >= 1 && this.mostRightPosition().getX() - xExtremeLeft.getX() - 2 <= this.getMaxGridSize()) {
             xExtremeLeft.setX(xExtremeLeft.getX() - 2);
             xMin = xExtremeLeft;
@@ -309,7 +327,7 @@ public class Board {
 
         // we calculate the xMax Position
         Position xMax;
-        Position xExtremeRight = this.mostRightPosition();
+        Position xExtremeRight = new Position(this.mostRightPosition().getX(), this.mostRightPosition().getY());
         if(xExtremeRight.getX() + 2 <= 2 * getMaxGridSize() - 1 && xExtremeRight.getX() + 2 - this.mostLeftPosition().getX() <= this.getMaxGridSize()) {
             xExtremeRight.setX(xExtremeRight.getX() + 2);
             xMax = xExtremeRight;
@@ -322,7 +340,7 @@ public class Board {
 
         // we calculate the yMax Position
         Position yMax;
-        Position yExtremeUp = this.upperPosition();
+        Position yExtremeUp = new Position(this.upperPosition().getX(), this.upperPosition().getY());
         if(yExtremeUp.getY() + 2 <= 2 * getMaxGridSize() - 1 && yExtremeUp.getY() + 2 - this.lowerPosition().getY() <= this.getMaxGridSize()) {
             yExtremeUp.setY(yExtremeUp.getY() + 2);
             yMax = yExtremeUp;
@@ -335,7 +353,7 @@ public class Board {
 
         // we calculate the yMax Position
         Position yMin;
-        Position yExtremeLow = this.lowerPosition();
+        Position yExtremeLow = new Position(this.lowerPosition().getX(), this.lowerPosition().getY());
         if(yExtremeLow.getY() - 2 >= 1 && this.upperPosition().getY() - yExtremeLow.getY() - 2 <= this.getMaxGridSize()) {
             yExtremeLow.setY(yExtremeLow.getY() - 2);
             yMin = yExtremeLow;
