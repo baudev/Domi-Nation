@@ -14,37 +14,92 @@ public class Board {
     private List<Domino> dominoes;
     private Castle castle;
     private StartTile startTile;
-    private Map<Position, LandPortion> grid;
+    private List<Position> grid;
+    private int maxGridSize;
 
     public Board(GameMode gameMode, PlayerColor playerColor) throws MaxCrownsLandPortionExceeded {
         this.setDominoes(new ArrayList<>()); // we set en empty ArrayList for the dominoes
-        this.setGrid(new HashMap<Position, LandPortion>());
-        this.generateGrid(gameMode, playerColor); // generate the grid with the different elements such as castle of startTile
-    }
-
-    private void generateGrid(GameMode gameMode, PlayerColor playerColor) throws MaxCrownsLandPortionExceeded {
-        int sizeGrid;
         switch (gameMode) {
             case THEGREATDUEL:
-                sizeGrid = 7;
+                maxGridSize = 7;
                 break;
             default:
-                sizeGrid = 5;
+                maxGridSize = 5;
                 break;
-        }
-        int gridMaximumAxis = 2 * sizeGrid;
-        // TODO is it useful to generate all position and to set them to null ?
-        for (int i = 1; i < gridMaximumAxis; i++) {
-            for (int j = 1; j < gridMaximumAxis; j++) {
-                this.getGrid().put(new Position(i, j), null);
-            }
         }
         this.setStartTile(new StartTile());
         // we put the startTile to the center of the grid
-        this.getStartTile().setPosition(new Position(sizeGrid, sizeGrid));
-        this.getGrid().put(new Position(sizeGrid, sizeGrid), this.getStartTile());
+        this.getStartTile().setPosition(new Position(maxGridSize, maxGridSize));
         // we generate the castle
-        this.setCastle(new Castle(playerColor, new Position(sizeGrid, sizeGrid)));
+        this.setCastle(new Castle(playerColor, new Position(maxGridSize, maxGridSize)));
+    }
+
+    /**
+     * Return the mostLeft position
+     * @return
+     */
+    private Position mostLeftPosition() {
+        Position mostLeft = new Position(this.getMaxGridSize(), this.getMaxGridSize());
+        for(Domino domino : this.getDominoes()) {
+            if(domino.getLeftPortion().getPosition().getX() < mostLeft.getX()) {
+                mostLeft = domino.getLeftPortion().getPosition();
+            }
+            if(domino.getRightPortion().getPosition().getX() < mostLeft.getX()) { // as the domino can rotate
+                mostLeft = domino.getRightPortion().getPosition();
+            }
+        }
+        return mostLeft;
+    }
+
+    /**
+     * Return the most right position
+     * @return
+     */
+    private Position mostRightPosition() {
+        Position mostRight = new Position(this.getMaxGridSize(), this.getMaxGridSize());
+        for(Domino domino : this.getDominoes()) {
+            if(domino.getLeftPortion().getPosition().getX() > mostRight.getX()) {
+                mostRight = domino.getLeftPortion().getPosition();
+            }
+            if(domino.getRightPortion().getPosition().getX() > mostRight.getX()) { // as the domino can rotate
+                mostRight = domino.getRightPortion().getPosition();
+            }
+        }
+        return mostRight;
+    }
+
+    /**
+     * Return the upper position
+     * @return
+     */
+    private Position UpperPosition() {
+        Position upperPosition = new Position(this.getMaxGridSize(), this.getMaxGridSize());
+        for(Domino domino : this.getDominoes()) {
+            if(domino.getLeftPortion().getPosition().getY() > upperPosition.getY()) {
+                upperPosition = domino.getLeftPortion().getPosition();
+            }
+            if(domino.getRightPortion().getPosition().getY() > upperPosition.getY()) { // as the domino can rotate
+                upperPosition = domino.getRightPortion().getPosition();
+            }
+        }
+        return upperPosition;
+    }
+
+    /**
+     * Return the lower position
+     * @return
+     */
+    private Position LowerPosition() {
+        Position lowerPosition = new Position(this.getMaxGridSize(), this.getMaxGridSize());
+        for(Domino domino : this.getDominoes()) {
+            if(domino.getLeftPortion().getPosition().getY() < lowerPosition.getY()) {
+                lowerPosition = domino.getLeftPortion().getPosition();
+            }
+            if(domino.getRightPortion().getPosition().getY() < lowerPosition.getY()) { // as the domino can rotate
+                lowerPosition = domino.getRightPortion().getPosition();
+            }
+        }
+        return lowerPosition;
     }
 
     /**
@@ -81,11 +136,19 @@ public class Board {
         this.startTile = startTile;
     }
 
-    public Map<Position, LandPortion> getGrid() {
+    public List<Position> getGrid() {
         return grid;
     }
 
-    public void setGrid(Map<Position, LandPortion> grid) {
+    public void setGrid(List<Position> grid) {
         this.grid = grid;
+    }
+
+    public int getMaxGridSize() {
+        return maxGridSize;
+    }
+
+    public void setMaxGridSize(int maxGridSize) {
+        this.maxGridSize = maxGridSize;
     }
 }
