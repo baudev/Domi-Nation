@@ -66,107 +66,88 @@ public class Board {
             position1 = new Position(position2.getX(), position2.getY());
             position2 = new Position(position_temp.getX(), position_temp.getY());
         }
-        if(domino.isHorizontal()) { // TODO useless condition
-            LandPortion landPortion1ToCompare = null;
-            LandPortion landPortion2ToCompare = null;
-            switch (domino.getRotation()) {
-                case NORMAL:
-                    landPortion1ToCompare = domino.getLeftPortion();
-                    landPortion2ToCompare = domino.getRightPortion();
-                    break;
-                case INVERSE:
-                    landPortion1ToCompare = domino.getRightPortion();
-                    landPortion2ToCompare = domino.getLeftPortion();
-                    break;
-            }
+        LandPortion landPortion1ToCompare = null;
+        LandPortion landPortion2ToCompare = null;
+        switch (domino.getRotation()) {
+            case NORMAL:
+            case RIGHT:
+                landPortion1ToCompare = domino.getLeftPortion();
+                landPortion2ToCompare = domino.getRightPortion();
+                break;
+            case INVERSE:
+            case LEFT:
+                landPortion1ToCompare = domino.getRightPortion();
+                landPortion2ToCompare = domino.getLeftPortion();
+                break;
+        }
+        if(domino.isHorizontal()) {
             LandPortion leftLandPortionToCheck1 = this.getLandPortion(new Position(position1.getX() - 1, position1.getY()));
             LandPortion upLandPortionToCheck1 = this.getLandPortion(new Position(position1.getX(), position1.getY() + 1));
             LandPortion lowLandPortionToCheck1 = this.getLandPortion(new Position(position1.getX(), position1.getY() - 1));
-            if(leftLandPortionToCheck1 != null) {
-                if(leftLandPortionToCheck1.getLandPortionType() != landPortion1ToCompare.getLandPortionType() && leftLandPortionToCheck1.getLandPortionType() != LandPortionType.TOUS) {
-                    return false;
-                }
+            if(!isConnectable(landPortion1ToCompare, leftLandPortionToCheck1)){
+                return false;
             }
-            if(upLandPortionToCheck1 != null) {
-                if(upLandPortionToCheck1.getLandPortionType() != landPortion1ToCompare.getLandPortionType() && upLandPortionToCheck1.getLandPortionType() != LandPortionType.TOUS) {
-                    return false;
-                }
+            if(!isConnectable(landPortion1ToCompare, upLandPortionToCheck1)){
+                return false;
             }
-            if(lowLandPortionToCheck1 != null) {
-                if(lowLandPortionToCheck1.getLandPortionType() != landPortion1ToCompare.getLandPortionType() && lowLandPortionToCheck1.getLandPortionType() != LandPortionType.TOUS) {
-                    return false;
-                }
+            if(!isConnectable(landPortion1ToCompare, lowLandPortionToCheck1)){
+                return false;
             }
             LandPortion rightLandPortionToCheck2 = this.getLandPortion(new Position(position2.getX() + 1, position2.getY()));
             LandPortion upLandPortionToCheck2 = this.getLandPortion(new Position(position2.getX(), position2.getY() + 1));
             LandPortion lowLandPortionToCheck2 = this.getLandPortion(new Position(position2.getX(), position2.getY() - 1));
-            if(rightLandPortionToCheck2 != null) {
-                if(rightLandPortionToCheck2.getLandPortionType() != landPortion2ToCompare.getLandPortionType() && rightLandPortionToCheck2.getLandPortionType() != LandPortionType.TOUS) {
-                    return false;
-                }
+            if(!isConnectable(landPortion2ToCompare, rightLandPortionToCheck2)){
+                return false;
             }
-            if(upLandPortionToCheck2 != null) {
-                if(upLandPortionToCheck2.getLandPortionType() != landPortion2ToCompare.getLandPortionType() && upLandPortionToCheck2.getLandPortionType() != LandPortionType.TOUS) {
-                    return false;
-                }
+            if(!isConnectable(landPortion2ToCompare, upLandPortionToCheck2)){
+                return false;
             }
-            if(lowLandPortionToCheck2 != null) {
-                if(lowLandPortionToCheck2.getLandPortionType() != landPortion2ToCompare.getLandPortionType() && lowLandPortionToCheck2.getLandPortionType() != LandPortionType.TOUS) {
-                    return false;
-                }
+            if(!isConnectable(landPortion2ToCompare, lowLandPortionToCheck2)){
+                return false;
             }
             return true;
         } else {
-            LandPortion landPortion1ToCompare = null;
-            LandPortion landPortion2ToCompare = null;
-            switch (domino.getRotation()) {
-                case RIGHT:
-                    landPortion1ToCompare = domino.getLeftPortion();
-                    landPortion2ToCompare = domino.getRightPortion();
-                    break;
-                case LEFT:
-                    landPortion1ToCompare = domino.getRightPortion();
-                    landPortion2ToCompare = domino.getLeftPortion();
-                    break;
-            }
             LandPortion leftLandPortionToCheck1 = this.getLandPortion(new Position(position1.getX() - 1, position1.getY()));
             LandPortion rightLandPortionToCheck1 = this.getLandPortion(new Position(position1.getX() + 1, position1.getY()));
             LandPortion upLandPortionToCheck1 = this.getLandPortion(new Position(position1.getX(), position1.getY() + 1));
-            if(leftLandPortionToCheck1 != null) {
-                if(leftLandPortionToCheck1.getLandPortionType() != landPortion1ToCompare.getLandPortionType() && leftLandPortionToCheck1.getLandPortionType() != LandPortionType.TOUS) {
-                    return false;
-                }
+            if(!isConnectable(landPortion1ToCompare, leftLandPortionToCheck1)){
+                return false;
             }
-            if(rightLandPortionToCheck1 != null) {
-                if(rightLandPortionToCheck1.getLandPortionType() != landPortion1ToCompare.getLandPortionType() && rightLandPortionToCheck1.getLandPortionType() != LandPortionType.TOUS) {
-                    return false;
-                }
+            if(!isConnectable(landPortion1ToCompare, rightLandPortionToCheck1)){
+                return false;
             }
-            if(upLandPortionToCheck1 != null) {
-                if(upLandPortionToCheck1.getLandPortionType() != landPortion1ToCompare.getLandPortionType() && upLandPortionToCheck1.getLandPortionType() != LandPortionType.TOUS) {
-                    return false;
-                }
+            if(!isConnectable(landPortion1ToCompare, upLandPortionToCheck1)){
+                return false;
             }
             LandPortion rightLandPortionToCheck2 = this.getLandPortion(new Position(position2.getX() + 1, position2.getY()));
             LandPortion leftLandPortionToCheck2 = this.getLandPortion(new Position(position2.getX() - 1, position2.getY()));
             LandPortion lowLandPortionToCheck2 = this.getLandPortion(new Position(position2.getX(), position2.getY() - 1));
-            if(rightLandPortionToCheck2 != null) {
-                if(rightLandPortionToCheck2.getLandPortionType() != landPortion2ToCompare.getLandPortionType() && rightLandPortionToCheck2.getLandPortionType() != LandPortionType.TOUS) {
-                    return false;
-                }
+            if(!isConnectable(landPortion2ToCompare, rightLandPortionToCheck2)){
+                return false;
             }
-            if(leftLandPortionToCheck2 != null) {
-                if(leftLandPortionToCheck2.getLandPortionType() != landPortion2ToCompare.getLandPortionType() && leftLandPortionToCheck2.getLandPortionType() != LandPortionType.TOUS) {
-                    return false;
-                }
+            if(!isConnectable(landPortion2ToCompare, leftLandPortionToCheck2)){
+                return false;
             }
-            if(lowLandPortionToCheck2 != null) {
-                if(lowLandPortionToCheck2.getLandPortionType() != landPortion2ToCompare.getLandPortionType() && lowLandPortionToCheck2.getLandPortionType() != LandPortionType.TOUS) {
-                    return false;
-                }
+            if(!isConnectable(landPortion2ToCompare, lowLandPortionToCheck2)){
+                return false;
             }
             return true;
         }
+    }
+
+    /**
+     * Return if the two LandPortion have compatible LandPortionType
+     * @param landPortionToConnect
+     * @param landPortionAlreadyExisting
+     * @return
+     */
+    private static boolean isConnectable(LandPortion landPortionToConnect, LandPortion landPortionAlreadyExisting) {
+        if(landPortionToConnect != null && landPortionAlreadyExisting != null) {
+            if(landPortionAlreadyExisting.getLandPortionType() != landPortionToConnect.getLandPortionType() && landPortionAlreadyExisting.getLandPortionType() != LandPortionType.TOUS) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -455,6 +436,7 @@ public class Board {
     }
 
     public void addDomino(Domino domino) {
+        // TODO check if it's possible to add the domino before
         this.dominoes.add(domino);
     }
 
