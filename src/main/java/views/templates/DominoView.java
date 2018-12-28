@@ -77,6 +77,7 @@ public class DominoView extends Parent {
         this.hidePortionsFace(); // we hide the portions face
         this.getRectangleNumber().setOpacity(1.0);
         this.getTextNumber().setOpacity(1.0);
+        // TODO hide the king
     }
 
     /**
@@ -93,6 +94,16 @@ public class DominoView extends Parent {
     private void hidePortionsFace() {
         this.getDomino().getLeftPortion().getLandPortionView().setOpacity(0);
         this.getDomino().getRightPortion().getLandPortionView().setOpacity(0);
+    }
+
+    public void addKing() {
+        if(this.getDomino().getKing() != null) {
+            // the add the king on the view
+            KingView kingView = this.getDomino().getKing().getKingView();
+            kingView.setTranslateX(Screen.percentageToXDimension(3.5));
+            kingView.setTranslateY(Screen.percentageToYDimension(1.5));
+            this.getChildren().add(kingView);
+        }
     }
 
 
