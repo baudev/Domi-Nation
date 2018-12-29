@@ -1,5 +1,6 @@
 package models.classes;
 
+import exceptions.InvalidDominoPosition;
 import exceptions.MaxCrownsLandPortionExceeded;
 import models.enums.GameMode;
 import models.enums.LandPortionType;
@@ -42,6 +43,7 @@ public class Board {
      * @param domino
      * @return
      */
+    // TODO take care if it's the domino positions to not pass them as references. It could be great surcharge this method
     public boolean isPossibleToPlaceDomino(Position position1, Position position2, Domino domino) {
         if(this.getLandPortion(position1) != null || this.getLandPortion(position2) != null) {
             return false; // there is already a tile
@@ -190,6 +192,11 @@ public class Board {
             }
         }
         listEmptyPlaces.removeAll(listToDelete);
+
+        // we impact the view
+        for(List<Position> list : listEmptyPlaces) {
+            this.getBoardView().addPossibility(list.get(0), list.get(1));
+        }
         return listEmptyPlaces;
     }
 
@@ -338,8 +345,8 @@ public class Board {
                             listEmptyPlaces.add(tempList);
                         }
                     }
-                    Position up1LeftPosition = new Position(position.getX() + 1, position.getY() + 1);
-                    Position up2LeftPosition = new Position(position.getX() + 1, position.getY());
+                    Position up1LeftPosition = new Position(position.getX() - 1, position.getY() + 1);
+                    Position up2LeftPosition = new Position(position.getX() - 1, position.getY());
                     if (maxGridSize.contains(up1LeftPosition) && maxGridSize.contains(up2LeftPosition)) {
                         if (this.getLandPortion(up1LeftPosition) == null && this.getLandPortion(up2LeftPosition) == null) {
                             List<Position> tempList = new ArrayList<>();
@@ -538,8 +545,12 @@ public class Board {
         this.dominoes = dominoes;
     }
 
-    public void addDomino(Domino domino) {
-        // TODO check if it's possible to add the domino before
+    public void addDomino(Domino domino) throws InvalidDominoPosition {
+        if(domino.getLeftPortion().getPosition() != null && domino.getRightPortion().getPosition() != null) {
+            if(!isPossibleToPlaceDomino(new Position(domino.getLeftPortion().getPosition().getX(), domino.getLeftPortion().getPosition().getY()), new Position(domino.getRightPortion().getPosition().getX(), domino.getRightPortion().getPosition().getY()), domino)) {
+                throw new InvalidDominoPosition();
+            }
+        }
         this.dominoes.add(domino);
     }
 
