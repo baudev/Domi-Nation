@@ -43,7 +43,7 @@ public class DominoesListView extends Parent {
 
     public void center() {
         this.setTranslateX(Screen.percentageToXDimension(50 - 8.5 * dominoesList.size() / 2));
-        this.setTranslateY(Screen.percentageToYDimension(50 - 5));
+        this.setTranslateY(Screen.percentageToYDimension(50 - 2.5));
     }
 
     public void setLowerPosition() {
