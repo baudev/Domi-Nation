@@ -4,6 +4,7 @@ import exceptions.MaxCrownsLandPortionExceeded;
 import models.enums.GameMode;
 import models.enums.LandPortionType;
 import models.enums.PlayerColor;
+import views.templates.BoardView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +16,7 @@ public class Board {
     private StartTile startTile;
     private List<Position> grid;
     private int maxGridSize;
+    private BoardView boardView;
 
     public Board(GameMode gameMode, PlayerColor playerColor) throws MaxCrownsLandPortionExceeded {
         this.setDominoes(new ArrayList<>()); // we set en empty ArrayList for the dominoes
@@ -159,11 +161,15 @@ public class Board {
             return getStartTile();
         } else {
             for(Domino domino : this.getDominoes()) {
-                if(position.getX() == domino.getLeftPortion().getPosition().getX() && position.getY() == domino.getLeftPortion().getPosition().getY()) {
-                    return domino.getLeftPortion();
+                if(domino.getLeftPortion().getPosition() != null) {
+                    if (position.getX() == domino.getLeftPortion().getPosition().getX() && position.getY() == domino.getLeftPortion().getPosition().getY()) {
+                        return domino.getLeftPortion();
+                    }
                 }
-                if(position.getX() == domino.getRightPortion().getPosition().getX() && position.getY() == domino.getRightPortion().getPosition().getY()) {
-                    return domino.getRightPortion();
+                if(domino.getRightPortion().getPosition() != null) {
+                    if (position.getX() == domino.getRightPortion().getPosition().getX() && position.getY() == domino.getRightPortion().getPosition().getY()) {
+                        return domino.getRightPortion();
+                    }
                 }
             }
         }
@@ -276,11 +282,13 @@ public class Board {
         List<Position> positionList = new ArrayList<>();
         positionList.add(this.getStartTile().getPosition());
         for(Domino domino : this.getDominoes()) {
-            if(domino.getLeftPortion().getLandPortionType() == landPortionType) {
-                positionList.add(domino.getLeftPortion().getPosition());
-            }
-            if(domino.getRightPortion().getLandPortionType() == landPortionType) {
-                positionList.add(domino.getRightPortion().getPosition());
+            if(domino.getRightPortion().getPosition() != null && domino.getLeftPortion().getPosition() != null) {
+                if (domino.getLeftPortion().getLandPortionType() == landPortionType) {
+                    positionList.add(domino.getLeftPortion().getPosition());
+                }
+                if (domino.getRightPortion().getLandPortionType() == landPortionType) {
+                    positionList.add(domino.getRightPortion().getPosition());
+                }
             }
         }
         return positionList;
@@ -359,11 +367,15 @@ public class Board {
     private Position mostLeftPosition() {
         Position mostLeft = new Position(this.getMaxGridSize(), this.getMaxGridSize());
         for(Domino domino : this.getDominoes()) {
-            if(domino.getLeftPortion().getPosition().getX() < mostLeft.getX()) {
-                mostLeft = domino.getLeftPortion().getPosition();
+            if(domino.getLeftPortion().getPosition() != null) {
+                if (domino.getLeftPortion().getPosition().getX() < mostLeft.getX()) {
+                    mostLeft = domino.getLeftPortion().getPosition();
+                }
             }
-            if(domino.getRightPortion().getPosition().getX() < mostLeft.getX()) { // as the domino can rotate
-                mostLeft = domino.getRightPortion().getPosition();
+            if(domino.getRightPortion().getPosition() != null) {
+                if (domino.getRightPortion().getPosition().getX() < mostLeft.getX()) { // as the domino can rotate
+                    mostLeft = domino.getRightPortion().getPosition();
+                }
             }
         }
         return mostLeft;
@@ -376,11 +388,15 @@ public class Board {
     private Position mostRightPosition() {
         Position mostRight = new Position(this.getMaxGridSize(), this.getMaxGridSize());
         for(Domino domino : this.getDominoes()) {
-            if(domino.getLeftPortion().getPosition().getX() > mostRight.getX()) {
-                mostRight = domino.getLeftPortion().getPosition();
+            if(domino.getLeftPortion().getPosition() != null) {
+                if (domino.getLeftPortion().getPosition().getX() > mostRight.getX()) {
+                    mostRight = domino.getLeftPortion().getPosition();
+                }
             }
-            if(domino.getRightPortion().getPosition().getX() > mostRight.getX()) { // as the domino can rotate
-                mostRight = domino.getRightPortion().getPosition();
+            if(domino.getRightPortion().getPosition() != null) {
+                if (domino.getRightPortion().getPosition().getX() > mostRight.getX()) { // as the domino can rotate
+                    mostRight = domino.getRightPortion().getPosition();
+                }
             }
         }
         return mostRight;
@@ -393,11 +409,15 @@ public class Board {
     private Position upperPosition() {
         Position upperPosition = new Position(this.getMaxGridSize(), this.getMaxGridSize());
         for(Domino domino : this.getDominoes()) {
-            if(domino.getLeftPortion().getPosition().getY() > upperPosition.getY()) {
-                upperPosition = domino.getLeftPortion().getPosition();
+            if(domino.getLeftPortion().getPosition() != null) {
+                if (domino.getLeftPortion().getPosition().getY() > upperPosition.getY()) {
+                    upperPosition = domino.getLeftPortion().getPosition();
+                }
             }
-            if(domino.getRightPortion().getPosition().getY() > upperPosition.getY()) { // as the domino can rotate
-                upperPosition = domino.getRightPortion().getPosition();
+            if(domino.getRightPortion().getPosition() != null) {
+                if (domino.getRightPortion().getPosition().getY() > upperPosition.getY()) { // as the domino can rotate
+                    upperPosition = domino.getRightPortion().getPosition();
+                }
             }
         }
         return upperPosition;
@@ -410,11 +430,15 @@ public class Board {
     private Position lowerPosition() {
         Position lowerPosition = new Position(this.getMaxGridSize(), this.getMaxGridSize());
         for(Domino domino : this.getDominoes()) {
-            if(domino.getLeftPortion().getPosition().getY() < lowerPosition.getY()) {
-                lowerPosition = domino.getLeftPortion().getPosition();
+            if(domino.getLeftPortion().getPosition() != null) {
+                if (domino.getLeftPortion().getPosition().getY() < lowerPosition.getY()) {
+                    lowerPosition = domino.getLeftPortion().getPosition();
+                }
             }
-            if(domino.getRightPortion().getPosition().getY() < lowerPosition.getY()) { // as the domino can rotate
-                lowerPosition = domino.getRightPortion().getPosition();
+            if(domino.getRightPortion().getPosition() != null) {
+                if (domino.getRightPortion().getPosition().getY() < lowerPosition.getY()) { // as the domino can rotate
+                    lowerPosition = domino.getRightPortion().getPosition();
+                }
             }
         }
         return lowerPosition;
@@ -469,5 +493,16 @@ public class Board {
 
     public void setMaxGridSize(int maxGridSize) {
         this.maxGridSize = maxGridSize;
+    }
+
+    public BoardView getBoardView() {
+        if(boardView == null) {
+            this.setBoardView(new BoardView(this));
+        }
+        return boardView;
+    }
+
+    public void setBoardView(BoardView boardView) {
+        this.boardView = boardView;
     }
 }
