@@ -229,6 +229,26 @@ public class Board {
                             listEmptyPlaces.add(tempList);
                         }
                     }
+                    Position right1UpPosition = new Position(position.getX(), position.getY() + 1); // up right
+                    Position right2UpPosition = new Position(position.getX() + 1, position.getY() + 1);
+                    if (maxGridSize.contains(right1UpPosition) && maxGridSize.contains(right2UpPosition)) {
+                        if (this.getLandPortion(right1UpPosition) == null && this.getLandPortion(right2UpPosition) == null) {
+                            List<Position> tempList = new ArrayList<>();
+                            tempList.add(right1UpPosition);
+                            tempList.add(right2UpPosition);
+                            listEmptyPlaces.add(tempList);
+                        }
+                    }
+                    Position right1LowPosition = new Position(position.getX(), position.getY() - 1);
+                    Position right2LowPosition = new Position(position.getX() + 1, position.getY() - 1);
+                    if (maxGridSize.contains(right1LowPosition) && maxGridSize.contains(right2LowPosition)) {
+                        if (this.getLandPortion(right1LowPosition) == null && this.getLandPortion(right2LowPosition) == null) {
+                            List<Position> tempList = new ArrayList<>();
+                            tempList.add(right1LowPosition);
+                            tempList.add(right2LowPosition);
+                            listEmptyPlaces.add(tempList);
+                        }
+                    }
                 }
                 for (Position position : sameTypePortion2PositionList) {
                     Position left1Position = new Position(position.getX() - 2, position.getY());
@@ -241,30 +261,90 @@ public class Board {
                             listEmptyPlaces.add(tempList);
                         }
                     }
+                    Position left1UpPosition = new Position(position.getX() - 1, position.getY() + 1);
+                    Position left2UpPosition = new Position(position.getX(), position.getY() + 1);
+                    if (maxGridSize.contains(left1UpPosition) && maxGridSize.contains(left2UpPosition)) {
+                        if (this.getLandPortion(left1UpPosition) == null && this.getLandPortion(left2UpPosition) == null) {
+                            List<Position> tempList = new ArrayList<>();
+                            tempList.add(left1UpPosition);
+                            tempList.add(left2UpPosition);
+                            listEmptyPlaces.add(tempList);
+                        }
+                    }
+                    Position left1LowPosition = new Position(position.getX() - 1, position.getY() - 1);
+                    Position left2LowPosition = new Position(position.getX(), position.getY() - 1);
+                    if (maxGridSize.contains(left1LowPosition) && maxGridSize.contains(left2LowPosition)) {
+                        if (this.getLandPortion(left1LowPosition) == null && this.getLandPortion(left2LowPosition) == null) {
+                            List<Position> tempList = new ArrayList<>();
+                            tempList.add(left1LowPosition);
+                            tempList.add(left2LowPosition);
+                            listEmptyPlaces.add(tempList);
+                        }
+                    }
                 }
                 break;
             case RIGHT:
             case LEFT:
                 for (Position position : sameTypePortion1PositionList) {
-                    Position right1Position = new Position(position.getX(), position.getY() - 1);
-                    Position right2Position = new Position(position.getX(), position.getY() - 2);
-                    if (maxGridSize.contains(right1Position) && maxGridSize.contains(right2Position)) {
-                        if (this.getLandPortion(right1Position) == null && this.getLandPortion(right2Position) == null) {
+                    Position low1Position = new Position(position.getX(), position.getY() - 1);
+                    Position low2Position = new Position(position.getX(), position.getY() - 2);
+                    if (maxGridSize.contains(low1Position) && maxGridSize.contains(low2Position)) {
+                        if (this.getLandPortion(low1Position) == null && this.getLandPortion(low2Position) == null) {
                             List<Position> tempList = new ArrayList<>();
-                            tempList.add(right1Position);
-                            tempList.add(right2Position);
+                            tempList.add(low1Position);
+                            tempList.add(low2Position);
+                            listEmptyPlaces.add(tempList);
+                        }
+                    }
+                    Position right1LowPosition = new Position(position.getX() + 1, position.getY());
+                    Position right2LowPosition = new Position(position.getX() + 1, position.getY() - 1);
+                    if (maxGridSize.contains(right1LowPosition) && maxGridSize.contains(right2LowPosition)) {
+                        if (this.getLandPortion(right1LowPosition) == null && this.getLandPortion(right2LowPosition) == null) {
+                            List<Position> tempList = new ArrayList<>();
+                            tempList.add(right1LowPosition);
+                            tempList.add(right2LowPosition);
+                            listEmptyPlaces.add(tempList);
+                        }
+                    }
+                    Position left1LowPosition = new Position(position.getX() - 1, position.getY());
+                    Position left2LowPosition = new Position(position.getX() - 1, position.getY() - 1);
+                    if (maxGridSize.contains(left1LowPosition) && maxGridSize.contains(left2LowPosition)) {
+                        if (this.getLandPortion(left1LowPosition) == null && this.getLandPortion(left2LowPosition) == null) {
+                            List<Position> tempList = new ArrayList<>();
+                            tempList.add(left1LowPosition);
+                            tempList.add(left2LowPosition);
                             listEmptyPlaces.add(tempList);
                         }
                     }
                 }
                 for (Position position : sameTypePortion2PositionList) {
-                    Position left1Position = new Position(position.getX(), position.getY() + 2);
-                    Position left2Position = new Position(position.getX(), position.getY() + 1);
-                    if (maxGridSize.contains(left1Position) && maxGridSize.contains(left2Position)) {
-                        if (this.getLandPortion(left1Position) == null && this.getLandPortion(left2Position) == null) {
+                    Position up1Position = new Position(position.getX(), position.getY() + 2);
+                    Position up2Position = new Position(position.getX(), position.getY() + 1);
+                    if (maxGridSize.contains(up1Position) && maxGridSize.contains(up2Position)) {
+                        if (this.getLandPortion(up1Position) == null && this.getLandPortion(up2Position) == null) {
                             List<Position> tempList = new ArrayList<>();
-                            tempList.add(left1Position);
-                            tempList.add(left2Position);
+                            tempList.add(up1Position);
+                            tempList.add(up2Position);
+                            listEmptyPlaces.add(tempList);
+                        }
+                    }
+                    Position up1RightPosition = new Position(position.getX() + 1, position.getY() + 1);
+                    Position up2RightPosition = new Position(position.getX() + 1, position.getY());
+                    if (maxGridSize.contains(up1RightPosition) && maxGridSize.contains(up2RightPosition)) {
+                        if (this.getLandPortion(up1RightPosition) == null && this.getLandPortion(up2RightPosition) == null) {
+                            List<Position> tempList = new ArrayList<>();
+                            tempList.add(up1RightPosition);
+                            tempList.add(up2RightPosition);
+                            listEmptyPlaces.add(tempList);
+                        }
+                    }
+                    Position up1LeftPosition = new Position(position.getX() + 1, position.getY() + 1);
+                    Position up2LeftPosition = new Position(position.getX() + 1, position.getY());
+                    if (maxGridSize.contains(up1LeftPosition) && maxGridSize.contains(up2LeftPosition)) {
+                        if (this.getLandPortion(up1LeftPosition) == null && this.getLandPortion(up2LeftPosition) == null) {
+                            List<Position> tempList = new ArrayList<>();
+                            tempList.add(up1LeftPosition);
+                            tempList.add(up2LeftPosition);
                             listEmptyPlaces.add(tempList);
                         }
                     }
