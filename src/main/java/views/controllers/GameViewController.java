@@ -15,6 +15,7 @@ import views.interfaces.OnDominoClickListener;
 import views.interfaces.OnGameModeClickListener;
 import views.interfaces.OnPlayerColorClickListener;
 import views.interfaces.OnPlayerNumberClickListener;
+import views.templates.BoardView;
 import views.templates.ColorPlayerView;
 import views.templates.GameModeView;
 import views.templates.NumberPlayerView;
@@ -123,6 +124,28 @@ public class GameViewController {
             this.getGame().initiatePlayers(); // we initiate all player attributes
             this.getGame().generateDominoes(); // we generate the dominoes for the game
             this.getGame().setTurnNumber(1); // first turn start
+            int count = 0;
+            for(Player player : this.getGame().getPlayers()) {
+                BoardView boardView = player.getBoard().getBoardView();
+                this.getRoot().getChildren().add(boardView);
+                switch (count) {
+                    case 0:
+                        boardView.setTranslateY(Screen.percentageToYDimension(10));
+                        break;
+                    case 1:
+                        boardView.setTranslateY(Screen.percentageToYDimension(10));
+                        boardView.setTranslateX(Screen.percentageToXDimension(60));
+                        break;
+                    case 2:
+                        boardView.setTranslateX(Screen.percentageToXDimension(40));
+                        break;
+                    case 3:
+                        boardView.setTranslateY(Screen.percentageToYDimension(60));
+                        boardView.setTranslateX(Screen.percentageToXDimension(40));
+                        break;
+                }
+                count++;
+            }
         } catch (IOException | MaxCrownsLandPortionExceeded | InvalidDominoesCSVFile e) {
             e.printStackTrace(); // TODO handle errors
         }
@@ -168,7 +191,11 @@ public class GameViewController {
                         domino.setKing(king);
                         // TODO simplify next operations
                         if(getGame().getTurnNumber() == 1) {
-                            getGame().getCurrentPlayer().getBoard().addDomino(domino);
+                            try {
+                                getGame().getCurrentPlayer().getBoard().addDomino(domino);
+                            } catch (InvalidDominoPosition invalidDominoPosition) {
+                                invalidDominoPosition.printStackTrace(); // TODO handle this case
+                            }
                             newDominoesList.remove(domino);
                             getGame().playerHasSelectedDomino();
                         } else {
@@ -176,27 +203,31 @@ public class GameViewController {
                             Domino previousDomino = getGame().getCurrentPlayer().getDominoWithKing(king);
                             previousDomino.setKing(null); // !! BEFORE SETTING POSITION OF THE PREVIOUS DOMINO !!
 
-                            showRotationButton(previousDomino);
+                            showRotationButtonAndAssociatedPossibilities(previousDomino);
 
-                            // set the position
                             previousDomino.getLeftPortion().setPosition(new Position(1, 1));
                             previousDomino.getRightPortion().setPosition(new Position(1, 2));
 
 
-                            getGame().getCurrentPlayer().getBoard().addDomino(domino);
+                            try {
+                                getGame().getCurrentPlayer().getBoard().addDomino(domino);
+                            } catch (InvalidDominoPosition invalidDominoPosition) {
+                                invalidDominoPosition.printStackTrace(); // TODO handle this case
+                            }
                             newDominoesList.remove(domino);
 
-                            // TODO add the Player to the turns list
+                            // TODO add the Player to the turns list, already done by the following function right ?
                             getGame().playerHasSelectedDomino();
                         }
 
                         // we check if it's not a new turn
-                        if(getGame().isAllPickedDominoesListHaveKings(getGame().getPickedDominoes().size() - 1)) {
+                        if (getGame().isAllPickedDominoesListHaveKings(getGame().getPickedDominoes().size() - 1)) {
                             getGame().setTurnNumber(getGame().getTurnNumber() + 1); // increment the turn number
                             pickDominoes();
                         } else {
                             playTurnPlayer();
                         }
+
                     }
                 }
             });
@@ -207,7 +238,10 @@ public class GameViewController {
      * Show a button to make rotate a domino
      * @param domino
      */
-    public void showRotationButton(Domino domino) {
+    public void showRotationButtonAndAssociatedPossibilities(Domino domino) {
+        //  we show all possible positions
+        getGame().getCurrentPlayer().getBoard().getPossibilities(domino);
+        // show rotation button
         setButtonRotation(new Button());
         getButtonRotation().setLayoutX(Screen.percentageToXDimension(48));
         getButtonRotation().setLayoutY(Screen.percentageToYDimension(60));
@@ -217,6 +251,9 @@ public class GameViewController {
             @Override
             public void handle(MouseEvent event) {
                 domino.setRotation(Rotation.getCorrespondingRotation(domino.getRotation().getDegree() + 90));
+                getGame().getCurrentPlayer().getBoard().getBoardView().removeAllPossibilities();
+                getGame().getCurrentPlayer().getBoard().getPossibilities(domino);
+
             }
         });
     }
