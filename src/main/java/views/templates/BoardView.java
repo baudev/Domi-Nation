@@ -9,7 +9,7 @@ import javafx.scene.shape.Rectangle;
 import models.classes.Board;
 import models.classes.Domino;
 import models.classes.Position;
-import models.classes.StartTile;
+import views.interfaces.OnPossibilityClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +19,7 @@ public class BoardView extends Parent {
 
     private Board board;
     private List<Rectangle> possiblePositions;
+    private OnPossibilityClickListener onPossibilityClickListener;
 
     public BoardView(Board board) {
         this.board = board;
@@ -41,7 +42,8 @@ public class BoardView extends Parent {
     }
 
     private void generateBoardView() {
-        List<Position> positionList = this.getBoard().calculateMaxGridSize();
+        this.getBoard().calculateGridMaxSize(); // TODO usefull there ?
+        List<Position> positionList = this.getBoard().getGrid();
         for(Position position : positionList) {
             Rectangle rectangle = new Rectangle();
             rectangle.setFill(Color.RED);
@@ -50,6 +52,12 @@ public class BoardView extends Parent {
             rectangle.setTranslateX(Screen.percentageToXDimension(3) * (position.getX() - 1));
             rectangle.setTranslateY(Screen.percentageToXDimension(3) * (position.getY() - 1));
             this.getChildren().add(rectangle);
+            rectangle.setOnMouseEntered(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    System.out.println("Position_" + position.getX() + "_" + position.getY());
+                }
+            });
         }
     }
 
@@ -78,6 +86,12 @@ public class BoardView extends Parent {
                 rectangle.setFill(Color.LIGHTGREEN);
             }
         });
+        rectangle.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                getOnPossibilityClickListener().onPossibilityClickListener(position1, position2);
+            }
+        });
         this.getPossiblePositions().add(rectangle);
         this.getChildren().add(rectangle);
     }
@@ -89,10 +103,29 @@ public class BoardView extends Parent {
     }
 
     public void addDomino(Domino domino) {
-        // TODO
-        this.getChildren().add(domino.getDominoView());
-        domino.getDominoView().setTranslateX(Screen.percentageToXDimension(3) * (domino.getLeftPortion().getPosition().getX() - 1));
-        domino.getDominoView().setTranslateY(Screen.percentageToXDimension(3) * (domino.getLeftPortion().getPosition().getY() - 1));
+        DominoView dominoView = domino.getDominoView();
+        this.getChildren().add(dominoView);
+        System.out.println(domino.getLeftPortion().getPosition().getX() + "_" + domino.getLeftPortion().getPosition().getY());
+        System.out.println(domino.getRightPortion().getPosition().getX() + "_" + domino.getRightPortion().getPosition().getY());
+        switch (domino.getRotation()){
+            case NORMAL:
+                dominoView.setTranslateX(Screen.percentageToXDimension(3) * (domino.getLeftPortion().getPosition().getX() - 1));
+                dominoView.setTranslateY(Screen.percentageToXDimension(3) * (domino.getLeftPortion().getPosition().getY() - 1));
+                break;
+            case RIGHT:
+                dominoView.setTranslateX(Screen.percentageToXDimension(3) * (domino.getLeftPortion().getPosition().getX() - 1) - Screen.percentageToXDimension(3) / 2);
+                dominoView.setTranslateY(Screen.percentageToXDimension(3) * (domino.getLeftPortion().getPosition().getY()) - Screen.percentageToXDimension(3) / 2);
+                break;
+            case LEFT:
+                dominoView.setTranslateX(Screen.percentageToXDimension(3) * (domino.getRightPortion().getPosition().getX() - 1) - Screen.percentageToXDimension(3) / 2);
+                dominoView.setTranslateY(Screen.percentageToXDimension(3) * (domino.getRightPortion().getPosition().getY() - 1) - Screen.percentageToXDimension(3) / 2);
+                break;
+            case INVERSE:
+                dominoView.setTranslateX(Screen.percentageToXDimension(3) * (domino.getRightPortion().getPosition().getX() - 2));
+                dominoView.setTranslateY(Screen.percentageToXDimension(3) * (domino.getRightPortion().getPosition().getY() - 1));
+                break;
+        }
+        dominoView.toFront();
     }
 
     /**
@@ -115,5 +148,13 @@ public class BoardView extends Parent {
 
     public void setPossiblePositions(List<Rectangle> possiblePositions) {
         this.possiblePositions = possiblePositions;
+    }
+
+    public OnPossibilityClickListener getOnPossibilityClickListener() {
+        return onPossibilityClickListener;
+    }
+
+    public void setOnPossibilityClickListener(OnPossibilityClickListener onPossibilityClickListener) {
+        this.onPossibilityClickListener = onPossibilityClickListener;
     }
 }
