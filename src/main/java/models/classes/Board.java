@@ -21,6 +21,7 @@ public class Board {
 
     public Board(GameMode gameMode, PlayerColor playerColor) throws MaxCrownsLandPortionExceeded {
         this.setDominoes(new ArrayList<>()); // we set en empty ArrayList for the dominoes
+        this.setGrid(new ArrayList<>());
         switch (gameMode) {
             case THEGREATDUEL:
                 maxGridSize = 7;
@@ -36,6 +37,50 @@ public class Board {
         this.setCastle(new Castle(playerColor, new Position(maxGridSize, maxGridSize)));
     }
 
+
+    /**
+     * Return all possibilities
+     * @param domino
+     * @return
+     */
+    public List<List<Position>> getPossibilities(Domino domino) {
+        List<List<Position>> listEmptyPlaces = this.getEmptyPlaces(domino);
+        List<List<Position>> listToDelete = new ArrayList<>();
+        for(List<Position> listPosition : listEmptyPlaces) {
+            if(!this.isPossibleToPlaceDomino(listPosition.get(0), listPosition.get(1), domino)) { // we remove the position as a possibility
+                listToDelete.add(listPosition);
+            }
+        }
+        listEmptyPlaces.removeAll(listToDelete);
+
+        // we impact the view
+        for(List<Position> list : listEmptyPlaces) { // TODO simplify
+            Position position1 = list.get(0);
+            Position position2 = list.get(1);
+            boolean hasToBeInverted = false;
+            // we check if the position must be inverted
+            if(position1.getX() == position2.getX()) { // horizontal
+                if(position1.getY() <= position2.getY()) {
+                    // invert
+                    hasToBeInverted = true;
+                }
+            }
+            if(position1.getY() == position2.getY()) { // vertical
+                if(position1.getX() >= position2.getX()) {
+                    // invert
+                    hasToBeInverted = true;
+                }
+            }
+            if(hasToBeInverted) {
+                Position tempPosition = new Position(position1.getX(), position1.getY()); // TODO copy object method
+                position1 = position2;
+                position2 = tempPosition;
+            }
+            this.getBoardView().addPossibility(position1, position2);
+        }
+        return listEmptyPlaces;
+    }
+
     /**
      * Check if it's possible to place the domino pass as parameter to the position1 and position2 according to its rotation
      * @param position1
@@ -44,11 +89,12 @@ public class Board {
      * @return
      */
     // TODO take care if it's the domino positions to not pass them as references. It could be great surcharge this method
-    public boolean isPossibleToPlaceDomino(Position position1, Position position2, Domino domino) {
+    boolean isPossibleToPlaceDomino(Position position1, Position position2, Domino domino) {
         if(this.getLandPortion(position1) != null || this.getLandPortion(position2) != null) {
             return false; // there is already a tile
         }
-        List<Position> maxGridSize = this.calculateMaxGridSize();
+        this.calculateGridMaxSize(); // TODO check if call useful there
+        List<Position> maxGridSize = this.getGrid();
         if(!maxGridSize.contains(position1) || !maxGridSize.contains(position2)) { // the position are not in the possibilities of the maxGrid
             return false;
         }
@@ -64,93 +110,90 @@ public class Board {
         if(position1.getX() != position2.getX() && !domino.isHorizontal()) {
             return false;
         }
-        if((position1.getX() == position2.getX() && position1.getX() > position2.getX()) || (position1.getY() == position2.getY() && position1.getY() < position2.getY())) { // we swap the objects
-            Position position_temp = new Position(position1.getX(), position1.getY());
-            position1 = new Position(position2.getX(), position2.getY());
-            position2 = new Position(position_temp.getX(), position_temp.getY());
-        }
-        LandPortion landPortion1ToCompare = null;
-        LandPortion landPortion2ToCompare = null;
-        switch (domino.getRotation()) {
-            case NORMAL:
-            case RIGHT:
-                landPortion1ToCompare = domino.getLeftPortion();
-                landPortion2ToCompare = domino.getRightPortion();
-                break;
-            case INVERSE:
-            case LEFT:
-                landPortion1ToCompare = domino.getRightPortion();
-                landPortion2ToCompare = domino.getLeftPortion();
-                break;
-        }
-        if(domino.isHorizontal()) {
-            LandPortion leftLandPortionToCheck1 = this.getLandPortion(new Position(position1.getX() - 1, position1.getY()));
-            LandPortion upLandPortionToCheck1 = this.getLandPortion(new Position(position1.getX(), position1.getY() + 1));
-            LandPortion lowLandPortionToCheck1 = this.getLandPortion(new Position(position1.getX(), position1.getY() - 1));
-            if(!isConnectible(landPortion1ToCompare, leftLandPortionToCheck1)){
-                return false;
-            }
-            if(!isConnectible(landPortion1ToCompare, upLandPortionToCheck1)){
-                return false;
-            }
-            if(!isConnectible(landPortion1ToCompare, lowLandPortionToCheck1)){
-                return false;
-            }
-            LandPortion rightLandPortionToCheck2 = this.getLandPortion(new Position(position2.getX() + 1, position2.getY()));
-            LandPortion upLandPortionToCheck2 = this.getLandPortion(new Position(position2.getX(), position2.getY() + 1));
-            LandPortion lowLandPortionToCheck2 = this.getLandPortion(new Position(position2.getX(), position2.getY() - 1));
-            if(!isConnectible(landPortion2ToCompare, rightLandPortionToCheck2)){
-                return false;
-            }
-            if(!isConnectible(landPortion2ToCompare, upLandPortionToCheck2)){
-                return false;
-            }
-            if(!isConnectible(landPortion2ToCompare, lowLandPortionToCheck2)){
-                return false;
-            }
-            return true;
-        } else {
-            LandPortion leftLandPortionToCheck1 = this.getLandPortion(new Position(position1.getX() - 1, position1.getY()));
-            LandPortion rightLandPortionToCheck1 = this.getLandPortion(new Position(position1.getX() + 1, position1.getY()));
-            LandPortion upLandPortionToCheck1 = this.getLandPortion(new Position(position1.getX(), position1.getY() + 1));
-            if(!isConnectible(landPortion1ToCompare, leftLandPortionToCheck1)){
-                return false;
-            }
-            if(!isConnectible(landPortion1ToCompare, rightLandPortionToCheck1)){
-                return false;
-            }
-            if(!isConnectible(landPortion1ToCompare, upLandPortionToCheck1)){
-                return false;
-            }
-            LandPortion rightLandPortionToCheck2 = this.getLandPortion(new Position(position2.getX() + 1, position2.getY()));
-            LandPortion leftLandPortionToCheck2 = this.getLandPortion(new Position(position2.getX() - 1, position2.getY()));
-            LandPortion lowLandPortionToCheck2 = this.getLandPortion(new Position(position2.getX(), position2.getY() - 1));
-            if(!isConnectible(landPortion2ToCompare, rightLandPortionToCheck2)){
-                return false;
-            }
-            if(!isConnectible(landPortion2ToCompare, leftLandPortionToCheck2)){
-                return false;
-            }
-            if(!isConnectible(landPortion2ToCompare, lowLandPortionToCheck2)){
-                return false;
-            }
-            return true;
-        }
+        return true;
     }
 
     /**
-     * Return if the two LandPortion have compatible LandPortionType
-     * @param landPortionToConnect
-     * @param landPortionAlreadyExisting
+     * Return all free places for the Domino passed as parameter
+     * @param domino
      * @return
      */
-    private static boolean isConnectible(LandPortion landPortionToConnect, LandPortion landPortionAlreadyExisting) {
-        if(landPortionToConnect != null && landPortionAlreadyExisting != null) {
-            if(landPortionAlreadyExisting.getLandPortionType() != landPortionToConnect.getLandPortionType() && landPortionAlreadyExisting.getLandPortionType() != LandPortionType.TOUS) {
-                return false;
+    private List<List<Position>> getEmptyPlaces(Domino domino) {
+        List<List<Position>> listEmptyPlaces = new ArrayList<>();
+        this.calculateGridMaxSize(); // TODO not every time
+        List<Position> list1SamePortionType = this.getAllTilesOfType(domino.getLeftPortion().getLandPortionType());
+        List<Position> list2SamePortionType = this.getAllTilesOfType(domino.getRightPortion().getLandPortionType());
+        if(domino.isHorizontal()) {
+            for(Position position : list1SamePortionType) {
+                Position rightSameY = new Position(position.getX() + 1, position.getY());
+                Position rightSameY2 = new Position(position.getX() + 2, position.getY());
+                isTherePlace(listEmptyPlaces, rightSameY, rightSameY2);
+
+                Position rightUpY = new Position(position.getX(), position.getY() + 1);
+                Position rightUpY2 = new Position(position.getX() + 1, position.getY() + 1);
+                isTherePlace(listEmptyPlaces, rightUpY, rightUpY2);
+
+                Position rightLowY = new Position(position.getX(), position.getY() - 1);
+                Position rightLowY2 = new Position(position.getX() + 1, position.getY() - 1);
+                isTherePlace(listEmptyPlaces, rightLowY, rightLowY2);
+            }
+            for(Position position : list2SamePortionType) {
+                Position leftSameY = new Position(position.getX() - 2, position.getY());
+                Position leftSameY2 = new Position(position.getX() - 1, position.getY());
+                isTherePlace(listEmptyPlaces, leftSameY, leftSameY2);
+
+                Position leftUpY = new Position(position.getX() - 1, position.getY() + 1);
+                Position leftUpY2 = new Position(position.getX(), position.getY() + 1);
+                isTherePlace(listEmptyPlaces, leftUpY, leftUpY2);
+
+                Position leftLowY = new Position(position.getX() - 1, position.getY() - 1);
+                Position leftLowY2 = new Position(position.getX(), position.getY() - 1);
+                isTherePlace(listEmptyPlaces, leftLowY, leftLowY2);
+            }
+        } else { // vertical
+            for(Position position : list1SamePortionType) {
+                Position upSameX = new Position(position.getX(), position.getY() + 2);
+                Position upSameX2 = new Position(position.getX(), position.getY() + 1);
+                isTherePlace(listEmptyPlaces, upSameX, upSameX2);
+
+                Position leftUpX = new Position(position.getX() - 1, position.getY() + 1);
+                Position leftUpX2 = new Position(position.getX() - 1, position.getY());
+                isTherePlace(listEmptyPlaces, leftUpX, leftUpX2);
+
+                Position rightUpX = new Position(position.getX() + 1, position.getY() + 1);
+                Position rightUpX2 = new Position(position.getX() + 1, position.getY());
+                isTherePlace(listEmptyPlaces, rightUpX, rightUpX2);
+            }
+            for(Position position : list2SamePortionType) {
+                Position lowSameX = new Position(position.getX(), position.getY() - 1);
+                Position lowSameX2 = new Position(position.getX(), position.getY() - 2);
+                isTherePlace(listEmptyPlaces, lowSameX, lowSameX2);
+
+                Position leftLowX = new Position(position.getX() - 1, position.getY());
+                Position leftLowX2 = new Position(position.getX() - 1, position.getY() - 1);
+                isTherePlace(listEmptyPlaces, leftLowX, leftLowX2);
+
+                Position rightLowX = new Position(position.getX() + 1, position.getY());
+                Position rightLowX2 = new Position(position.getX() + 1, position.getY() - 1);
+                isTherePlace(listEmptyPlaces, rightLowX, rightLowX2);
             }
         }
-        return true;
+        return listEmptyPlaces;
+    }
+
+    /**
+     * Useful method for getEmptyPlaces one. It checks if the position1 and position2 is free, and add them to listEmptyPlaces if it's the case
+     * @param listEmptyPlaces
+     * @param position1
+     * @param position2
+     */
+    private void isTherePlace(List<List<Position>> listEmptyPlaces, Position position1, Position position2) {
+        if(this.getLandPortion(position1) == null && this.getLandPortion(position2) == null) {
+            List<Position> tempList = new ArrayList<>();
+            tempList.add(position1);
+            tempList.add(position2);
+            listEmptyPlaces.add(tempList);
+        }
     }
 
     /**
@@ -179,195 +222,13 @@ public class Board {
     }
 
     /**
-     * Return all possibilities
-     * @param domino
-     * @return
-     */
-    public List<List<Position>> getPossibilities(Domino domino) {
-        List<List<Position>> listEmptyPlaces = this.getEmptyPlaces(domino);
-        List<List<Position>> listToDelete = new ArrayList<>();
-        for(List<Position> listPosition : listEmptyPlaces) {
-            if(!this.isPossibleToPlaceDomino(listPosition.get(0), listPosition.get(1), domino)) { // we remove the position as a possibility
-                listToDelete.add(listPosition);
-            }
-        }
-        listEmptyPlaces.removeAll(listToDelete);
-
-        // we impact the view
-        for(List<Position> list : listEmptyPlaces) {
-            this.getBoardView().addPossibility(list.get(0), list.get(1));
-        }
-        return listEmptyPlaces;
-    }
-
-    /**
-     * Return all empty places according to the domino rotation and LandPortionType of the two LandPortions.
-     * @param domino
-     * @return
-     */
-    private List<List<Position>> getEmptyPlaces(Domino domino) {
-        List<List<Position>> listEmptyPlaces = new ArrayList<>();
-        List<Position> sameTypePortion1PositionList = new ArrayList<>();
-        List<Position> sameTypePortion2PositionList = new ArrayList<>();
-        switch (domino.getRotation()) {
-            case NORMAL:
-            case RIGHT:
-                sameTypePortion1PositionList = this.getAllTilesOfType(domino.getLeftPortion().getLandPortionType());
-                sameTypePortion2PositionList = this.getAllTilesOfType(domino.getRightPortion().getLandPortionType());
-                break;
-            case INVERSE:
-            case LEFT:
-                sameTypePortion1PositionList = this.getAllTilesOfType(domino.getRightPortion().getLandPortionType());
-                sameTypePortion2PositionList = this.getAllTilesOfType(domino.getLeftPortion().getLandPortionType());
-                break;
-        }
-        List<Position> maxGridSize = this.calculateMaxGridSize();
-        switch (domino.getRotation()) {
-            case NORMAL:
-            case INVERSE:
-                for (Position position : sameTypePortion1PositionList) {
-                    Position right1Position = new Position(position.getX() + 1, position.getY());
-                    Position right2Position = new Position(position.getX() + 2, position.getY());
-                    if (maxGridSize.contains(right1Position) && maxGridSize.contains(right2Position)) { // TODO make redundent code in a function ? Make comprehension harder...
-                        if (this.getLandPortion(right1Position) == null && this.getLandPortion(right2Position) == null) {
-                            List<Position> tempList = new ArrayList<>();
-                            tempList.add(right1Position);
-                            tempList.add(right2Position);
-                            listEmptyPlaces.add(tempList);
-                        }
-                    }
-                    Position right1UpPosition = new Position(position.getX(), position.getY() + 1); // up right
-                    Position right2UpPosition = new Position(position.getX() + 1, position.getY() + 1);
-                    if (maxGridSize.contains(right1UpPosition) && maxGridSize.contains(right2UpPosition)) {
-                        if (this.getLandPortion(right1UpPosition) == null && this.getLandPortion(right2UpPosition) == null) {
-                            List<Position> tempList = new ArrayList<>();
-                            tempList.add(right1UpPosition);
-                            tempList.add(right2UpPosition);
-                            listEmptyPlaces.add(tempList);
-                        }
-                    }
-                    Position right1LowPosition = new Position(position.getX(), position.getY() - 1);
-                    Position right2LowPosition = new Position(position.getX() + 1, position.getY() - 1);
-                    if (maxGridSize.contains(right1LowPosition) && maxGridSize.contains(right2LowPosition)) {
-                        if (this.getLandPortion(right1LowPosition) == null && this.getLandPortion(right2LowPosition) == null) {
-                            List<Position> tempList = new ArrayList<>();
-                            tempList.add(right1LowPosition);
-                            tempList.add(right2LowPosition);
-                            listEmptyPlaces.add(tempList);
-                        }
-                    }
-                }
-                for (Position position : sameTypePortion2PositionList) {
-                    Position left1Position = new Position(position.getX() - 2, position.getY());
-                    Position left2Position = new Position(position.getX() - 1, position.getY());
-                    if (maxGridSize.contains(left1Position) && maxGridSize.contains(left2Position)) {
-                        if (this.getLandPortion(left1Position) == null && this.getLandPortion(left2Position) == null) {
-                            List<Position> tempList = new ArrayList<>();
-                            tempList.add(left1Position);
-                            tempList.add(left2Position);
-                            listEmptyPlaces.add(tempList);
-                        }
-                    }
-                    Position left1UpPosition = new Position(position.getX() - 1, position.getY() + 1);
-                    Position left2UpPosition = new Position(position.getX(), position.getY() + 1);
-                    if (maxGridSize.contains(left1UpPosition) && maxGridSize.contains(left2UpPosition)) {
-                        if (this.getLandPortion(left1UpPosition) == null && this.getLandPortion(left2UpPosition) == null) {
-                            List<Position> tempList = new ArrayList<>();
-                            tempList.add(left1UpPosition);
-                            tempList.add(left2UpPosition);
-                            listEmptyPlaces.add(tempList);
-                        }
-                    }
-                    Position left1LowPosition = new Position(position.getX() - 1, position.getY() - 1);
-                    Position left2LowPosition = new Position(position.getX(), position.getY() - 1);
-                    if (maxGridSize.contains(left1LowPosition) && maxGridSize.contains(left2LowPosition)) {
-                        if (this.getLandPortion(left1LowPosition) == null && this.getLandPortion(left2LowPosition) == null) {
-                            List<Position> tempList = new ArrayList<>();
-                            tempList.add(left1LowPosition);
-                            tempList.add(left2LowPosition);
-                            listEmptyPlaces.add(tempList);
-                        }
-                    }
-                }
-                break;
-            case RIGHT:
-            case LEFT:
-                for (Position position : sameTypePortion1PositionList) {
-                    Position low1Position = new Position(position.getX(), position.getY() - 1);
-                    Position low2Position = new Position(position.getX(), position.getY() - 2);
-                    if (maxGridSize.contains(low1Position) && maxGridSize.contains(low2Position)) {
-                        if (this.getLandPortion(low1Position) == null && this.getLandPortion(low2Position) == null) {
-                            List<Position> tempList = new ArrayList<>();
-                            tempList.add(low1Position);
-                            tempList.add(low2Position);
-                            listEmptyPlaces.add(tempList);
-                        }
-                    }
-                    Position right1LowPosition = new Position(position.getX() + 1, position.getY());
-                    Position right2LowPosition = new Position(position.getX() + 1, position.getY() - 1);
-                    if (maxGridSize.contains(right1LowPosition) && maxGridSize.contains(right2LowPosition)) {
-                        if (this.getLandPortion(right1LowPosition) == null && this.getLandPortion(right2LowPosition) == null) {
-                            List<Position> tempList = new ArrayList<>();
-                            tempList.add(right1LowPosition);
-                            tempList.add(right2LowPosition);
-                            listEmptyPlaces.add(tempList);
-                        }
-                    }
-                    Position left1LowPosition = new Position(position.getX() - 1, position.getY());
-                    Position left2LowPosition = new Position(position.getX() - 1, position.getY() - 1);
-                    if (maxGridSize.contains(left1LowPosition) && maxGridSize.contains(left2LowPosition)) {
-                        if (this.getLandPortion(left1LowPosition) == null && this.getLandPortion(left2LowPosition) == null) {
-                            List<Position> tempList = new ArrayList<>();
-                            tempList.add(left1LowPosition);
-                            tempList.add(left2LowPosition);
-                            listEmptyPlaces.add(tempList);
-                        }
-                    }
-                }
-                for (Position position : sameTypePortion2PositionList) {
-                    Position up1Position = new Position(position.getX(), position.getY() + 2);
-                    Position up2Position = new Position(position.getX(), position.getY() + 1);
-                    if (maxGridSize.contains(up1Position) && maxGridSize.contains(up2Position)) {
-                        if (this.getLandPortion(up1Position) == null && this.getLandPortion(up2Position) == null) {
-                            List<Position> tempList = new ArrayList<>();
-                            tempList.add(up1Position);
-                            tempList.add(up2Position);
-                            listEmptyPlaces.add(tempList);
-                        }
-                    }
-                    Position up1RightPosition = new Position(position.getX() + 1, position.getY() + 1);
-                    Position up2RightPosition = new Position(position.getX() + 1, position.getY());
-                    if (maxGridSize.contains(up1RightPosition) && maxGridSize.contains(up2RightPosition)) {
-                        if (this.getLandPortion(up1RightPosition) == null && this.getLandPortion(up2RightPosition) == null) {
-                            List<Position> tempList = new ArrayList<>();
-                            tempList.add(up1RightPosition);
-                            tempList.add(up2RightPosition);
-                            listEmptyPlaces.add(tempList);
-                        }
-                    }
-                    Position up1LeftPosition = new Position(position.getX() - 1, position.getY() + 1);
-                    Position up2LeftPosition = new Position(position.getX() - 1, position.getY());
-                    if (maxGridSize.contains(up1LeftPosition) && maxGridSize.contains(up2LeftPosition)) {
-                        if (this.getLandPortion(up1LeftPosition) == null && this.getLandPortion(up2LeftPosition) == null) {
-                            List<Position> tempList = new ArrayList<>();
-                            tempList.add(up1LeftPosition);
-                            tempList.add(up2LeftPosition);
-                            listEmptyPlaces.add(tempList);
-                        }
-                    }
-                }
-        }
-        return listEmptyPlaces;
-    }
-
-    /**
      * Return a list of all positions having LandPortion with the same type passed as parameter
      * @param landPortionType
      * @return
      */
     private List<Position> getAllTilesOfType(LandPortionType landPortionType) {
         List<Position> positionList = new ArrayList<>();
-        positionList.add(this.getStartTile().getPosition());
+        positionList.add(this.getStartTile().getPosition()); // startTile is connectible to all landPortionType
         for(Domino domino : this.getDominoes()) {
             if(domino.getRightPortion().getPosition() != null && domino.getLeftPortion().getPosition() != null) {
                 if (domino.getLeftPortion().getLandPortionType() == landPortionType) {
@@ -383,17 +244,15 @@ public class Board {
 
     /**
      * Calculate the maxGridSize possible while respecting all rules
-     * @return
      */
-    public List<Position> calculateMaxGridSize() {
-        // TODO optimize with saving results
+    public void calculateGridMaxSize() {
         // we calculate the xMin Position
         Position xMin;
         Position xExtremeLeft = new Position(this.mostLeftPosition().getX(), this.mostLeftPosition().getY());
-        if(xExtremeLeft.getX() - 2 >= 1 && this.mostRightPosition().getX() - xExtremeLeft.getX() - 2 <= this.getMaxGridSize()) {
+        if(xExtremeLeft.getX() - 2 >= 1 && this.mostRightPosition().getX() - (xExtremeLeft.getX() - 2) < this.getMaxGridSize()) {
             xExtremeLeft.setX(xExtremeLeft.getX() - 2);
             xMin = xExtremeLeft;
-        } else if(xExtremeLeft.getX() - 1 >= 1 && this.mostRightPosition().getX() - xExtremeLeft.getX() - 1 <= this.getMaxGridSize()) {
+        } else if(xExtremeLeft.getX() - 1 >= 1 && this.mostRightPosition().getX() - (xExtremeLeft.getX() - 1) < this.getMaxGridSize()) {
             xExtremeLeft.setX(xExtremeLeft.getX() - 1);
             xMin = xExtremeLeft;
         } else {
@@ -403,10 +262,10 @@ public class Board {
         // we calculate the xMax Position
         Position xMax;
         Position xExtremeRight = new Position(this.mostRightPosition().getX(), this.mostRightPosition().getY());
-        if(xExtremeRight.getX() + 2 <= 2 * getMaxGridSize() - 1 && xExtremeRight.getX() + 2 - this.mostLeftPosition().getX() <= this.getMaxGridSize()) {
+        if(xExtremeRight.getX() + 2 <= 2 * getMaxGridSize() - 1 && xExtremeRight.getX() + 2 - this.mostLeftPosition().getX() < this.getMaxGridSize()) {
             xExtremeRight.setX(xExtremeRight.getX() + 2);
             xMax = xExtremeRight;
-        } else if(xExtremeRight.getX() + 1 <= 2 * getMaxGridSize() - 1 && xExtremeRight.getX() + 2 - this.mostLeftPosition().getX() <= this.getMaxGridSize()) {
+        } else if(xExtremeRight.getX() + 1 <= 2 * getMaxGridSize() - 1 && xExtremeRight.getX() + 2 - this.mostLeftPosition().getX() < this.getMaxGridSize()) {
             xExtremeRight.setX(xExtremeRight.getX() + 1);
             xMax = xExtremeRight;
         } else {
@@ -416,23 +275,22 @@ public class Board {
         // we calculate the yMax Position
         Position yMax;
         Position yExtremeUp = new Position(this.upperPosition().getX(), this.upperPosition().getY());
-        if(yExtremeUp.getY() + 2 <= 2 * getMaxGridSize() - 1 && yExtremeUp.getY() + 2 - this.lowerPosition().getY() <= this.getMaxGridSize()) {
+        if(yExtremeUp.getY() + 2 <= 2 * getMaxGridSize() - 1 && yExtremeUp.getY() + 2 - this.lowerPosition().getY() < this.getMaxGridSize()) {
             yExtremeUp.setY(yExtremeUp.getY() + 2);
             yMax = yExtremeUp;
-        } else if(yExtremeUp.getY() + 1 <= 2 * getMaxGridSize() - 1 && yExtremeUp.getY() + 1 - this.lowerPosition().getY() <= this.getMaxGridSize()) {
+        } else if(yExtremeUp.getY() + 1 <= 2 * getMaxGridSize() - 1 && yExtremeUp.getY() + 1 - this.lowerPosition().getY() < this.getMaxGridSize()) {
             yExtremeUp.setY(yExtremeUp.getY() + 1);
             yMax = yExtremeUp;
         } else {
             yMax = yExtremeUp;
         }
-
         // we calculate the yMax Position
         Position yMin;
         Position yExtremeLow = new Position(this.lowerPosition().getX(), this.lowerPosition().getY());
-        if(yExtremeLow.getY() - 2 >= 1 && this.upperPosition().getY() - yExtremeLow.getY() - 2 <= this.getMaxGridSize()) {
+        if(yExtremeLow.getY() - 2 >= 1 && this.upperPosition().getY() - (yExtremeLow.getY() - 2) < this.getMaxGridSize()) {
             yExtremeLow.setY(yExtremeLow.getY() - 2);
             yMin = yExtremeLow;
-        } else if(yExtremeLow.getY() - 1 >= 1 && this.upperPosition().getY() - yExtremeLow.getY() - 1 <= this.getMaxGridSize()) {
+        } else if(yExtremeLow.getY() - 1 >= 1 && this.upperPosition().getY() - (yExtremeLow.getY() - 1) < this.getMaxGridSize()) {
             yExtremeLow.setY(yExtremeLow.getY() - 1);
             yMin = yExtremeLow;
         } else {
@@ -444,7 +302,7 @@ public class Board {
                 positionList.add(new Position(i, j));
             }
         }
-        return positionList;
+        this.setGrid(positionList);
     }
 
     /**
@@ -550,8 +408,13 @@ public class Board {
             if(!isPossibleToPlaceDomino(new Position(domino.getLeftPortion().getPosition().getX(), domino.getLeftPortion().getPosition().getY()), new Position(domino.getRightPortion().getPosition().getX(), domino.getRightPortion().getPosition().getY()), domino)) {
                 throw new InvalidDominoPosition();
             }
+            this.getBoardView().addDomino(domino);
         }
         this.dominoes.add(domino);
+    }
+
+    public void removeDomino(Domino domino) {
+        this.dominoes.remove(domino);
     }
 
     public Castle getCastle() {
