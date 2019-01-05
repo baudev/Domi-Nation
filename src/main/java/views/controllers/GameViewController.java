@@ -11,10 +11,7 @@ import models.enums.GameMode;
 import models.enums.PlayerColor;
 import models.enums.PlayerNumber;
 import models.enums.Rotation;
-import views.interfaces.OnDominoClickListener;
-import views.interfaces.OnGameModeClickListener;
-import views.interfaces.OnPlayerColorClickListener;
-import views.interfaces.OnPlayerNumberClickListener;
+import views.interfaces.*;
 import views.templates.BoardView;
 import views.templates.ColorPlayerView;
 import views.templates.GameModeView;
@@ -198,34 +195,21 @@ public class GameViewController {
                             }
                             newDominoesList.remove(domino);
                             getGame().playerHasSelectedDomino();
+
+                            // we check if it's not a new turn
+                            if (getGame().isAllPickedDominoesListHaveKings(getGame().getPickedDominoes().size() - 1)) {
+                                getGame().setTurnNumber(getGame().getTurnNumber() + 1); // increment the turn number
+                                pickDominoes();
+                            } else {
+                                playTurnPlayer();
+                            }
                         } else {
                             // we get the domino on which the king was
                             Domino previousDomino = getGame().getCurrentPlayer().getDominoWithKing(king);
                             previousDomino.setKing(null); // !! BEFORE SETTING POSITION OF THE PREVIOUS DOMINO !!
 
-                            showRotationButtonAndAssociatedPossibilities(previousDomino);
+                            showRotationButtonAndAssociatedPossibilities(previousDomino, domino, newDominoesList);
 
-                            previousDomino.getLeftPortion().setPosition(new Position(1, 1));
-                            previousDomino.getRightPortion().setPosition(new Position(1, 2));
-
-
-                            try {
-                                getGame().getCurrentPlayer().getBoard().addDomino(domino);
-                            } catch (InvalidDominoPosition invalidDominoPosition) {
-                                invalidDominoPosition.printStackTrace(); // TODO handle this case
-                            }
-                            newDominoesList.remove(domino);
-
-                            // TODO add the Player to the turns list, already done by the following function right ?
-                            getGame().playerHasSelectedDomino();
-                        }
-
-                        // we check if it's not a new turn
-                        if (getGame().isAllPickedDominoesListHaveKings(getGame().getPickedDominoes().size() - 1)) {
-                            getGame().setTurnNumber(getGame().getTurnNumber() + 1); // increment the turn number
-                            pickDominoes();
-                        } else {
-                            playTurnPlayer();
                         }
 
                     }
@@ -238,9 +222,9 @@ public class GameViewController {
      * Show a button to make rotate a domino
      * @param domino
      */
-    public void showRotationButtonAndAssociatedPossibilities(Domino domino) {
+    public void showRotationButtonAndAssociatedPossibilities(Domino previousDomino, Domino domino, DominoesList newDominoesList) {
         //  we show all possible positions
-        getGame().getCurrentPlayer().getBoard().getPossibilities(domino);
+        getGame().getCurrentPlayer().getBoard().getPossibilities(previousDomino);
         // show rotation button
         setButtonRotation(new Button());
         getButtonRotation().setLayoutX(Screen.percentageToXDimension(48));
@@ -250,10 +234,54 @@ public class GameViewController {
         getButtonRotation().setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                domino.setRotation(Rotation.getCorrespondingRotation(domino.getRotation().getDegree() + 90));
+                previousDomino.setRotation(Rotation.getCorrespondingRotation(previousDomino.getRotation().getDegree() + 90));
                 getGame().getCurrentPlayer().getBoard().getBoardView().removeAllPossibilities();
-                getGame().getCurrentPlayer().getBoard().getPossibilities(domino);
+                getGame().getCurrentPlayer().getBoard().getPossibilities(previousDomino);
+            }
+        });
+        getGame().getCurrentPlayer().getBoard().getBoardView().setOnPossibilityClickListener(new OnPossibilityClickListener() {
+            @Override
+            public void onPossibilityClickListener(Position position1, Position position2) {
+                getRoot().getChildren().remove(getButtonRotation()); // we remove the button rotation view
+                getGame().getCurrentPlayer().getBoard().getBoardView().removeAllPossibilities();
+                switch (previousDomino.getRotation()) {
+                    case NORMAL:
+                    case INVERSE:
+                        previousDomino.getLeftPortion().setPosition(position1);
+                        previousDomino.getRightPortion().setPosition(position2);
+                        break;
+                    case LEFT:
+                    case RIGHT:
+                        previousDomino.getLeftPortion().setPosition(position2);
+                        previousDomino.getRightPortion().setPosition(position1);
+                        break;
+                }
+                System.out.println("Left:" + previousDomino.getLeftPortion().getPosition().getX() + "__" + previousDomino.getLeftPortion().getPosition().getY());
+                System.out.println("Right:" + previousDomino.getRightPortion().getPosition().getX() + "__" + previousDomino.getRightPortion().getPosition().getY());
+                try {
+                    /**
+                     * IMPORTANT
+                     * We remove the domino from the board as it was already stored in it with empty position. As the position are now set for this domino, we will not be able to add it (by checking if the position are right).
+                     */
+                    getGame().getCurrentPlayer().getBoard().removeDomino(previousDomino);
+                    getGame().getCurrentPlayer().getBoard().addDomino(previousDomino);
+                    getGame().getCurrentPlayer().getBoard().addDomino(domino); // add the new domino
+                } catch (InvalidDominoPosition invalidDominoPosition) {
+                    invalidDominoPosition.printStackTrace(); // TODO handle this case
+                }
+                newDominoesList.remove(previousDomino);
 
+                // TODO add the Player to the turns list, already done by the following function right ?
+                getGame().playerHasSelectedDomino();
+
+
+                // we check if it's not a new turn
+                if (getGame().isAllPickedDominoesListHaveKings(getGame().getPickedDominoes().size() - 1)) {
+                    getGame().setTurnNumber(getGame().getTurnNumber() + 1); // increment the turn number
+                    pickDominoes();
+                } else {
+                    playTurnPlayer();
+                }
             }
         });
     }
