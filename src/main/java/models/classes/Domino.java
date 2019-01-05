@@ -1,5 +1,6 @@
 package models.classes;
 
+import exceptions.MaxCrownsLandPortionExceeded;
 import models.enums.Rotation;
 import views.templates.DominoView;
 
@@ -95,9 +96,23 @@ public class Domino {
     }
 
     public void setRotation(Rotation rotation) {
-        this.rotation = rotation;
-        if(rotation != null) { // we make rotate the view
-            this.getDominoView().setRotate(rotation.getDegree());
+        switch (rotation) {
+            case INVERSE:
+            case NORMAL:
+                LandPortion landPortionTemp = null;
+                try {
+                    landPortionTemp = new LandPortion(this.getLeftPortion().getNumberCrowns(), this.getLeftPortion().getLandPortionType());
+                } catch (MaxCrownsLandPortionExceeded maxCrownsLandPortionExceeded) {
+                    maxCrownsLandPortionExceeded.printStackTrace();
+                }
+                landPortionTemp.setPosition(this.getLeftPortion().getPosition());
+                landPortionTemp.setLandPortionView(this.getLeftPortion().getLandPortionView());
+                leftPortion = rightPortion;
+                rightPortion = landPortionTemp;
+                break;
         }
+        this.rotation = rotation;
+        // we make rotate the view
+        this.getDominoView().setRotate(rotation.getDegree());
     }
 }
