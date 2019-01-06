@@ -328,6 +328,46 @@ public class Game {
         return Response.NULL;
     }
 
+    public Response playerChoosesPositionForDomino(Position position1, Position position2) {
+        this.getCurrentPlayer().getBoard().getBoardView().removeAllPossibilities();
+        switch (this.getPreviousDomino().getRotation()) {
+            case NORMAL:
+            case INVERSE:
+                this.getPreviousDomino().getLeftPortion().setPosition(position1);
+                this.getPreviousDomino().getRightPortion().setPosition(position2);
+                break;
+            case LEFT:
+            case RIGHT:
+                this.getPreviousDomino().getLeftPortion().setPosition(position2);
+                this.getPreviousDomino().getRightPortion().setPosition(position1);
+                break;
+        }
+        try {
+            /*
+             * IMPORTANT
+             * We remove the domino from the board as it was already stored in it with empty position. As the position are now set for this domino, we will not be able to add it (by checking if the position are right).
+             */
+            this.getCurrentPlayer().getBoard().removeDomino(this.getPreviousDomino());
+            this.getCurrentPlayer().getBoard().addDomino(this.getPreviousDomino());
+            this.getCurrentPlayer().getBoard().addDomino(this.getNewDomino()); // add the new domino
+        } catch (InvalidDominoPosition invalidDominoPosition) {
+            invalidDominoPosition.printStackTrace(); // TODO handle this case
+        }
+        //newDominoesList.remove(previousDomino); // TODO useful ?
+
+        // TODO add the Player to the turns list, already done by the following function right ?
+        this.playerHasSelectedDomino();
+
+
+        // we check if it's not a new turn
+        if (this.isAllPickedDominoesListHaveKings(this.getPickedDominoes().size() - 1)) {
+            this.setTurnNumber(this.getTurnNumber() + 1); // increment the turn number
+            return Response.PICKDOMINOES;
+        } else {
+            return Response.NEXTTURNPLAYER;
+        }
+    }
+
     
     /**
      *
