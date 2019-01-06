@@ -17,13 +17,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Handles all the methods linked to the {@link Domino} source csv file.
+ * The csv file must be located to the resources directory and called <code>dominos.csv</code>.
+ */
 public class CSVReader {
 
     /**
-     * Return a list of all dominoes stored in the csv file
-     * @return
-     * @throws IOException
-     * @throws InvalidDominoesCSVFile
+     * Returns a list of {@link Domino}s stored in the csv file.
+     * @return  {@link DominoesList} which was contained in the csv file.
+     * @throws  IOException Cannot read the csv file correctly.
+     * @throws  InvalidDominoesCSVFile  The content of the csv file is not the same as expected.
      */
     public static DominoesList getDominoes() throws IOException, InvalidDominoesCSVFile {
         Reader reader = Files.newBufferedReader(Paths.get("src/main/resources/dominos.csv"));
