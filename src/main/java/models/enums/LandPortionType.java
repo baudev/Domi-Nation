@@ -7,9 +7,9 @@ public enum LandPortionType {
     CHAMPS(Color.YELLOW),
     FORET(Color.GREEN),
     MER(Color.BLUE),
-    PRAIRIE(Color.RED),
+    PRAIRIE(Color.BLACK),
     MINE(Color.GREY),
-    MONTAGNE(Color.WHITESMOKE),
+    MONTAGNE(Color.CYAN),
     TOUS(Color.PINK);
 
     private Color color;
