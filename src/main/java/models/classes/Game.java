@@ -23,6 +23,7 @@ public class Game {
     private int turnNumber;
     private Player currentPlayer;
     private GameMode gameMode;
+    private boolean isLastTurn;
 
     public Game() {
         this.setPlayers(new ArrayList<>());
@@ -31,6 +32,7 @@ public class Game {
         this.getPlayerTurns().add(new HashMap<>()); // to complete the index 1
         this.setPickedDominoes(new ArrayList<>());
         this.setTurnNumber(1); // first turn start
+        this.setLastTurn(false);
     }
 
 
@@ -178,7 +180,7 @@ public class Game {
     public Response playerChoosesDomino(Domino domino) {
         // we ask for the next King to be placed
         King king = this.nextKing();
-        if(domino.getKing() != null || king.isPlaced()) {
+        if(domino.getKing() != null || king.isPlaced() || !this.getNewDominoesList().contains(domino)) {
             // we do nothing
         } else {
             this.setNewDomino(domino);
@@ -264,6 +266,9 @@ public class Game {
                     smallValue = entry.getValue();
                     player = entry.getKey();
                 }
+            }
+            if(player == null) {
+                player = this.getCurrentPlayer();
             }
             this.setCurrentPlayer(player);
             if(player.getNotPlacedKings().size() == 0) { // all kings are placed, we mark all of them as no more placed anymore
@@ -470,6 +475,14 @@ public class Game {
 
     public void setNewDomino(Domino newDomino) {
         this.newDomino = newDomino;
+    }
+
+    public boolean isLastTurn() {
+        return isLastTurn;
+    }
+
+    public void setLastTurn(boolean lastTurn) {
+        isLastTurn = lastTurn;
     }
 }
 
