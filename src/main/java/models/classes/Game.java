@@ -7,6 +7,7 @@ import helpers.CSVReader;
 import helpers.Function;
 import models.enums.GameMode;
 import models.enums.PlayerColor;
+import models.enums.Response;
 
 import java.io.IOException;
 import java.util.*;
@@ -15,6 +16,7 @@ public class Game {
 
     private DominoesList dominoes;
     private List<DominoesList> pickedDominoes;
+    private Domino previousDomino, newDomino;
     private List<Player> players;
     private List<Map<Player, Integer>> playerTurns;
     private int turnNumber;
@@ -27,6 +29,7 @@ public class Game {
         this.getPlayerTurns().add(new HashMap<>()); // to complete the index 0
         this.getPlayerTurns().add(new HashMap<>()); // to complete the index 1
         this.setPickedDominoes(new ArrayList<>());
+        this.setTurnNumber(1); // first turn start
     }
 
 
@@ -68,6 +71,7 @@ public class Game {
      * Generate the dominoes for the current game
      */
     public void generateDominoes() throws IOException, InvalidDominoesCSVFile {
+        // TODO check if players have been initialised
         this.setDominoes(CSVReader.getDominoes()); // we get all the dominoes stored in the CSV file
         int numberDominoesToRemove = 0;
         switch (this.getPlayers().size()){
@@ -118,18 +122,38 @@ public class Game {
     }
 
     /**
+     * Get the new line on the board
+     * @return
+     */
+    public DominoesList getNewDominoesList() {
+        DominoesList newDominoesList = this.getPickedDominoes().get(this.getPickedDominoes().size() - 1);
+        newDominoesList.sortByNumber(); // sort
+        return newDominoesList;
+    }
+
+    /**
+     * Get the previous line on the board
+     * @return
+     */
+    public DominoesList getPreviousDominoesList() {
+        DominoesList previousDominoesList = this.getPickedDominoes().get(this.getPickedDominoes().size() - 2);
+        previousDominoesList.sortByNumber();
+        return previousDominoesList;
+    }
+
+    /**
      * Pick a number of dominoes
-     * @param number
      * @throws NoMoreDominoInGameStack
      * @throws NotEnoughDominoesInGameStack
      */
-    public void pickDominoes(int number) throws NoMoreDominoInGameStack, NotEnoughDominoesInGameStack {
+    public void pickDominoes() throws NoMoreDominoInGameStack, NotEnoughDominoesInGameStack {
+        int numberToPick = this.numberKingsInGame();
         // we select a part of the class dominoes array
         DominoesList dominoesPicked;
         try {
-             dominoesPicked = new DominoesList(this.getDominoes().subList(0, number));
+             dominoesPicked = new DominoesList(this.getDominoes().subList(0, numberToPick));
             // we remove it from the class array
-            this.getDominoes().subList(0, number).clear();
+            this.getDominoes().subList(0, numberToPick).clear();
             // we add the DominoesList to the Picked Dominoes list
             this.getPickedDominoes().add(dominoesPicked);
         } catch (IndexOutOfBoundsException e) {
@@ -143,6 +167,40 @@ public class Game {
                 throw new NotEnoughDominoesInGameStack(); // there is not enough dominoes asked to be picked
             }
         }
+    }
+
+    public Response playerChoosesDomino(Domino domino, King king) {
+        if(domino.getKing() != null || king.isPlaced()) {
+            // we do nothing
+        } else {
+            domino.setKing(king);
+            if(this.getTurnNumber() == 1) {
+                try {
+                    this.getCurrentPlayer().getBoard().addDomino(domino);
+                } catch (InvalidDominoPosition invalidDominoPosition) {
+                    invalidDominoPosition.printStackTrace(); // TODO handle this case
+                }
+                this.getNewDominoesList().remove(domino);
+                this.playerHasSelectedDomino();
+
+                // we check if it's not a new turn
+                if (this.isAllPickedDominoesListHaveKings(this.getPickedDominoes().size() - 1)) {
+                    this.setTurnNumber(this.getTurnNumber() + 1); // increment the turn number
+                    return Response.PICKDOMINOES;
+                } else {
+                    return Response.NEXTTURNPLAYER;
+                }
+            } else {
+                // we get the domino on which the king was
+                this.setPreviousDomino(this.getCurrentPlayer().getDominoWithKing(king));
+                this.getPreviousDomino().setKing(null); // !! BEFORE SETTING POSITION OF THE PREVIOUS DOMINO !!
+
+                return Response.SHOWPLACEPOSSIBILITIES;
+
+            }
+
+        }
+        return Response.NULL;
     }
 
     /**
@@ -305,6 +363,22 @@ public class Game {
 
     public void setPickedDominoes(List<DominoesList> pickedDominoes) {
         this.pickedDominoes = pickedDominoes;
+    }
+
+    public Domino getPreviousDomino() {
+        return previousDomino;
+    }
+
+    public void setPreviousDomino(Domino previousDomino) {
+        this.previousDomino = previousDomino;
+    }
+
+    public Domino getNewDomino() {
+        return newDomino;
+    }
+
+    public void setNewDomino(Domino newDomino) {
+        this.newDomino = newDomino;
     }
 }
 

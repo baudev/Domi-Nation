@@ -120,7 +120,6 @@ public class GameViewController {
         try {
             this.getGame().initiatePlayers(); // we initiate all player attributes
             this.getGame().generateDominoes(); // we generate the dominoes for the game
-            this.getGame().setTurnNumber(1); // first turn start
             int count = 0;
             for(Player player : this.getGame().getPlayers()) {
                 BoardView boardView = player.getBoard().getBoardView();
@@ -154,64 +153,44 @@ public class GameViewController {
      */
     private void pickDominoes() {
         try {
-            this.getGame().pickDominoes(this.getGame().numberKingsInGame()); // we pick as many dominoes as kings in game
+            this.getGame().pickDominoes(); // we pick as many dominoes as kings in game
         } catch (NoMoreDominoInGameStack noMoreDominoInGameStack) {
             System.out.println("Game ended"); // TODO let finish the others domino
             exit();
         } catch (NotEnoughDominoesInGameStack notEnoughDominoesInGameStack) {
             notEnoughDominoesInGameStack.printStackTrace();
         }
-        DominoesList newDominoesList = this.getGame().getPickedDominoes().get(this.getGame().getPickedDominoes().size() - 1);
-        newDominoesList.sortByNumber(); // we order them by the number
         playTurnPlayer(); // !! BEFORE DOMINO VIEW GENERATION !!
-        this.getRoot().getChildren().add(newDominoesList.getDominoesListView());
-        newDominoesList.getDominoesListView().setLowerPosition();
+        this.getRoot().getChildren().add(this.getGame().getNewDominoesList().getDominoesListView());
+        this.getGame().getNewDominoesList().getDominoesListView().setLowerPosition();
         // we translate by x the precedent row of dominoes
         if(this.getGame().getTurnNumber() > 1) {
-            DominoesList previousDominoesList = this.getGame().getPickedDominoes().get(this.getGame().getPickedDominoes().size() - 2);
-            previousDominoesList.getDominoesListView().setUpperPosition();
+            this.getGame().getPreviousDominoesList().getDominoesListView().setUpperPosition();
         }
-        newDominoesList.getDominoesListView().showPortionsFaces();
+        this.getGame().getNewDominoesList().getDominoesListView().showPortionsFaces();
     }
 
     private void playTurnPlayer() {
-        DominoesList newDominoesList = this.getGame().getPickedDominoes().get(this.getGame().getPickedDominoes().size() - 1);
         // we ask for the next King to be placed
         King king = this.getGame().nextKing();
-        for(Domino domino : newDominoesList) { // we define a clickListener for each domino
+        for(Domino domino : this.getGame().getNewDominoesList()) { // we define a clickListener for each domino
             domino.getDominoView().setOnDominoClickListener(new OnDominoClickListener() {
                 @Override
                 public void onDominoClickListener(Domino domino) {
-                    if(domino.getKing() != null || king.isPlaced()) {
-                        // we do nothing
-                    } else {
-                        domino.setKing(king);
-                        // TODO simplify next operations
-                        if(getGame().getTurnNumber() == 1) {
-                            try {
-                                getGame().getCurrentPlayer().getBoard().addDomino(domino);
-                            } catch (InvalidDominoPosition invalidDominoPosition) {
-                                invalidDominoPosition.printStackTrace(); // TODO handle this case
-                            }
-                            newDominoesList.remove(domino);
-                            getGame().playerHasSelectedDomino();
-
-                            // we check if it's not a new turn
-                            if (getGame().isAllPickedDominoesListHaveKings(getGame().getPickedDominoes().size() - 1)) {
-                                getGame().setTurnNumber(getGame().getTurnNumber() + 1); // increment the turn number
-                                pickDominoes();
-                            } else {
-                                playTurnPlayer();
-                            }
-                        } else {
-                            // we get the domino on which the king was
-                            Domino previousDomino = getGame().getCurrentPlayer().getDominoWithKing(king);
-                            previousDomino.setKing(null); // !! BEFORE SETTING POSITION OF THE PREVIOUS DOMINO !!
-
-                            showRotationButtonAndAssociatedPossibilities(previousDomino, domino, newDominoesList);
-
-                        }
-
+                    switch (getGame().playerChoosesDomino(domino, king)) {
+                        case PICKDOMINOES:
+                            pickDominoes();
+                            break;
+                        case NEXTTURNPLAYER:
+                            playTurnPlayer();
+                            break;
+                        case SHOWPLACEPOSSIBILITIES:
+                            Domino previousDomino = getGame().getPreviousDomino();
+                            showRotationButtonAndAssociatedPossibilities(previousDomino, domino, getGame().getNewDominoesList());
+                            break;
+                        case NULL:
+                            // nothing
+                            break;
                     }
                 }
             });
