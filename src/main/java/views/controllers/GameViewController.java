@@ -171,13 +171,11 @@ public class GameViewController {
     }
 
     private void playTurnPlayer() {
-        // we ask for the next King to be placed
-        King king = this.getGame().nextKing();
         for(Domino domino : this.getGame().getNewDominoesList()) { // we define a clickListener for each domino
             domino.getDominoView().setOnDominoClickListener(new OnDominoClickListener() {
                 @Override
                 public void onDominoClickListener(Domino domino) {
-                    switch (getGame().playerChoosesDomino(domino, king)) {
+                    switch (getGame().playerChoosesDomino(domino)) {
                         case PICKDOMINOES:
                             pickDominoes();
                             break;
@@ -213,9 +211,7 @@ public class GameViewController {
         getButtonRotation().setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                previousDomino.setRotation(Rotation.getCorrespondingRotation(previousDomino.getRotation().getDegree() + 90));
-                getGame().getCurrentPlayer().getBoard().getBoardView().removeAllPossibilities();
-                getGame().getCurrentPlayer().getBoard().getPossibilities(previousDomino);
+                getGame().makeRotateDomino(previousDomino);
             }
         });
 
@@ -227,27 +223,15 @@ public class GameViewController {
         discardButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                try {
-                    System.out.println("Discard");
-                    getGame().getCurrentPlayer().getBoard().getBoardView().removeAllPossibilities();
-                    getGame().getCurrentPlayer().getBoard().removeDomino(previousDomino);
-                    newDominoesList.remove(previousDomino); // TODO useful ? To remove from the game list... already deleted
-                    DominoesList previousDominoesList = getGame().getPickedDominoes().get(getGame().getPickedDominoes().size() - 2);
-                    previousDominoesList.getDominoesListView().removeDominoView(previousDomino);
-                    getGame().getCurrentPlayer().getBoard().addDomino(domino);
-
-                    getGame().playerHasSelectedDomino();
-
-
-                    // we check if it's not a new turn
-                    if (getGame().isAllPickedDominoesListHaveKings(getGame().getPickedDominoes().size() - 1)) {
-                        getGame().setTurnNumber(getGame().getTurnNumber() + 1); // increment the turn number
+                switch (getGame().discardDomino()) {
+                    case PICKDOMINOES:
                         pickDominoes();
-                    } else {
+                        break;
+                    case NEXTTURNPLAYER:
                         playTurnPlayer();
-                    }
-                } catch (InvalidDominoPosition invalidDominoPosition) {
-                    invalidDominoPosition.printStackTrace();
+                        break;
+                    case NULL:
+                        break;
                 }
             }
         });

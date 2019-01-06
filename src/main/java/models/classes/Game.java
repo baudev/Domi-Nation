@@ -8,6 +8,7 @@ import helpers.Function;
 import models.enums.GameMode;
 import models.enums.PlayerColor;
 import models.enums.Response;
+import models.enums.Rotation;
 
 import java.io.IOException;
 import java.util.*;
@@ -169,18 +170,21 @@ public class Game {
         }
     }
 
-    public Response playerChoosesDomino(Domino domino, King king) {
+    public Response playerChoosesDomino(Domino domino) {
+        // we ask for the next King to be placed
+        King king = this.nextKing();
         if(domino.getKing() != null || king.isPlaced()) {
             // we do nothing
         } else {
-            domino.setKing(king);
+            this.setNewDomino(domino);
+            this.getNewDomino().setKing(king);
             if(this.getTurnNumber() == 1) {
                 try {
-                    this.getCurrentPlayer().getBoard().addDomino(domino);
+                    this.getCurrentPlayer().getBoard().addDomino(this.getNewDomino());
                 } catch (InvalidDominoPosition invalidDominoPosition) {
                     invalidDominoPosition.printStackTrace(); // TODO handle this case
                 }
-                this.getNewDominoesList().remove(domino);
+                this.getNewDominoesList().remove(this.getNewDomino());
                 this.playerHasSelectedDomino();
 
                 // we check if it's not a new turn
@@ -196,7 +200,6 @@ public class Game {
                 this.getPreviousDomino().setKing(null); // !! BEFORE SETTING POSITION OF THE PREVIOUS DOMINO !!
 
                 return Response.SHOWPLACEPOSSIBILITIES;
-
             }
 
         }
@@ -292,6 +295,37 @@ public class Game {
             notPlacedKings.addAll(player.getNotPlacedKings());
         }
         return notPlacedKings;
+    }
+
+    public void makeRotateDomino(Domino domino) {
+        domino.setRotation(Rotation.getCorrespondingRotation(domino.getRotation().getDegree() + 90));
+        this.getCurrentPlayer().getBoard().getBoardView().removeAllPossibilities();
+        this.getCurrentPlayer().getBoard().getPossibilities(domino);
+    }
+
+    public Response discardDomino() {
+        try {
+            this.getCurrentPlayer().getBoard().getBoardView().removeAllPossibilities();
+            this.getCurrentPlayer().getBoard().removeDomino(this.getPreviousDomino());
+            this.getNewDominoesList().remove(this.getPreviousDomino());
+            DominoesList previousDominoesList = this.getPickedDominoes().get(this.getPickedDominoes().size() - 2);
+            previousDominoesList.getDominoesListView().removeDominoView(this.getPreviousDomino());
+            this.getCurrentPlayer().getBoard().addDomino(this.getNewDomino());
+
+            this.playerHasSelectedDomino();
+
+
+            // we check if it's not a new turn
+            if (this.isAllPickedDominoesListHaveKings(this.getPickedDominoes().size() - 1)) {
+                this.setTurnNumber(this.getTurnNumber() + 1); // increment the turn number
+                return Response.PICKDOMINOES;
+            } else {
+                return Response.NEXTTURNPLAYER;
+            }
+        } catch (InvalidDominoPosition invalidDominoPosition) {
+            invalidDominoPosition.printStackTrace();
+        }
+        return Response.NULL;
     }
 
     
