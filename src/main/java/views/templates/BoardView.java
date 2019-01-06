@@ -42,7 +42,7 @@ public class BoardView extends Parent {
     }
 
     private void generateBoardView() {
-        this.getBoard().calculateGridMaxSize(); // TODO usefull there ?
+        this.getBoard().calculateGridMaxSize(); // TODO remove all this method
         List<Position> positionList = this.getBoard().getGrid();
         for(Position position : positionList) {
             Rectangle rectangle = new Rectangle();
@@ -52,12 +52,6 @@ public class BoardView extends Parent {
             rectangle.setTranslateX(Screen.percentageToXDimension(3) * (position.getX() - 1));
             rectangle.setTranslateY(Screen.percentageToXDimension(3) * (position.getY() - 1));
             this.getChildren().add(rectangle);
-            rectangle.setOnMouseEntered(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent event) {
-                    System.out.println("Position_" + position.getX() + "_" + position.getY());
-                }
-            });
         }
     }
 
@@ -105,8 +99,6 @@ public class BoardView extends Parent {
     public void addDomino(Domino domino) {
         DominoView dominoView = domino.getDominoView();
         this.getChildren().add(dominoView);
-        System.out.println(domino.getLeftPortion().getPosition().getX() + "_" + domino.getLeftPortion().getPosition().getY());
-        System.out.println(domino.getRightPortion().getPosition().getX() + "_" + domino.getRightPortion().getPosition().getY());
         switch (domino.getRotation()){
             case NORMAL:
                 dominoView.setTranslateX(Screen.percentageToXDimension(3) * (domino.getLeftPortion().getPosition().getX() - 1));
