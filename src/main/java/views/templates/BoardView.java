@@ -24,7 +24,6 @@ public class BoardView extends Parent {
     public BoardView(Board board) {
         this.board = board;
         this.possiblePositions = new ArrayList<>();
-        generateBoardView();
         showStartTile();
         showCastle();
     }
@@ -39,20 +38,6 @@ public class BoardView extends Parent {
 
     private void showCastle() {
         // TODO
-    }
-
-    private void generateBoardView() {
-        this.getBoard().calculateGridMaxSize(); // TODO remove all this method
-        List<Position> positionList = this.getBoard().getGrid();
-        for(Position position : positionList) {
-            Rectangle rectangle = new Rectangle();
-            rectangle.setFill(Color.RED);
-            rectangle.setWidth(Screen.percentageToXDimension(3));
-            rectangle.setHeight(Screen.percentageToXDimension(3));
-            rectangle.setTranslateX(Screen.percentageToXDimension(3) * (position.getX() - 1));
-            rectangle.setTranslateY(Screen.percentageToXDimension(3) * (position.getY() - 1));
-            this.getChildren().add(rectangle);
-        }
     }
 
     public void addPossibility(Position position1, Position position2) {
