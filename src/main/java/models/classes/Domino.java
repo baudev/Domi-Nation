@@ -104,6 +104,7 @@ public class Domino {
      * Get the {@link DominoView} of the {@link Domino}.
      * @return  if the view was not created, a new instance of {@link DominoView}.
      *          if the view was already created, the associated instance of {@link DominoView}.
+     * @see DominoView
      */
     public DominoView getDominoView() {
         if(dominoView == null) {
@@ -153,6 +154,7 @@ public class Domino {
      * Set the current {@link Rotation} of the {@link Domino}.
      * If the {@link Rotation} is <code>INVERSE</code> or <code>NORMAL</code>, then the <code>leftLandPortion</code> and the <code>rightLandPortion</code> are inverted.
      * @param rotation  The new current {@link Rotation} of the {@link Domino}.
+     * @see Rotation
      */
     public void setRotation(Rotation rotation) {
         switch (rotation) {
