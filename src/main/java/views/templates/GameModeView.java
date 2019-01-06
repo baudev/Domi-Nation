@@ -9,6 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
+import models.enums.GameMode;
 import views.interfaces.OnGameModeClickListener;
 
 public class GameModeView extends Parent {
@@ -31,6 +32,9 @@ public class GameModeView extends Parent {
             button.setText(gameMode.toString());
             button.setLayoutX(10);
             button.setLayoutY(10);
+            if(gameMode == GameMode.DYNASTY) {
+                button.setDisable(true);
+            }
 
             button.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
