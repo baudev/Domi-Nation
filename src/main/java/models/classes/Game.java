@@ -170,6 +170,11 @@ public class Game {
         }
     }
 
+    /**
+     * When a player choose a Domino
+     * @param domino
+     * @return
+     */
     public Response playerChoosesDomino(Domino domino) {
         // we ask for the next King to be placed
         King king = this.nextKing();
@@ -185,7 +190,7 @@ public class Game {
                     invalidDominoPosition.printStackTrace(); // TODO handle this case
                 }
                 this.getNewDominoesList().remove(this.getNewDomino());
-                this.playerHasSelectedDomino();
+                this.playerHasFinishSelectingDomino();
 
                 // we check if it's not a new turn
                 if (this.isAllPickedDominoesListHaveKings(this.getPickedDominoes().size() - 1)) {
@@ -211,7 +216,7 @@ public class Game {
      * @param indexList
      * @return
      */
-    public boolean isAllPickedDominoesListHaveKings(int indexList) {
+    private boolean isAllPickedDominoesListHaveKings(int indexList) {
         DominoesList dominoesList = this.getPickedDominoes().get(indexList);
         for(Domino domino : dominoesList) {
             if(domino.getKing() == null) { // there is at least one domino that has no king yet
@@ -237,7 +242,7 @@ public class Game {
      * Return the next King and set the current player
      */
 
-    public King nextKing() {
+    private King nextKing() {
         List<King> notPlacedKingList = this.getNotPlacedKings();
         if(this.getTurnNumber() == 1) { // it's the first turn
             King nextKing = notPlacedKingList.get(Function.randInt(0, notPlacedKingList.size() - 1)); // we take the king randomly
@@ -277,7 +282,7 @@ public class Game {
     /**
      * This function must be called when a player has over his turn. It edits the turns List for next turns.
      */
-    public void playerHasSelectedDomino() {
+    private void playerHasFinishSelectingDomino() {
         if(this.getTurnNumber() + 1 >= this.getPlayerTurns().size()) {
             this.getPlayerTurns().add(new HashMap<>()); // we create the list for the next turn
         }
@@ -297,12 +302,20 @@ public class Game {
         return notPlacedKings;
     }
 
+    /**
+     * Make rotate a Domino by 90 degrees
+     * @param domino
+     */
     public void makeRotateDomino(Domino domino) {
         domino.setRotation(Rotation.getCorrespondingRotation(domino.getRotation().getDegree() + 90));
         this.getCurrentPlayer().getBoard().getBoardView().removeAllPossibilities();
         this.getCurrentPlayer().getBoard().getPossibilities(domino);
     }
 
+    /**
+     * Discard the domino that the player has to place
+     * @return
+     */
     public Response discardDomino() {
         try {
             this.getCurrentPlayer().getBoard().getBoardView().removeAllPossibilities();
@@ -312,7 +325,7 @@ public class Game {
             previousDominoesList.getDominoesListView().removeDominoView(this.getPreviousDomino());
             this.getCurrentPlayer().getBoard().addDomino(this.getNewDomino());
 
-            this.playerHasSelectedDomino();
+            this.playerHasFinishSelectingDomino();
 
 
             // we check if it's not a new turn
@@ -328,6 +341,12 @@ public class Game {
         return Response.NULL;
     }
 
+    /**
+     * Determine the place chosen by the Player for his domino
+     * @param position1
+     * @param position2
+     * @return
+     */
     public Response playerChoosesPositionForDomino(Position position1, Position position2) {
         this.getCurrentPlayer().getBoard().getBoardView().removeAllPossibilities();
         switch (this.getPreviousDomino().getRotation()) {
@@ -353,11 +372,9 @@ public class Game {
         } catch (InvalidDominoPosition invalidDominoPosition) {
             invalidDominoPosition.printStackTrace(); // TODO handle this case
         }
-        //newDominoesList.remove(previousDomino); // TODO useful ?
+        this.getNewDominoesList().remove(this.getPreviousDomino());
 
-        // TODO add the Player to the turns list, already done by the following function right ?
-        this.playerHasSelectedDomino();
-
+        this.playerHasFinishSelectingDomino();
 
         // we check if it's not a new turn
         if (this.isAllPickedDominoesListHaveKings(this.getPickedDominoes().size() - 1)) {
