@@ -201,7 +201,7 @@ public class Board {
      * @param position
      * @return LandPortion|null
      */
-    private LandPortion getLandPortion(Position position) {
+    public LandPortion getLandPortion(Position position) {
         if(position.getX() == this.getMaxGridSize() && position.getY() == this.getMaxGridSize()) {
             return getStartTile();
         } else {
@@ -309,7 +309,7 @@ public class Board {
      * Return the mostLeft position
      * @return
      */
-    private Position mostLeftPosition() {
+    public Position mostLeftPosition() {
         Position mostLeft = new Position(this.getMaxGridSize(), this.getMaxGridSize());
         for(Domino domino : this.getDominoes()) {
             if(domino.getLeftPortion().getPosition() != null) {
@@ -330,7 +330,7 @@ public class Board {
      * Return the most right position
      * @return
      */
-    private Position mostRightPosition() {
+    public Position mostRightPosition() {
         Position mostRight = new Position(this.getMaxGridSize(), this.getMaxGridSize());
         for(Domino domino : this.getDominoes()) {
             if(domino.getLeftPortion().getPosition() != null) {
@@ -351,7 +351,8 @@ public class Board {
      * Return the upper position
      * @return
      */
-    private Position upperPosition() {
+    public Position upperPosition() {
+        // TODO rename in uppest
         Position upperPosition = new Position(this.getMaxGridSize(), this.getMaxGridSize());
         for(Domino domino : this.getDominoes()) {
             if(domino.getLeftPortion().getPosition() != null) {
@@ -372,7 +373,8 @@ public class Board {
      * Return the lower position
      * @return
      */
-    private Position lowerPosition() {
+    public Position lowerPosition() {
+        // TODO rename in lowest
         Position lowerPosition = new Position(this.getMaxGridSize(), this.getMaxGridSize());
         for(Domino domino : this.getDominoes()) {
             if(domino.getLeftPortion().getPosition() != null) {
