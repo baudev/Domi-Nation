@@ -223,6 +223,8 @@ public class GameViewController {
         discardButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
+                hideRotationButton(); // we remove the button rotation view
+                getRoot().getChildren().remove(discardButton);
                 switch (getGame().discardDomino()) {
                     case PICKDOMINOES:
                         pickDominoes();
@@ -240,6 +242,7 @@ public class GameViewController {
             @Override
             public void onPossibilityClickListener(Position position1, Position position2) {
                 hideRotationButton(); // we remove the button rotation view
+                getRoot().getChildren().remove(discardButton);
                 switch (getGame().playerChoosesPositionForDomino(position1, position2)) {
                     case NEXTTURNPLAYER:
                         playTurnPlayer();
