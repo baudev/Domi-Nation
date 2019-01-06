@@ -156,7 +156,7 @@ public class GameViewController {
         try {
             this.getGame().pickDominoes(this.getGame().numberKingsInGame()); // we pick as many dominoes as kings in game
         } catch (NoMoreDominoInGameStack noMoreDominoInGameStack) {
-            System.out.println("Game ended");
+            System.out.println("Game ended"); // TODO let finish the others domino
             exit();
         } catch (NotEnoughDominoesInGameStack notEnoughDominoesInGameStack) {
             notEnoughDominoesInGameStack.printStackTrace();
@@ -239,6 +239,40 @@ public class GameViewController {
                 getGame().getCurrentPlayer().getBoard().getPossibilities(previousDomino);
             }
         });
+
+        Button discardButton = new Button();
+        discardButton.setLayoutX(Screen.percentageToXDimension(55));
+        discardButton.setLayoutY(Screen.percentageToYDimension(60));
+        discardButton.setText("Discard");
+        getRoot().getChildren().add(discardButton);
+        discardButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                try {
+                    System.out.println("Discard");
+                    getGame().getCurrentPlayer().getBoard().getBoardView().removeAllPossibilities();
+                    getGame().getCurrentPlayer().getBoard().removeDomino(previousDomino);
+                    newDominoesList.remove(previousDomino); // TODO useful ? To remove from the game list... already deleted
+                    DominoesList previousDominoesList = getGame().getPickedDominoes().get(getGame().getPickedDominoes().size() - 2);
+                    previousDominoesList.getDominoesListView().removeDominoView(previousDomino);
+                    getGame().getCurrentPlayer().getBoard().addDomino(domino);
+
+                    getGame().playerHasSelectedDomino();
+
+
+                    // we check if it's not a new turn
+                    if (getGame().isAllPickedDominoesListHaveKings(getGame().getPickedDominoes().size() - 1)) {
+                        getGame().setTurnNumber(getGame().getTurnNumber() + 1); // increment the turn number
+                        pickDominoes();
+                    } else {
+                        playTurnPlayer();
+                    }
+                } catch (InvalidDominoPosition invalidDominoPosition) {
+                    invalidDominoPosition.printStackTrace();
+                }
+            }
+        });
+
         getGame().getCurrentPlayer().getBoard().getBoardView().setOnPossibilityClickListener(new OnPossibilityClickListener() {
             @Override
             public void onPossibilityClickListener(Position position1, Position position2) {
@@ -256,8 +290,6 @@ public class GameViewController {
                         previousDomino.getRightPortion().setPosition(position1);
                         break;
                 }
-                System.out.println("Left:" + previousDomino.getLeftPortion().getPosition().getX() + "__" + previousDomino.getLeftPortion().getPosition().getY());
-                System.out.println("Right:" + previousDomino.getRightPortion().getPosition().getX() + "__" + previousDomino.getRightPortion().getPosition().getY());
                 try {
                     /**
                      * IMPORTANT
@@ -269,7 +301,7 @@ public class GameViewController {
                 } catch (InvalidDominoPosition invalidDominoPosition) {
                     invalidDominoPosition.printStackTrace(); // TODO handle this case
                 }
-                newDominoesList.remove(previousDomino);
+                //newDominoesList.remove(previousDomino); // TODO useful ?
 
                 // TODO add the Player to the turns list, already done by the following function right ?
                 getGame().playerHasSelectedDomino();
