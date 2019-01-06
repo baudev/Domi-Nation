@@ -2,6 +2,11 @@ package models.classes;
 
 import models.enums.PlayerColor;
 
+/**
+ * A player's {@link Castle}.
+ * It is the central piece of the {@link Player}'s {@link Board}. Each {@link Player} has only one {@link Castle}.
+ * Each one has an unique {@link Position} and {@link PlayerColor}.
+ */
 public class Castle {
 
     private PlayerColor color;
