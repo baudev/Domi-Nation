@@ -25,7 +25,7 @@ public class Board {
     private BoardView boardView;
 
     /**
-     * Creates a {@link Board} from the {@link GameMode} and {@link PlayerColor} parameter.
+     * Creates a {@link Board} from the {@link GameMode} and {@link PlayerColor} parameters.
      * @param gameMode      {@link GameMode} of the current {@link Game}.
      * @param playerColor   {@link PlayerColor} of the {@link Board}'s {@link Player} owner.
      * @throws MaxCrownsLandPortionExceeded If the number of crowns is not correct.
@@ -55,7 +55,7 @@ public class Board {
      * Then, it checks that these {@link Position} will not make the {@link Board} exceed its regulatory size.
      * @param domino    {@link Domino} for which we want to have the possible positions.
      * @return  {@link List] of {@link Position} {@link List} containing all possible {@link Position}s for the {@link Domino} passed as parameter.
-     *          Each {@link List] of {@link Position}s contains only two of the latter. Indeed, as each {@link Domino} is composed of two {@link LandPortion}, a {@link Position} must be provided for each of them.
+     *          All {@link List] of {@link Position}s contains only two of the latter. Indeed, as each {@link Domino} is composed of two {@link LandPortion}, a {@link Position} must be provided for each of them.
      */
     public List<List<Position>> getPossibilities(Domino domino) {
         List<List<Position>> listEmptyPlaces = this.getEmptyPlaces(domino);
@@ -132,7 +132,7 @@ public class Board {
      * Return all empty {@link Position} for the {@link Domino} passed as parameter.
      * @param domino {@link Domino} for which we are looking for free locations.
      * @return  {@link List] of {@link Position} {@link List} containing all empty {@link Position}s for the {@link Domino} passed as parameter.
-     *          Each {@link List] of {@link Position}s contains only two of the latter. Indeed, as each {@link Domino} is composed of two {@link LandPortion}, a {@link Position} must be provided for each of them.
+     *          All {@link List] of {@link Position}s contains only two of the latter. Indeed, as each {@link Domino} is composed of two {@link LandPortion}, a {@link Position} must be provided for each of them.
      */
     private List<List<Position>> getEmptyPlaces(Domino domino) {
         List<List<Position>> listEmptyPlaces = new ArrayList<>();
