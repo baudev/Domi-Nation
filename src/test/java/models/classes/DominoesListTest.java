@@ -7,6 +7,7 @@ import models.enums.LandPortionType;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import views.templates.DominoView;
+import views.templates.LandPortionView;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -17,6 +18,11 @@ class DominoesListTest {
         new MockUp<DominoView>() {
             @Mock
             public void $init(Domino domino) {
+            }
+        };
+        new MockUp<LandPortionView>() {
+            @Mock
+            public void $init(LandPortion landPortion) {
             }
         };
     }

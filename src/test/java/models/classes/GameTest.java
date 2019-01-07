@@ -10,6 +10,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 import views.templates.DominoView;
+import views.templates.LandPortionView;
 
 import java.io.IOException;
 
@@ -24,6 +25,11 @@ class GameTest {
         new MockUp<DominoView>() {
             @Mock
             public void $init(Domino domino) {
+            }
+        };
+        new MockUp<LandPortionView>() {
+            @Mock
+            public void $init(LandPortion landPortion) {
             }
         };
 
@@ -148,15 +154,16 @@ class GameTest {
         }
     }
 
+    /*
     @Test
     void pick4DominoesOf48ShouldRemain42() throws IOException, InvalidDominoesCSVFile, NotEnoughDominoesInGameStack, NoMoreDominoInGameStack {
         Game game = new Game();
         game.setGameMode(GameMode.THEGREATDUEL);
         game.generateDominoes();
-        game.pickDominoes(4);
+        game.pickDominoes();
         assertEquals(4, game.getPickedDominoes().get(game.getPickedDominoes().size() - 1).size());
         assertEquals(48 - 4, game.getDominoes().size());
-    }
+    }*/
 
     @Test
     void numberKingsInGameShouldReturn4() throws MaxCrownsLandPortionExceeded {

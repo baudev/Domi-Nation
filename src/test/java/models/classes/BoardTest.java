@@ -1,5 +1,6 @@
 package models.classes;
 
+import exceptions.InvalidDominoPosition;
 import exceptions.MaxCrownsLandPortionExceeded;
 import mockit.Mock;
 import mockit.MockUp;
@@ -9,7 +10,9 @@ import models.enums.PlayerColor;
 import models.enums.Rotation;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import views.templates.BoardView;
 import views.templates.DominoView;
+import views.templates.LandPortionView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +26,11 @@ class BoardTest {
         new MockUp<DominoView>() {
             @Mock
             public void $init(Domino domino) {
+            }
+        };
+        new MockUp<LandPortionView>() {
+            @Mock
+            public void $init(LandPortion landPortion) {
             }
         };
     }
@@ -44,7 +52,7 @@ class BoardTest {
     }
 
     @Test
-    void setaddDominoShouldReturnDomino() throws MaxCrownsLandPortionExceeded {
+    void setaddDominoShouldReturnDomino() throws MaxCrownsLandPortionExceeded, InvalidDominoPosition {
         Board board = new Board(GameMode.CLASSIC, PlayerColor.BLUE);
         board.setDominoes(new ArrayList<>());
         Domino domino = new Domino(new LandPortion(1, LandPortionType.CHAMPS), new LandPortion(1, LandPortionType.MINE), 1);
@@ -55,7 +63,8 @@ class BoardTest {
     @Test
     void calculateEmptyGridSizeInNormalGameMode() throws MaxCrownsLandPortionExceeded {
         Board board = new Board(GameMode.CLASSIC, PlayerColor.PINK);
-        List<Position> positionList = board.calculateMaxGridSize();
+        board.calculateGridMaxSize();
+        List<Position> positionList = board.getGrid();
         assertTrue(positionList.contains(new Position(3, 3)));
         assertTrue(positionList.contains(new Position(3, 7)));
         assertTrue(positionList.contains(new Position(7, 7)));
