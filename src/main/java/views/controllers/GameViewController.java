@@ -4,6 +4,7 @@ import exceptions.*;
 import helpers.Screen;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import models.classes.*;
@@ -19,6 +20,7 @@ import views.templates.NumberPlayerView;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import static javafx.application.Platform.exit;
 
@@ -155,44 +157,76 @@ public class GameViewController {
         try {
             this.getGame().pickDominoes(); // we pick as many dominoes as kings in game
         } catch (NoMoreDominoInGameStack noMoreDominoInGameStack) {
-            System.out.println("Game ended"); // TODO let finish the others domino
-            exit();
+            lastPlayerTurn();
         } catch (NotEnoughDominoesInGameStack notEnoughDominoesInGameStack) {
             notEnoughDominoesInGameStack.printStackTrace();
         }
-        playTurnPlayer(); // !! BEFORE DOMINO VIEW GENERATION !!
-        this.getRoot().getChildren().add(this.getGame().getNewDominoesList().getDominoesListView());
-        this.getGame().getNewDominoesList().getDominoesListView().setLowerPosition();
-        // we translate by x the precedent row of dominoes
-        if(this.getGame().getTurnNumber() > 1) {
-            this.getGame().getPreviousDominoesList().getDominoesListView().setUpperPosition();
+        if(!this.getGame().isLastTurn()) {
+            playTurnPlayer(); // !! BEFORE DOMINO VIEW GENERATION !!
+            this.getRoot().getChildren().add(this.getGame().getNewDominoesList().getDominoesListView());
+            this.getGame().getNewDominoesList().getDominoesListView().setLowerPosition();
+            // we translate by x the precedent row of dominoes
+            if (this.getGame().getTurnNumber() > 1) {
+                this.getGame().getPreviousDominoesList().getDominoesListView().setUpperPosition();
+            }
+            this.getGame().getNewDominoesList().getDominoesListView().showPortionsFaces();
         }
-        this.getGame().getNewDominoesList().getDominoesListView().showPortionsFaces();
     }
 
     private void playTurnPlayer() {
-        for(Domino domino : this.getGame().getNewDominoesList()) { // we define a clickListener for each domino
-            domino.getDominoView().setOnDominoClickListener(new OnDominoClickListener() {
-                @Override
-                public void onDominoClickListener(Domino domino) {
-                    switch (getGame().playerChoosesDomino(domino)) {
-                        case PICKDOMINOES:
-                            pickDominoes();
-                            break;
-                        case NEXTTURNPLAYER:
-                            playTurnPlayer();
-                            break;
-                        case SHOWPLACEPOSSIBILITIES:
-                            Domino previousDomino = getGame().getPreviousDomino();
-                            showRotationButtonAndAssociatedPossibilities(previousDomino, domino, getGame().getNewDominoesList());
-                            break;
-                        case NULL:
-                            // nothing
-                            break;
+        if(this.getGame().isLastTurn()) {
+            lastPlayerTurn();
+        } else {
+            for (Domino domino : this.getGame().getNewDominoesList()) { // we define a clickListener for each domino
+                domino.getDominoView().setOnDominoClickListener(new OnDominoClickListener() {
+                    @Override
+                    public void onDominoClickListener(Domino domino) {
+                        switch (getGame().playerChoosesDomino(domino)) {
+                            case PICKDOMINOES:
+                                pickDominoes();
+                                break;
+                            case NEXTTURNPLAYER:
+                                playTurnPlayer();
+                                break;
+                            case SHOWPLACEPOSSIBILITIES:
+                                Domino previousDomino = getGame().getPreviousDomino();
+                                showRotationButtonAndAssociatedPossibilities(previousDomino, domino, getGame().getNewDominoesList());
+                                break;
+                            case NULL:
+                                // nothing
+                                break;
+                        }
                     }
-                }
-            });
+                });
+            }
         }
+    }
+
+    private void lastPlayerTurn() {
+        switch (getGame().playerChoosesDomino(null)){
+            case GAMEOVER:
+                this.calculateScore();
+                break;
+            default:
+                Domino previousDomino = getGame().getPreviousDomino();
+                showRotationButtonAndAssociatedPossibilities(previousDomino, null, getGame().getNewDominoesList());
+                break;
+        }
+    }
+
+    private void calculateScore() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Game results");
+        alert.setHeaderText("The game is over, the results are as follows:");
+        StringBuilder resultsString = new StringBuilder();
+
+        // TODO print on the screen the results
+        Map<Player, Integer> results = this.getGame().calculateScore();
+        for (Map.Entry<Player, Integer> entry : results.entrySet()) {
+            resultsString.append("Player ").append(entry.getKey().getPlayerColor().toString()).append(" : ").append(entry.getValue()).append("\n");
+        }
+        alert.setContentText(resultsString.toString());
+        alert.showAndWait();
     }
 
     /**

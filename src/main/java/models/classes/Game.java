@@ -139,7 +139,12 @@ public class Game {
      * @return
      */
     public DominoesList getPreviousDominoesList() {
-        DominoesList previousDominoesList = this.getPickedDominoes().get(this.getPickedDominoes().size() - 2);
+        DominoesList previousDominoesList;
+        if(!this.isLastTurn) {
+            previousDominoesList = this.getPickedDominoes().get(this.getPickedDominoes().size() - 2);
+        } else {
+            previousDominoesList = this.getPickedDominoes().get(this.getPickedDominoes().size() - 1);
+        }
         previousDominoesList.sortByNumber();
         return previousDominoesList;
     }
@@ -161,6 +166,7 @@ public class Game {
             this.getPickedDominoes().add(dominoesPicked);
         } catch (IndexOutOfBoundsException e) {
             if(this.getDominoes().size() == 0) {
+                this.setLastTurn(true);
                 throw new NoMoreDominoInGameStack(); // there is no more Domino in game to be picked
             } else {
                 dominoesPicked = new DominoesList(this.getDominoes());
@@ -178,39 +184,60 @@ public class Game {
      * @return
      */
     public Response playerChoosesDomino(Domino domino) {
-        // we ask for the next King to be placed
-        King king = this.nextKing();
-        if(domino.getKing() != null || king.isPlaced() || !this.getNewDominoesList().contains(domino)) {
-            // we do nothing
-        } else {
-            this.setNewDomino(domino);
-            this.getNewDomino().setKing(king);
-            if(this.getTurnNumber() == 1) {
-                try {
-                    this.getCurrentPlayer().getBoard().addDomino(this.getNewDomino());
-                } catch (InvalidDominoPosition invalidDominoPosition) {
-                    invalidDominoPosition.printStackTrace(); // TODO handle this case
-                }
-                this.getNewDominoesList().remove(this.getNewDomino());
-                this.playerHasFinishSelectingDomino();
-
-                // we check if it's not a new turn
-                if (this.isAllPickedDominoesListHaveKings(this.getPickedDominoes().size() - 1)) {
-                    this.setTurnNumber(this.getTurnNumber() + 1); // increment the turn number
-                    return Response.PICKDOMINOES;
-                } else {
-                    return Response.NEXTTURNPLAYER;
-                }
-            } else {
-                // we get the domino on which the king was
-                this.setPreviousDomino(this.getCurrentPlayer().getDominoWithKing(king));
-                this.getPreviousDomino().setKing(null); // !! BEFORE SETTING POSITION OF THE PREVIOUS DOMINO !!
-
-                return Response.SHOWPLACEPOSSIBILITIES;
+        if(this.isLastTurn){
+            this.setPreviousDomino(this.getRandomDominoWithoutPosition());
+            if(this.getPreviousDomino() == null) {
+                return Response.GAMEOVER;
             }
+            this.getPreviousDomino().setKing(null); // !! BEFORE SETTING POSITION OF THE PREVIOUS DOMINO !!
 
+            return Response.SHOWPLACEPOSSIBILITIES;
+        } else {
+            // we ask for the next King to be placed
+            King king = this.nextKing();
+            if (domino.getKing() != null || king.isPlaced() || !this.getNewDominoesList().contains(domino)) {
+                // we do nothing
+            } else {
+                this.setNewDomino(domino);
+                this.getNewDomino().setKing(king);
+                if (this.getTurnNumber() == 1) {
+                    try {
+                        this.getCurrentPlayer().getBoard().addDomino(this.getNewDomino());
+                    } catch (InvalidDominoPosition invalidDominoPosition) {
+                        invalidDominoPosition.printStackTrace(); // TODO handle this case
+                    }
+                    this.getNewDominoesList().remove(this.getNewDomino());
+                    this.playerHasFinishSelectingDomino();
+
+                    // we check if it's not a new turn
+                    if (this.isAllPickedDominoesListHaveKings(this.getPickedDominoes().size() - 1)) {
+                        this.setTurnNumber(this.getTurnNumber() + 1); // increment the turn number
+                        return Response.PICKDOMINOES;
+                    } else {
+                        return Response.NEXTTURNPLAYER;
+                    }
+                } else {
+                    // we get the domino on which the king was
+                    this.setPreviousDomino(this.getCurrentPlayer().getDominoWithKing(king));
+                    this.getPreviousDomino().setKing(null); // !! BEFORE SETTING POSITION OF THE PREVIOUS DOMINO !!
+
+                    return Response.SHOWPLACEPOSSIBILITIES;
+                }
+
+            }
         }
         return Response.NULL;
+    }
+
+    private Domino getRandomDominoWithoutPosition() {
+        for(Player player : this.getPlayers()) {
+            Domino dominoWithoutPosition = player.getDominoWithoutPosition();
+            if(dominoWithoutPosition != null) {
+                this.setCurrentPlayer(player);
+                return dominoWithoutPosition;
+            }
+        }
+        return null;
     }
 
     /**
@@ -326,10 +353,10 @@ public class Game {
             this.getCurrentPlayer().getBoard().getBoardView().removeAllPossibilities();
             this.getCurrentPlayer().getBoard().removeDomino(this.getPreviousDomino());
             this.getNewDominoesList().remove(this.getPreviousDomino());
-            DominoesList previousDominoesList = this.getPickedDominoes().get(this.getPickedDominoes().size() - 2);
-            previousDominoesList.getDominoesListView().removeDominoView(this.getPreviousDomino());
-            this.getCurrentPlayer().getBoard().addDomino(this.getNewDomino());
-
+            this.getPreviousDominoesList().getDominoesListView().removeDominoView(this.getPreviousDomino());
+            if(!this.isLastTurn) {
+                this.getCurrentPlayer().getBoard().addDomino(this.getNewDomino());
+            }
             this.playerHasFinishSelectingDomino();
 
 
@@ -371,9 +398,13 @@ public class Game {
              * IMPORTANT
              * We remove the domino from the board as it was already stored in it with empty position. As the position are now set for this domino, we will not be able to add it (by checking if the position are right).
              */
-            this.getCurrentPlayer().getBoard().removeDomino(this.getPreviousDomino());
-            this.getCurrentPlayer().getBoard().addDomino(this.getPreviousDomino());
-            this.getCurrentPlayer().getBoard().addDomino(this.getNewDomino()); // add the new domino
+            if(!this.isLastTurn) {
+                this.getCurrentPlayer().getBoard().removeDomino(this.getPreviousDomino());
+                this.getCurrentPlayer().getBoard().addDomino(this.getPreviousDomino());
+                this.getCurrentPlayer().getBoard().addDomino(this.getNewDomino()); // add the new domino
+            } else {
+                this.getCurrentPlayer().getBoard().getBoardView().addDomino(this.getPreviousDomino());
+            }
         } catch (InvalidDominoPosition invalidDominoPosition) {
             invalidDominoPosition.printStackTrace(); // TODO handle this case
         }
@@ -388,6 +419,10 @@ public class Game {
         } else {
             return Response.NEXTTURNPLAYER;
         }
+    }
+
+    public Map<Player, Integer> calculateScore() {
+        return Score.getScores(this);
     }
 
     
