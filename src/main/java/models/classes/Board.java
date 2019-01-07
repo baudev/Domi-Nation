@@ -10,6 +10,11 @@ import views.templates.BoardView;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents the grid on which the {@link Player} places his {@link Domino}s.
+ * It contains all the methods related to the management of all {@link Domino}s.
+ * It also monitors, depending on the {@link GameMode}, that the size of the game remains in accordance with the rules.
+ */
 public class Board {
 
     private List<Domino> dominoes;
@@ -19,6 +24,12 @@ public class Board {
     private int maxGridSize;
     private BoardView boardView;
 
+    /**
+     * Creates a {@link Board} from the {@link GameMode} and {@link PlayerColor} parameter.
+     * @param gameMode      {@link GameMode} of the current {@link Game}.
+     * @param playerColor   {@link PlayerColor} of the {@link Board}'s {@link Player} owner.
+     * @throws MaxCrownsLandPortionExceeded If the number of crowns is not correct.
+     */
     public Board(GameMode gameMode, PlayerColor playerColor) throws MaxCrownsLandPortionExceeded {
         this.setDominoes(new ArrayList<>()); // we set en empty ArrayList for the dominoes
         this.setGrid(new ArrayList<>());
@@ -39,9 +50,12 @@ public class Board {
 
 
     /**
-     * Return all possibilities
-     * @param domino
-     * @return
+     * Returns all possibles {@link Position} for a {@link Domino}.
+     * This method first recovers all the {@link Position} available for the {@link Domino} passed as parameter, depending on its orientation.
+     * Then, it checks that these {@link Position} will not make the {@link Board} exceed its regulatory size.
+     * @param domino    {@link Domino} for which we want to have the possible positions.
+     * @return  {@link List] of {@link Position} {@link List} containing all possible {@link Position}s for the {@link Domino} passed as parameter.
+     *          Each {@link List] of {@link Position}s contains only two of the latter. Indeed, as each {@link Domino} is composed of two {@link LandPortion}, a {@link Position} must be provided for each of them.
      */
     public List<List<Position>> getPossibilities(Domino domino) {
         List<List<Position>> listEmptyPlaces = this.getEmptyPlaces(domino);
@@ -54,7 +68,7 @@ public class Board {
         listEmptyPlaces.removeAll(listToDelete);
 
         // we impact the view
-        for(List<Position> list : listEmptyPlaces) { // TODO simplify
+        for(List<Position> list : listEmptyPlaces) {
             Position position1 = list.get(0);
             Position position2 = list.get(1);
             boolean hasToBeInverted = false;
@@ -82,14 +96,15 @@ public class Board {
     }
 
     /**
-     * Check if it's possible to place the domino pass as parameter to the position1 and position2 according to its rotation
-     * @param position1
-     * @param position2
-     * @param domino
-     * @return
+     * Check if it's possible to place the {@link Domino} passed as parameter to the position1 and position2 according to its {@link models.enums.Rotation}.
+     * @param position1 {@link Position} of one of the two {@link LandPortion} of the {@link Domino}.
+     * @param position2 {@link Position} of one of the two {@link LandPortion} of the {@link Domino}.
+     * @param domino    {@link Domino} whose possibility of being place at position1 and position2 is checked.
+     * @return  true if the {@link Domino} can be placed to the position1 and position2.
+     *          false otherwise.
      */
     // TODO take care if it's the domino positions to not pass them as references. It could be great surcharge this method
-    boolean isPossibleToPlaceDomino(Position position1, Position position2, Domino domino) {
+    public boolean isPossibleToPlaceDomino(Position position1, Position position2, Domino domino) {
         if(this.getLandPortion(position1) != null || this.getLandPortion(position2) != null) {
             return false; // there is already a tile
         }
@@ -114,9 +129,10 @@ public class Board {
     }
 
     /**
-     * Return all free places for the Domino passed as parameter
-     * @param domino
-     * @return
+     * Return all empty {@link Position} for the {@link Domino} passed as parameter.
+     * @param domino {@link Domino} for which we are looking for free locations.
+     * @return  {@link List] of {@link Position} {@link List} containing all empty {@link Position}s for the {@link Domino} passed as parameter.
+     *          Each {@link List] of {@link Position}s contains only two of the latter. Indeed, as each {@link Domino} is composed of two {@link LandPortion}, a {@link Position} must be provided for each of them.
      */
     private List<List<Position>> getEmptyPlaces(Domino domino) {
         List<List<Position>> listEmptyPlaces = new ArrayList<>();
@@ -182,10 +198,10 @@ public class Board {
     }
 
     /**
-     * Useful method for getEmptyPlaces one. It checks if the position1 and position2 is free, and add them to listEmptyPlaces if it's the case
-     * @param listEmptyPlaces
-     * @param position1
-     * @param position2
+     * Useful method for {@link Board#getEmptyPlaces(Domino)}. It checks if the position1 and position2 is free, and add them to listEmptyPlaces if it's the case
+     * @param listEmptyPlaces {@link List} where the position1 and position2 must be added if they are free.
+     * @param position1 {@link Position} whose occupation is being checked.
+     * @param position2 {@link Position} whose occupation is being checked.
      */
     private void isTherePlace(List<List<Position>> listEmptyPlaces, Position position1, Position position2) {
         if(this.getLandPortion(position1) == null && this.getLandPortion(position2) == null) {
@@ -197,9 +213,10 @@ public class Board {
     }
 
     /**
-     * Return the LandPortion situated on the position given as parameter.
-     * @param position
-     * @return LandPortion|null
+     * Returns the {@link LandPortion} situated on the {@link Position} given as parameter.
+     * @param position {@link Position} in which we want to know what's there.
+     * @return {@link LandPortion} if there is one located at the position specified as parameter.
+     *          Null if nothing was found to the position specified.
      */
     public LandPortion getLandPortion(Position position) {
         if(position.getX() == this.getMaxGridSize() && position.getY() == this.getMaxGridSize()) {
@@ -222,9 +239,9 @@ public class Board {
     }
 
     /**
-     * Return a list of all positions having LandPortion with the same type passed as parameter
-     * @param landPortionType
-     * @return
+     * Returns a {@link List} of all {@link Position}s having {@link LandPortion} with the same {@link LandPortionType} passed as parameter.
+     * @param landPortionType {@link LandPortionType} we are looking for in the {@link Board}.
+     * @return  {@link List} of {@link Position} having the same {@link LandPortionType}.
      */
     private List<Position> getAllTilesOfType(LandPortionType landPortionType) {
         List<Position> positionList = new ArrayList<>();
@@ -243,7 +260,9 @@ public class Board {
     }
 
     /**
-     * Calculate the maxGridSize possible while respecting all rules
+     * Calculates the maxGridSize possible while respecting all rules.
+     * This updates the grid attribute. It calculates the {@link Position}s of the extremes of the {@link Board}.
+     * This function allows you to know if you can place a {@link Domino} for example in a {@link Position} without exceeding the size of the regulatory {@link Board}.
      */
     public void calculateGridMaxSize() {
         // we calculate the xMin Position
@@ -274,7 +293,7 @@ public class Board {
 
         // we calculate the yMax Position
         Position yMax;
-        Position yExtremeUp = new Position(this.upperPosition().getX(), this.upperPosition().getY());
+        Position yExtremeUp = new Position(this.highestPosition().getX(), this.highestPosition().getY());
         if(yExtremeUp.getY() + 2 <= 2 * getMaxGridSize() - 1 && yExtremeUp.getY() + 2 - this.lowerPosition().getY() < this.getMaxGridSize()) {
             yExtremeUp.setY(yExtremeUp.getY() + 2);
             yMax = yExtremeUp;
@@ -287,10 +306,10 @@ public class Board {
         // we calculate the yMax Position
         Position yMin;
         Position yExtremeLow = new Position(this.lowerPosition().getX(), this.lowerPosition().getY());
-        if(yExtremeLow.getY() - 2 >= 1 && this.upperPosition().getY() - (yExtremeLow.getY() - 2) < this.getMaxGridSize()) {
+        if(yExtremeLow.getY() - 2 >= 1 && this.highestPosition().getY() - (yExtremeLow.getY() - 2) < this.getMaxGridSize()) {
             yExtremeLow.setY(yExtremeLow.getY() - 2);
             yMin = yExtremeLow;
-        } else if(yExtremeLow.getY() - 1 >= 1 && this.upperPosition().getY() - (yExtremeLow.getY() - 1) < this.getMaxGridSize()) {
+        } else if(yExtremeLow.getY() - 1 >= 1 && this.highestPosition().getY() - (yExtremeLow.getY() - 1) < this.getMaxGridSize()) {
             yExtremeLow.setY(yExtremeLow.getY() - 1);
             yMin = yExtremeLow;
         } else {
@@ -306,8 +325,8 @@ public class Board {
     }
 
     /**
-     * Return the mostLeft position
-     * @return
+     * Return the mostLeft {@link Position}.
+     * @return {@link Position} of the most left element on the {@link Board}.
      */
     public Position mostLeftPosition() {
         Position mostLeft = new Position(this.getMaxGridSize(), this.getMaxGridSize());
@@ -327,8 +346,8 @@ public class Board {
     }
 
     /**
-     * Return the most right position
-     * @return
+     * Return the mostRight {@link Position}.
+     * @return {@link Position} of the most right element on the {@link Board}.
      */
     public Position mostRightPosition() {
         Position mostRight = new Position(this.getMaxGridSize(), this.getMaxGridSize());
@@ -348,11 +367,10 @@ public class Board {
     }
 
     /**
-     * Return the upper position
-     * @return
+     * Return the highest {@link Position}.
+     * @return {@link Position} of the highest element on the {@link Board}.
      */
-    public Position upperPosition() {
-        // TODO rename in uppest
+    public Position highestPosition() {
         Position upperPosition = new Position(this.getMaxGridSize(), this.getMaxGridSize());
         for(Domino domino : this.getDominoes()) {
             if(domino.getLeftPortion().getPosition() != null) {
@@ -370,8 +388,8 @@ public class Board {
     }
 
     /**
-     * Return the lower position
-     * @return
+     * Return the lowest {@link Position}.
+     * @return {@link Position} of the lowest element on the {@link Board}.
      */
     public Position lowerPosition() {
         // TODO rename in lowest
@@ -391,20 +409,37 @@ public class Board {
         return lowerPosition;
     }
 
-    /**
+    /*
      *
      * GETTERS AND SETTERS
      *
      */
 
+    /**
+     * Returns all {@link Domino}s selected by the {@link Board}'s {@link Player} owner.
+     * {@link Domino} can have a {@link Position} or not.
+     * @return  {@link List} of {@link Domino}s selected by the {@link Board}'s {@link Player} owner.
+     */
     public List<Domino> getDominoes() {
         return dominoes;
     }
 
+    /**
+     * Sets a list of {@link Domino}s selected by the {@link Board}'s {@link Player} owner.
+     * Take care, it erases all previous selected {@link Domino}s.
+     * @param dominoes  New list of {@link Domino}s selected by the {@link Board}'s {@link Player} owner.
+     */
     public void setDominoes(List<Domino> dominoes) {
         this.dominoes = dominoes;
     }
 
+    /**
+     * Adds a {@link Domino} to the list of {@link Domino}s selected by the {@link Board}'s {@link Player} owner.
+     * If the {@link Domino} has a {@link Position}, this checks if it can be added on the {@link Board} by respecting the connection rules.
+     * This impacts the view of the {@link Board} too.
+     * @param domino {@link Domino} which the {@link Player} wants to add.
+     * @throws InvalidDominoPosition    If the {@link Domino} cant be added to the {@link Board}'s {@link Player} according to it's {@link Position}.
+     */
     public void addDomino(Domino domino) throws InvalidDominoPosition {
         if(domino.getLeftPortion().getPosition() != null && domino.getRightPortion().getPosition() != null) {
             if(!isPossibleToPlaceDomino(new Position(domino.getLeftPortion().getPosition().getX(), domino.getLeftPortion().getPosition().getY()), new Position(domino.getRightPortion().getPosition().getX(), domino.getRightPortion().getPosition().getY()), domino)) {
@@ -415,42 +450,88 @@ public class Board {
         this.dominoes.add(domino);
     }
 
+    /**
+     * Removes a {@link Domino} to the list of {@link Domino}s selected by the {@link Board}'s {@link Player} owner.
+     * Take care, this doesn't impact the view of the {@link Board}. If you want to, see {@link views.templates.DominoesListView#removeDominoView(Domino)}.
+     * @param domino {@link Domino} which the {@link Player} wants to remove.
+     */
     public void removeDomino(Domino domino) {
         this.dominoes.remove(domino);
     }
 
+    /**
+     * Gets the {@link Castle} of the {@link Player}.
+     * @return {@link Castle} of the {@link Player}.
+     */
     public Castle getCastle() {
         return castle;
     }
 
+    /**
+     * Sets the {@link Castle} of the {@link Player}.
+     * @param castle {@link Castle} of the {@link Player} to be set.
+     */
     public void setCastle(Castle castle) {
         this.castle = castle;
     }
 
+    /**
+     * Gets the {@link StartTile} of the {@link Player}.
+     * @return  {@link StartTile} of the {@link Player}.
+     */
     public StartTile getStartTile() {
         return startTile;
     }
 
+    /**
+     * Sets the {@link StartTile} of the {@link Player}.
+     * @param startTile {@link StartTile} of the {@link Player} to be set.
+     */
     public void setStartTile(StartTile startTile) {
         this.startTile = startTile;
     }
 
+    /**
+     * Gets the grid of the {@link Board}.
+     * This is a list of {@link Position}s on which {@link Domino}s are allowed to be placed on it. Outside this list, the {@link Domino} cannot be placed without violating the regulatory size.
+     * @return {@link List} of {@link Position}s on which {@link Domino}s are allowed to be placed on it.
+     * @see #calculateGridMaxSize()
+     */
     public List<Position> getGrid() {
         return grid;
     }
 
+    /**
+     * Sets the grid of the {@link Board}.
+     * This is a list of {@link Position}s on which {@link Domino}s are allowed to be placed on it. Outside this list, the {@link Domino} cannot be placed without violating the regulatory size.
+     * @param grid {@link List} of {@link Position}s on which {@link Domino}s are allowed to be placed on it.
+     * @see #calculateGridMaxSize()
+     */
     public void setGrid(List<Position> grid) {
         this.grid = grid;
     }
 
+    /**
+     * Returns the maximum {@link Board} size allowed according to the {@link GameMode}.
+     * @return integer corresponding to the maximum {@link Board} size allowed.
+     */
     public int getMaxGridSize() {
         return maxGridSize;
     }
 
+    /**
+     * Sets the maximum {@link Board} size allowed according to the {@link GameMode}.
+     * @param maxGridSize integer corresponding to the maximum {@link Board} size allowed.
+     */
     public void setMaxGridSize(int maxGridSize) {
         this.maxGridSize = maxGridSize;
     }
 
+    /**
+     * Gets the JavaFX {@link BoardView} linked to the {@link Board}.
+     * @return  if the view was not created, a new instance of {@link BoardView}.
+     *          if the view was already created, the associated instance of {@link BoardView}.
+     */
     public BoardView getBoardView() {
         if(boardView == null) {
             this.setBoardView(new BoardView(this));
@@ -458,6 +539,10 @@ public class Board {
         return boardView;
     }
 
+    /**
+     * Sets the JavaFX {@link BoardView} linked to the {@link Board}.
+     * @param  boardView JavaFX {@link BoardView} that has to be linked to the {@link Board}.
+     */
     public void setBoardView(BoardView boardView) {
         this.boardView = boardView;
     }
