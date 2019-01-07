@@ -47,6 +47,19 @@ public class Player {
     }
 
     /**
+     * Return a random Domino without position
+     * @return
+     */
+    public Domino getDominoWithoutPosition() {
+        for(Domino domino : this.getBoard().getDominoes()) {
+            if(domino.getLeftPortion().getPosition() == null || domino.getRightPortion().getPosition() == null) {
+                return domino;
+            }
+        }
+        return null;
+    }
+
+    /**
      * Return the smallest domino number value of unplaced ones
      * @return
      */
