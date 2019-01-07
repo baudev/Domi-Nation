@@ -99,7 +99,7 @@ public class Score {
     private static int middleKingdomBonus(Player player) {
         int distanceRight = player.getBoard().mostRightPosition().getX() - player.getBoard().getCastle().getPosition().getX();
         int distanceLeft = player.getBoard().getCastle().getPosition().getX() - player.getBoard().mostLeftPosition().getX();
-        int distanceUp = player.getBoard().upperPosition().getY() - player.getBoard().getCastle().getPosition().getY();
+        int distanceUp = player.getBoard().highestPosition().getY() - player.getBoard().getCastle().getPosition().getY();
         int distanceLow = player.getBoard().getCastle().getPosition().getY() - player.getBoard().lowerPosition().getY();
         if(distanceLeft == distanceRight && distanceUp == distanceLow) {
             return 10;
