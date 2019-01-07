@@ -5,6 +5,7 @@ public enum Response {
     PICKDOMINOES,
     NEXTTURNPLAYER,
     SHOWPLACEPOSSIBILITIES,
+    GAMEOVER,
     NULL;
 
 }
