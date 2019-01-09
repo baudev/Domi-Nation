@@ -115,7 +115,7 @@ public class Domino {
 
     /**
      * Associates a {@link DominoView} to the {@link Domino}.
-     * @param dominoView
+     * @param dominoView {@link DominoView} to be associated to the {@link Domino}.
      */
     public void setDominoView(DominoView dominoView) {
         this.dominoView = dominoView;
@@ -123,7 +123,7 @@ public class Domino {
 
     /**
      * Get the current {@link King} placed on the {@link Domino}.
-     * @return
+     * @return  {@link King} placed on the {@link Domino}. Can be null.
      */
     public King getKing() {
         return king;

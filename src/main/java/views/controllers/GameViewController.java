@@ -49,7 +49,6 @@ public class GameViewController {
         gameModeView.setOnGameModeClickListener(new OnGameModeClickListener() {
             @Override
             public void onGameModeClickListener(GameMode gameMode) {
-                // TODO if DYNASTY, count the number of rounds
                 game.setGameMode(gameMode);  // we set the gameMode of the game
                 // we remove the current view
                 root.getChildren().remove(gameModeView);
@@ -159,7 +158,7 @@ public class GameViewController {
         } catch (NoMoreDominoInGameStack noMoreDominoInGameStack) {
             lastPlayerTurn();
         } catch (NotEnoughDominoesInGameStack notEnoughDominoesInGameStack) {
-            notEnoughDominoesInGameStack.printStackTrace();
+            notEnoughDominoesInGameStack.printStackTrace(); // TODO
         }
         if(!this.getGame().isLastTurn()) {
             playTurnPlayer(); // !! BEFORE DOMINO VIEW GENERATION !!

@@ -6,8 +6,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This is used to get the winner and associated score of each {@link Player} of a {@link Game}.
+ */
 public class Score {
 
+    /**
+     * Returns list of {@link Player}s with their scores.
+     * @param game  {@link Game} that must be scored.
+     * @return  {@link Map} containing {@link Player} and their associated score.
+     */
     public static Map<Player, Integer> getScores(Game game) {
         Map scores = new HashMap();
         for (Player player : game.getPlayers()) {
@@ -16,14 +24,12 @@ public class Score {
         return scores;
     }
 
-    public static int getScores(Player player) {
-        if(player != null) {
-            return playerScore(player);
-        } else {
-            return 0;
-        }
-    }
 
+    /**
+     * Returns the score of a {@link Player}.
+     * @param player {@link Player} whose score must be returned. Player must not be null.
+     * @return  Score of the player passed as parameter.
+     */
     private static int playerScore(Player player) {
         int total = 0;
         int increment = 0;
@@ -46,6 +52,13 @@ public class Score {
         return total;
     }
 
+    /**
+     * Calculate the total of points obtained from the different {@link Player}'s {@link LandPortion}s groups.
+     * @param landPortion  The {@link LandPortion} from where the recursive method start.
+     * @param landPortionList   The memory {@link List} which stores all already scored {@link LandPortion}.
+     * @param board The {@link Board} that must be scored.
+     * @return  The number of points accumulated by the different {@link Player}'s {@link LandPortion}s groups.
+     */
     private static int getGroupScore(LandPortion landPortion, List<LandPortion> landPortionList, Board board) {
         int crownsNumber = 0;
         List<LandPortion> tempList = new ArrayList<>();
@@ -57,6 +70,12 @@ public class Score {
         return crownsNumber * tempList.size();
     }
 
+    /**
+     * Completes the {@link List} by adding {@link LandPortion} of the same groups. This method is recursively collecting any landPortion neighbors with the same {@link models.enums.LandPortionType}.
+     * @param landPortion {@link LandPortion} from which we are searching his {@link LandPortion} group.
+     * @param landPortionList   {@link List} which is completed with the {@link LandPortion} of the same group.
+     * @param board {@link Board} which is scored.
+     */
     private static void getGroupNeighbors(LandPortion landPortion, List<LandPortion> landPortionList, Board board) {
         landPortionList.add(landPortion);
         LandPortion leftNeighbor = board.getLandPortion(new Position(landPortion.getPosition().getX() - 1, landPortion.getPosition().getY()));
@@ -86,6 +105,12 @@ public class Score {
         }
     }
 
+    /**
+     * Returns the bonus associated to each particular {@link models.enums.GameMode}.
+     * @param game  {@link Game} which is currently scored.
+     * @param player    {@link Player} whose we are calculating score.
+     * @return  The number of points obtained thanks to the bonus {@link models.enums.GameMode}.
+     */
     private static int bonusWithMode(Game game, Player player) {
         switch (game.getGameMode()) {
             case MIDDLEKINGDOM:
@@ -96,6 +121,11 @@ public class Score {
         return 0;
     }
 
+    /**
+     * Gets the number of points given by the Middle Kingdom bonus.
+     * @param player    {@link Player} who is scored.
+     * @return  The number of points given by the Middle Kingdom bonus.
+     */
     private static int middleKingdomBonus(Player player) {
         int distanceRight = player.getBoard().mostRightPosition().getX() - player.getBoard().getCastle().getPosition().getX();
         int distanceLeft = player.getBoard().getCastle().getPosition().getX() - player.getBoard().mostLeftPosition().getX();
@@ -107,6 +137,11 @@ public class Score {
         return 0;
     }
 
+    /**
+     * Gets the number of points given by the Harmony bonus.
+     * @param player {@link Player} who is scored.
+     * @return  The number of points given by the Harmony bonus.
+     */
     private static int harmonyBonus(Player player) {
         if(player.getBoard().getDominoes().size() == 12) { // the board is full
             return 5;

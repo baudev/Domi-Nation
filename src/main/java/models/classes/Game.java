@@ -1,7 +1,5 @@
 package models.classes;
 
-
-
 import exceptions.*;
 import helpers.CSVReader;
 import helpers.Function;
@@ -13,6 +11,9 @@ import models.enums.Rotation;
 import java.io.IOException;
 import java.util.*;
 
+/**
+ * This manages the entirety of a {@link Game}.
+ */
 public class Game {
 
     private DominoesList dominoes;
@@ -25,6 +26,9 @@ public class Game {
     private GameMode gameMode;
     private boolean isLastTurn;
 
+    /**
+     * Creates a new {@link Game} with any properties.
+     */
     public Game() {
         this.setPlayers(new ArrayList<>());
         this.setPlayerTurns(new ArrayList<>());
@@ -37,8 +41,8 @@ public class Game {
 
 
     /**
-     * Return all unused player colors
-     * @return
+     * Returns all unused {@link PlayerColor}s.
+     * @return {@link List} of unused {@link PlayerColor}s.
      */
     public List<PlayerColor> getFreePlayerColors() {
         // we add all possible PlayerColors
@@ -51,8 +55,8 @@ public class Game {
     }
 
     /**
-     * Create a player in the game passed in parameter
-     * @param playerColor
+     * Creates a {@link Player} in the {@link Game} with the {@link PlayerColor} passed in parameter.
+     * @param playerColor {@link PlayerColor} of the {@link Player} to be created.
      */
     public void createPlayerWithColor(PlayerColor playerColor) throws PlayerColorAlreadyUsed {
         // we check if the color has not already been taken
@@ -71,7 +75,9 @@ public class Game {
     }
 
     /**
-     * Generate the dominoes for the current game
+     * Generates the {@link Domino}s for the current {@link Game}.
+     * This collects all {@link Domino}s stored in a csv file and select randomly the good number of them according to the number of {@link Player}s and the {@link GameMode}.
+     * @see CSVReader#getDominoes()
      */
     public void generateDominoes() throws IOException, InvalidDominoesCSVFile {
         // TODO check if players have been initialised
@@ -96,8 +102,8 @@ public class Game {
     }
 
     /**
-     * Initiate all player attributes such as their boards or kings
-     * @throws MaxCrownsLandPortionExceeded
+     * Initiates all {@link Player} attributes such as their {@link Board}s or {@link King}s.
+     * @throws MaxCrownsLandPortionExceeded If a {@link LandPortion} has an invalid number of crowns.
      */
     public void initiatePlayers() throws MaxCrownsLandPortionExceeded {
         // for each player we generate his grid and his kings
@@ -125,8 +131,8 @@ public class Game {
     }
 
     /**
-     * Get the new line on the board
-     * @return
+     * Get the new line of {@link Domino}s on the {@link Game}.
+     * @return  {@link DominoesList} containing all {@link Domino}s in the new {@link Game} line.
      */
     public DominoesList getNewDominoesList() {
         DominoesList newDominoesList = this.getPickedDominoes().get(this.getPickedDominoes().size() - 1);
@@ -135,8 +141,8 @@ public class Game {
     }
 
     /**
-     * Get the previous line on the board
-     * @return
+     * Get the previous line of {@link Domino}s on the {@link Game}.
+     * @return  {@link DominoesList} containing all {@link Domino}s in the previous {@link Game} line.
      */
     public DominoesList getPreviousDominoesList() {
         DominoesList previousDominoesList;
@@ -150,9 +156,9 @@ public class Game {
     }
 
     /**
-     * Pick a number of dominoes
-     * @throws NoMoreDominoInGameStack
-     * @throws NotEnoughDominoesInGameStack
+     * Picks as number of {@link Domino}s in the {@link Game} stack as the number of {@link King}s in the {@link Game}.
+     * @throws NoMoreDominoInGameStack  There is no more {@link Domino}s in the {@link Game} stack. This is consequently the last turn.
+     * @throws NotEnoughDominoesInGameStack There is not enough {@link Domino}s in the {@link Game} stack. It's probably a bug as the number of {@link Domino}s in the {@link Game} stack is a multiple of the number of {@link Player}s.
      */
     public void pickDominoes() throws NoMoreDominoInGameStack, NotEnoughDominoesInGameStack {
         int numberToPick = this.numberKingsInGame();
@@ -179,9 +185,13 @@ public class Game {
     }
 
     /**
-     * When a player choose a Domino
-     * @param domino
-     * @return
+     * Sets the domino passed as parameter as a {@link Domino} of the current {@link Player}.
+     * @param domino    {@link Domino} to be set as one of the current {@link Player}.
+     * @return          {@link Response#NEXTTURNPLAYER} if it must be the turn of the next {@link Player}.
+     *                  {@link Response#PICKDOMINOES} if a new turn must be started. A new line of {@link Domino}s must be picked.
+     *                  {@link Response#SHOWPLACEPOSSIBILITIES} if the {@link Position} possibilities must be shown for the domino.
+     *                  {@link Response#GAMEOVER} if the {@link Game} is over.
+     *                  {@link Response#NULL} if nothing must be done. It's probably a bug.
      */
     public Response playerChoosesDomino(Domino domino) {
         if(this.isLastTurn){
@@ -229,6 +239,12 @@ public class Game {
         return Response.NULL;
     }
 
+    /**
+     * Returns a random {@link Domino} with has any {@link Position}.
+     * This methods was designed for the last turn.
+     * Take care, this modify the current {@link Player} of the {@link Game}.
+     * @return  Random {@link Domino} without {@link Position}.
+     */
     private Domino getRandomDominoWithoutPosition() {
         for(Player player : this.getPlayers()) {
             Domino dominoWithoutPosition = player.getDominoWithoutPosition();
@@ -241,9 +257,10 @@ public class Game {
     }
 
     /**
-     * Check if all dominoes in the DominoesList selected from the PickedDominoesList have a king
-     * @param indexList
-     * @return
+     * Checks if all {@link Domino}s in the {@link DominoesList} selected (by the indexList) from the PickedDominoesList have a {@link King}.
+     * @param indexList Index of the {@link DominoesList} from the PickedDominoesList in which this methods checks if all {@link Domino}s have {@link King}.
+     * @return  true if all {@link Domino}s in the select {@link DominoesList} have kings.
+     *          false otherwise.
      */
     private boolean isAllPickedDominoesListHaveKings(int indexList) {
         DominoesList dominoesList = this.getPickedDominoes().get(indexList);
@@ -256,8 +273,8 @@ public class Game {
     }
 
     /**
-     * Return the number of kings in the game
-     * @return
+     * Returns the number of {@link King}s in the {@link Game}.
+     * @return  Number of {@link King}s in the {@link Game}.
      */
     public int numberKingsInGame() {
         int numberKings = 0;
@@ -268,9 +285,8 @@ public class Game {
     }
 
     /**
-     * Return the next King and set the current player
+     * Returns the next {@link King} that has to be placed and set the current {@link Player} of the {@link Game}.
      */
-
     private King nextKing() {
         List<King> notPlacedKingList = this.getNotPlacedKings();
         if(this.getTurnNumber() == 1) { // it's the first turn
@@ -312,7 +328,7 @@ public class Game {
     }
 
     /**
-     * This function must be called when a player has over his turn. It edits the turns List for next turns.
+     * Must be called when a {@link Player} has over his turn. It edits the turns List for next turns.
      */
     private void playerHasFinishSelectingDomino() {
         if(this.getTurnNumber() + 1 >= this.getPlayerTurns().size()) {
@@ -323,8 +339,8 @@ public class Game {
     }
 
     /**
-     * Return List of all not placed kings
-     * @return
+     * Returns {@link List} of all not placed {@link King}s.
+     * @return  {@link List} of all not placed {@link King}s.
      */
     private List<King> getNotPlacedKings() {
         List<King> notPlacedKings = new ArrayList();
@@ -335,8 +351,10 @@ public class Game {
     }
 
     /**
-     * Make rotate a Domino by 90 degrees
-     * @param domino
+     * Makes rotate a {@link Domino} by 90 degrees.
+     * It impacts the view of the {@link Game} and shows new {@link Position} possibilities according to the new domino {@link Rotation}.
+     * @param domino    {@link Domino} that must rotate.
+     * @see Rotation
      */
     public void makeRotateDomino(Domino domino) {
         domino.setRotation(Rotation.getCorrespondingRotation(domino.getRotation().getDegree() + 90));
@@ -345,8 +363,10 @@ public class Game {
     }
 
     /**
-     * Discard the domino that the player has to place
-     * @return
+     * Discards the {@link Domino} that the current {@link Player} has to place.
+     * @return  {@link Response#NEXTTURNPLAYER} if it must be the turn of the next {@link Player}.
+     *          {@link Response#PICKDOMINOES} if a new turn must be started. A new line of {@link Domino}s must be picked.
+     *          {@link Response#NULL} if nothing must be done. It's probably a bug.
      */
     public Response discardDomino() {
         try {
@@ -374,10 +394,12 @@ public class Game {
     }
 
     /**
-     * Determine the place chosen by the Player for his domino
-     * @param position1
-     * @param position2
-     * @return
+     * Determines the {@link Position} chosen by the current {@link Player} for his {@link Domino}.
+     * @param position1 {@link Position} for the first {@link LandPortion} of the {@link Domino}. Take care, position1 must have an x lower than or equal to that of position2. Also, position1 must have an y greater than or equal to that of position2.
+     * @param position2 {@link Position} for the second {@link LandPortion} of the {@link Domino}.
+     * @return  {@link Response#NEXTTURNPLAYER} if it must be the turn of the next {@link Player}.
+     *          {@link Response#PICKDOMINOES} if a new turn must be started. A new line of {@link Domino}s must be picked.
+     * @see LandPortion
      */
     public Response playerChoosesPositionForDomino(Position position1, Position position2) {
         this.getCurrentPlayer().getBoard().getBoardView().removeAllPossibilities();
@@ -421,101 +443,206 @@ public class Game {
         }
     }
 
+    /**
+     * Calculates the score of the {@link Game}.
+     * @return  {@link Map<Player, Integer>} containing all {@link Player}s and their associated score.
+     */
     public Map<Player, Integer> calculateScore() {
         return Score.getScores(this);
     }
-
     
-    /**
+    /*
      *
      * GETTERS AND SETTERS
      *
      */
 
+    /**
+     * Returns all {@link Domino}s in the {@link Game} stack.
+     * @return  {@link DominoesList} containing all {@link Domino}s in the {@link Game} stack.
+     */
     public DominoesList getDominoes() {
         return dominoes;
     }
 
+    /**
+     * Sets all the {@link Domino}s stored in the {@link Game} stack.
+     * Take care, it replaces all previous {@link Domino}s stored in this stack.
+     * @param dominoes {@link DominoesList} to be set as the {@link Game} stack.
+     */
     public void setDominoes(DominoesList dominoes) {
         this.dominoes = dominoes;
     }
 
+    /**
+     * Adds a {@link Domino} in the {@link Game} stack.
+     * @param domino {@link Domino} to be added into the {@link Game} stack.
+     */
     public void addDomino(Domino domino) {
         this.dominoes.add(domino);
     }
 
+    /**
+     * Returns all {@link Player}s of the {@link Game}.
+     * @return  {@link List} of all {@link Player}s in the {@link Game}.
+     */
     public List<Player> getPlayers() {
         return players;
     }
 
+    /**
+     * Sets all {@link Player}s in the {@link Game}.
+     * Take care, it replaces all previous {@link Player}s set in the {@link Game}.
+     * @param players   {@link List} of {@link Player}s of the {@link Game} to be set.
+     */
     public void setPlayers(List<Player> players) {
         this.players = players;
     }
 
+    /**
+     * Adds a {@link Player} into the {@link Game}.
+     * @param player    {@link Player} to be added into the {@link Game}.
+     */
     public void addPlayer(Player player) {
         this.players.add(player);
     }
 
+    /**
+     * Returns the {@link GameMode} of the {@link Game}.
+     * @return  {@link GameMode} of the {@link Game}.
+     * @see GameMode
+     */
     public GameMode getGameMode() {
         return gameMode;
     }
 
+    /**
+     * Sets the {@link GameMode} of the {@link Game}.
+     * @param gameMode {@link GameMode} of the {@link Game} to be set.
+     */
     public void setGameMode(GameMode gameMode) {
         this.gameMode = gameMode;
     }
 
+    /**
+     * Returns the current {@link Player} of the {@link Game}.
+     * @return  Current {@link Player} of the {@link Game}.
+     */
     public Player getCurrentPlayer() {
         return currentPlayer;
     }
 
+    /**
+     * Sets the current {@link Player} of the {@link Game}.
+     * @param currentPlayer Current {@link Player} of the {@link Game} to be set.
+     */
     public void setCurrentPlayer(Player currentPlayer) {
         this.currentPlayer = currentPlayer;
     }
 
+    /**
+     * Returns the {@link List<Map<Player, Integer>>} of {@link Player}s turns.
+     * It contains the order of player turns, for each one.
+     * @return {@link List<Map<Player, Integer>>} of the {@link Player}s turns.
+     */
     public List<Map<Player, Integer>> getPlayerTurns() {
         return playerTurns;
     }
 
+    /**
+     * Sets the {@link List<Map<Player, Integer>>} of {@link Player}s turns.
+     * It contains the order of player turns, for each one.
+     * Take care, it replaces the previous {@link List} stored.
+     * @param playerTurns {@link List<Map<Player, Integer>>} of the {@link Player}s turns to be set.
+     */
     public void setPlayerTurns(List<Map<Player, Integer>> playerTurns) {
         this.playerTurns = playerTurns;
     }
 
+    /**
+     * Returns the current turn number.
+     * @return  The current turn number.
+     */
     public int getTurnNumber() {
         return turnNumber;
     }
 
+    /**
+     * Sets the current turn number.
+     * @param turnNumber    Current turn number to be srt.
+     */
     public void setTurnNumber(int turnNumber) {
         this.turnNumber = turnNumber;
     }
 
+    /**
+     * Returns a {@link List} of {@link DominoesList} of pickedDominoes.
+     * At each execution of {@link #pickDominoes()} a new {@link DominoesList} is added.
+     * @return {@link List} of {@link DominoesList} of pickedDominoes.
+     * @see #pickDominoes()
+     */
     public List<DominoesList> getPickedDominoes() {
         return pickedDominoes;
     }
 
+    /**
+     * Sets the {@link List} of {@link DominoesList} of pickedDominoes.
+     * @param pickedDominoes {@link List} of {@link DominoesList} of pickedDominoes to be set.
+     * @see #pickDominoes()
+     */
     public void setPickedDominoes(List<DominoesList> pickedDominoes) {
         this.pickedDominoes = pickedDominoes;
     }
 
+    /**
+     * Returns the previous {@link Domino} of the current {@link Player}.
+     * It's generally the {@link Domino} that the current {@link Player} has to place on his {@link Board}.
+     * @return  Previous {@link Domino} of the current {@link Player}.
+     */
     public Domino getPreviousDomino() {
         return previousDomino;
     }
 
+    /**
+     * Sets the previous {@link Domino} of the current {@link Player}.
+     * It's generally the {@link Domino} that the current {@link Player} has to place on his {@link Board}.
+     * @param previousDomino  Previous {@link Domino} of the current {@link Player} to be set.
+     */
     public void setPreviousDomino(Domino previousDomino) {
         this.previousDomino = previousDomino;
     }
 
+    /**
+     * Returns the new {@link Domino} of the current {@link Player}.
+     * It's generally the {@link Domino} on which the current {@link Player} has placed one of his {@link King}.
+     * @return  New {@link Domino} of the current {@link Player}.
+     */
     public Domino getNewDomino() {
         return newDomino;
     }
 
+    /**
+     * Sets the new {@link Domino} of the current {@link Player}.
+     * It's generally the {@link Domino} on which the current {@link Player} has placed one of his {@link King}.
+     * @param newDomino  New {@link Domino} of the current {@link Player} to be set.
+     */
     public void setNewDomino(Domino newDomino) {
         this.newDomino = newDomino;
     }
 
+    /**
+     * Returns if this is the last turn of the {@link Game}.
+     * @return  true if this is the last turn of the {@link Game}.
+     *          false otherwise.
+     */
     public boolean isLastTurn() {
         return isLastTurn;
     }
 
+    /**
+     * Sets if this is the last turn of the {@link Game}.
+     * @param lastTurn  Boolean defining if this is the last {@link Game} turn.
+     */
     public void setLastTurn(boolean lastTurn) {
         isLastTurn = lastTurn;
     }
