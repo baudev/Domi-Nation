@@ -85,7 +85,7 @@ public class Game {
         int numberDominoesToRemove = 0;
         switch (this.getPlayers().size()){
             case 2:
-                numberDominoesToRemove = 24;
+                numberDominoesToRemove = 40;//24
                 break;
             case 3:
                 numberDominoesToRemove = 12;
@@ -449,6 +449,14 @@ public class Game {
      */
     public Map<Player, Integer> calculateScore() {
         return Score.getScores(this);
+    }
+
+    /**
+     * Calculates the winner of the {@link Game}.
+     * @return  {@link List} containing one or many winners.
+     */
+    public List<Player> getWinners() {
+        return Score.getWinners(this);
     }
     
     /*

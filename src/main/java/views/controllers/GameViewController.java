@@ -219,13 +219,24 @@ public class GameViewController {
         alert.setHeaderText("The game is over, the results are as follows:");
         StringBuilder resultsString = new StringBuilder();
 
-        // TODO print on the screen the results
         Map<Player, Integer> results = this.getGame().calculateScore();
         for (Map.Entry<Player, Integer> entry : results.entrySet()) {
             resultsString.append("Player ").append(entry.getKey().getPlayerColor().toString()).append(" : ").append(entry.getValue()).append("\n");
         }
         alert.setContentText(resultsString.toString());
         alert.showAndWait();
+
+        Alert alert2 = new Alert(Alert.AlertType.INFORMATION);
+        alert2.setTitle("Game results");
+        alert2.setHeaderText("The winner(s) is/are then:");
+        StringBuilder resultsString2 = new StringBuilder();
+
+        List<Player> winners = this.getGame().getWinners();
+        for (Player player : winners) {
+            resultsString2.append("Player ").append(player.getPlayerColor().toString()).append("\n");
+        }
+        alert2.setContentText(resultsString2.toString());
+        alert2.showAndWait();
     }
 
     /**

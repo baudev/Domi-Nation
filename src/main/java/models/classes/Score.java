@@ -31,12 +31,12 @@ public class Score {
      * @param game {@link Game} which we are searching the winner(s).
      * @return {@link List} of {@link Player}s who are the winners.
      */
-    public static List<Player> getWinner(Game game) {
+    public static List<Player> getWinners(Game game) {
         List<Player> winners = new ArrayList<>();
         Map<Player, Integer> scores = Score.getScores(game);
         Map<Player, Integer> equalityPlayers = Function.getDuplicated(scores);
         if(equalityPlayers.size() < 1) { // there is only one winner with an higher score than the others
-            winners.add(Function.indexWithHigherValue(equalityPlayers).getKey());
+            winners.add(Function.indexWithHigherValue(scores).getKey());
             return winners;
         } else {
             Map<Player, Integer> maxDomainSizePlayers = getMaxDomainSize(game);
@@ -205,25 +205,31 @@ public class Score {
      * @return  The larger domain size of the {@link Player}.
      */
     private static int playerLargerDomain(Player player) {
-        int total = 0;
+        int maxSize = 0;
         int increment = 0;
         List<LandPortion> landPortionList = new ArrayList<>();
         while (increment != player.getBoard().getDominoes().size()) {
             if(player.getBoard().getDominoes().get(increment) != null) {
                 if(player.getBoard().getDominoes().get(increment).getLeftPortion().getPosition() != null) {
                     if (!landPortionList.contains(player.getBoard().getDominoes().get(increment).getLeftPortion())) {
-                        total += getGroupSize(player.getBoard().getDominoes().get(increment).getLeftPortion(), landPortionList, player.getBoard());
+                        int temp = getGroupSize(player.getBoard().getDominoes().get(increment).getLeftPortion(), landPortionList, player.getBoard());
+                        if(temp > maxSize) {
+                            maxSize = temp;
+                        }
                     }
                 }
                 if(player.getBoard().getDominoes().get(increment).getRightPortion().getPosition() != null) {
                     if (!landPortionList.contains(player.getBoard().getDominoes().get(increment).getRightPortion())) {
-                        total += getGroupSize(player.getBoard().getDominoes().get(increment).getRightPortion(), landPortionList, player.getBoard());
+                        int temp = getGroupSize(player.getBoard().getDominoes().get(increment).getRightPortion(), landPortionList, player.getBoard());
+                        if(temp > maxSize) {
+                            maxSize = temp;
+                        }
                     }
                 }
             }
             increment++;
         }
-        return total;
+        return maxSize;
     }
 
     /**
