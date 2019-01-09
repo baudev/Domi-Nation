@@ -6,17 +6,26 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import models.classes.Castle;
-import models.enums.LandPortionType;
 
+/**
+ * JavaFX view of a {@link Castle}.
+ */
 public class CastleView extends Parent {
 
     private Castle castle;
 
+    /**
+     * Generates the view of the castle.
+     * @param castle {@link Castle} owner of the view.
+     */
     public CastleView(Castle castle) {
         this.castle = castle;
         generateCastle();
     }
 
+    /**
+     * Generates the view of the {@link Castle}.
+     */
     private void generateCastle() {
         Rectangle rectangle = new Rectangle();
         rectangle.setWidth(Screen.percentageToXDimension(3));

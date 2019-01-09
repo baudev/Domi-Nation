@@ -14,10 +14,18 @@ import views.interfaces.OnPlayerColorClickListener;
 
 import java.util.List;
 
+/**
+ * JavaFX view allowing a Player to choose his color.
+ */
 public class ColorPlayerView extends Parent {
 
     private OnPlayerColorClickListener onPlayerColorClickListener;
 
+    /**
+     * Generates the view allowing Player to choose his color
+     * @param playerColorList {@link List} containing available {@link PlayerColor}s.
+     * @param playerNumber Number of {@link models.classes.Player}s.
+     */
     public ColorPlayerView(List<PlayerColor> playerColorList, int playerNumber) {
         // Define layout
         GridPane gridPane = new GridPane();
@@ -51,16 +59,25 @@ public class ColorPlayerView extends Parent {
         this.getChildren().add(gridPane); // add the layout to the root group
     }
 
-    /**
+    /*
      *
      * GETTERS AND SETTERS
      *
      */
 
+    /**
+     * Gets the callback of OnPlayerColorClickListener.
+     * @return Callback of OnPlayerColorClickListener
+     * @see OnPlayerColorClickListener
+     */
     public OnPlayerColorClickListener getOnPlayerColorClickListener() {
         return onPlayerColorClickListener;
     }
 
+    /**
+     * Sets the callback of OnPlayerColorClickListener.
+     * @param onPlayerColorClickListener the callback of OnPlayerColorClickListener.
+     */
     public void setOnPlayerColorClickListener(OnPlayerColorClickListener onPlayerColorClickListener) {
         this.onPlayerColorClickListener = onPlayerColorClickListener;
     }
