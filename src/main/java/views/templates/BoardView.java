@@ -37,7 +37,11 @@ public class BoardView extends Parent {
     }
 
     private void showCastle() {
-        // TODO
+        CastleView castleView = this.getBoard().getCastle().getCastleView();
+        this.getChildren().add(castleView);
+        castleView.setTranslateX(Screen.percentageToXDimension(3) * (this.getBoard().getStartTile().getPosition().getX() - 1));
+        castleView.setTranslateY(Screen.percentageToXDimension(3) * (this.getBoard().getStartTile().getPosition().getY() - 1));
+        castleView.toFront();
     }
 
     public void addPossibility(Position position1, Position position2) {

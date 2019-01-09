@@ -85,7 +85,7 @@ public class Game {
         int numberDominoesToRemove = 0;
         switch (this.getPlayers().size()){
             case 2:
-                numberDominoesToRemove = 40;//24
+                numberDominoesToRemove = 24;
                 break;
             case 3:
                 numberDominoesToRemove = 12;
