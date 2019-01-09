@@ -9,9 +9,12 @@ buildscript {
 }
 
 plugins {
+    id 'application'
     id 'java'
     id 'jacoco'
 }
+
+mainClassName = 'Main'
 
 group 'com.domination'
 version '1.0-SNAPSHOT'
