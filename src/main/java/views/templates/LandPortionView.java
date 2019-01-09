@@ -2,10 +2,13 @@ package views.templates;
 
 import helpers.Screen;
 import javafx.scene.Parent;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import models.classes.LandPortion;
+import models.enums.LandPortionType;
 
 
 public class LandPortionView extends Parent {
@@ -26,6 +29,10 @@ public class LandPortionView extends Parent {
         rectangle.setFill(landPortion.getLandPortionType().getValue()); // set color
         rectangle.setWidth(Screen.percentageToXDimension(3));
         rectangle.setHeight(Screen.percentageToXDimension(3));
+        if(landPortion.getLandPortionType() != LandPortionType.TOUS) {
+            Image background = new Image("/tiles/" + this.landPortion.getLandPortionType().toString().toLowerCase() + ".png");
+            rectangle.setFill(new ImagePattern(background));
+        }
         this.getChildren().add(rectangle);
     }
 
