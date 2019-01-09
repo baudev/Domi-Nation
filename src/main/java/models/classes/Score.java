@@ -1,6 +1,8 @@
 package models.classes;
 
 
+import helpers.Function;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,9 +21,43 @@ public class Score {
     public static Map<Player, Integer> getScores(Game game) {
         Map scores = new HashMap();
         for (Player player : game.getPlayers()) {
-            scores.put(player, playerScore(player));
+            scores.put(player, playerScore(player) + bonusWithMode(game, player));
         }
         return scores;
+    }
+
+    /**
+     * Returns the winner of the {@link Game}.
+     * @param game {@link Game} which we are searching the winner(s).
+     * @return {@link List} of {@link Player}s who are the winners.
+     */
+    public static List<Player> getWinner(Game game) {
+        List<Player> winners = new ArrayList<>();
+        Map<Player, Integer> scores = Score.getScores(game);
+        Map<Player, Integer> equalityPlayers = Function.getDuplicated(scores);
+        if(equalityPlayers.size() < 1) { // there is only one winner with an higher score than the others
+            winners.add(Function.indexWithHigherValue(equalityPlayers).getKey());
+            return winners;
+        } else {
+            Map<Player, Integer> maxDomainSizePlayers = getMaxDomainSize(game);
+            equalityPlayers = Function.getDuplicated(maxDomainSizePlayers);
+            if(equalityPlayers.size() < 1) {
+                winners.add(Function.indexWithHigherValue(equalityPlayers).getKey()); // one player has a larger domain compared to others
+                return winners;
+            } else {
+                Map<Player, Integer> numberCrownsPlayers = geNumberCrowns(game);
+                equalityPlayers = Function.getDuplicated(numberCrownsPlayers);
+                if(equalityPlayers.size() < 1) {
+                    winners.add(Function.indexWithHigherValue(equalityPlayers).getKey()); // one player has more crowns than the others
+                    return winners;
+                } else { // many players are winners
+                    for(Map.Entry<Player, Integer> entry : equalityPlayers.entrySet()) {
+                        winners.add(entry.getKey());
+                    }
+                    return winners;
+                }
+            }
+        }
     }
 
 
@@ -147,6 +183,87 @@ public class Score {
             return 5;
         }
         return 0;
+    }
+
+
+    /**
+     * Returns list of {@link Player}s with their max domain size.
+     * @param game  {@link Game} that must be scored.
+     * @return  {@link Map} containing {@link Player} and their associated max domain size.
+     */
+    private static Map<Player, Integer> getMaxDomainSize(Game game) {
+        Map scores = new HashMap();
+        for (Player player : game.getPlayers()) {
+            scores.put(player, playerLargerDomain(player));
+        }
+        return scores;
+    }
+
+    /**
+     * Returns the larger domain size of the player.
+     * @param player {@link Player} whose we are calculating the size of his larger domain.
+     * @return  The larger domain size of the {@link Player}.
+     */
+    private static int playerLargerDomain(Player player) {
+        int total = 0;
+        int increment = 0;
+        List<LandPortion> landPortionList = new ArrayList<>();
+        while (increment != player.getBoard().getDominoes().size()) {
+            if(player.getBoard().getDominoes().get(increment) != null) {
+                if(player.getBoard().getDominoes().get(increment).getLeftPortion().getPosition() != null) {
+                    if (!landPortionList.contains(player.getBoard().getDominoes().get(increment).getLeftPortion())) {
+                        total += getGroupSize(player.getBoard().getDominoes().get(increment).getLeftPortion(), landPortionList, player.getBoard());
+                    }
+                }
+                if(player.getBoard().getDominoes().get(increment).getRightPortion().getPosition() != null) {
+                    if (!landPortionList.contains(player.getBoard().getDominoes().get(increment).getRightPortion())) {
+                        total += getGroupSize(player.getBoard().getDominoes().get(increment).getRightPortion(), landPortionList, player.getBoard());
+                    }
+                }
+            }
+            increment++;
+        }
+        return total;
+    }
+
+    /**
+     * Returns the size of a {@link LandPortion} group.
+     * @param landPortion  The {@link LandPortion} from where the recursive method start.
+     * @param landPortionList   The memory {@link List} which stores all already calculated {@link LandPortion}.
+     * @param board The {@link Board} that must be calculated.
+     * @return
+     */
+    private static int getGroupSize(LandPortion landPortion, List<LandPortion> landPortionList, Board board) {
+        List<LandPortion> tempList = new ArrayList<>();
+        getGroupNeighbors(landPortion, tempList, board);
+        return tempList.size();
+    }
+
+    /**
+     * Returns list of {@link Player}s with their number of crowns.
+     * @param game  {@link Game} that must be scored.
+     * @return  {@link Map} containing {@link Player} and their associated number of crowns.
+     */
+    private static Map<Player, Integer> geNumberCrowns(Game game) {
+        Map scores = new HashMap();
+        for (Player player : game.getPlayers()) {
+            scores.put(player, getNumberCrownsOfPlayer(player));
+        }
+        return scores;
+    }
+
+    /**
+     * Returns the number of crowns that has the player.
+     * @param player    {@link Player} whose we are counting his crowns.
+     * @return  The number of crowns that has the player.
+     */
+    private static int getNumberCrownsOfPlayer(Player player) {
+        int numberCrowns = 0;
+        for(Domino domino : player.getBoard().getDominoes()) {
+            numberCrowns += domino.getLeftPortion().getNumberCrowns();
+            numberCrowns += domino.getRightPortion().getNumberCrowns();
+        }
+        return numberCrowns;
     }
 
 
