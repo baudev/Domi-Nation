@@ -21,7 +21,6 @@ public class CastleView extends Parent {
         Rectangle rectangle = new Rectangle();
         rectangle.setWidth(Screen.percentageToXDimension(3));
         rectangle.setHeight(Screen.percentageToXDimension(3));
-        System.out.println("/castles/" + this.castle.getColor().toString().toLowerCase() + ".png");
         Image background = new Image("/castles/" + this.castle.getColor().toString().toLowerCase() + ".png");
         rectangle.setFill(new ImagePattern(background));
         this.getChildren().add(rectangle);
