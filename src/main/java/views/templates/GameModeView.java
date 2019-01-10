@@ -38,27 +38,28 @@ public class GameModeView extends Parent {
 
         // Define banner
         StackPane stackPane1 = new StackPane();
-        Image imageParchemin = new Image("/parchemin.png");
-        ImageView parchemin = new ImageView(imageParchemin);
-        stackPane1.getChildren().add(parchemin);
-        stackPane1.setMinSize(Screen.percentageToXDimension(100), Screen.percentageToYDimension(100));
-        stackPane1.setAlignment(Pos.CENTER);
-        stackPane1.setTranslateY(Screen.percentageToYDimension(-20));
-        this.getChildren().add(stackPane1);
-
-
-
-        // Define title
-        StackPane stackPane = new StackPane();
+        Rectangle backgroundTitle = new Rectangle(Screen.percentageToXDimension(70),Screen.percentageToYDimension(30)); // create the rectangle that will host the banner
+        Image banner = new Image("/bannerTitleRed.png");
+        backgroundTitle.setFill(new ImagePattern(banner));  //  create a banner
+        stackPane1.getChildren().add(backgroundTitle);  //  add to the stackpane the whole banner
         Text text = new Text();
         text.setText("Select the game mode");
         text.setFont(Font.font("null", FontWeight.BOLD,35));
-        text.setTextAlignment(TextAlignment.CENTER);
-        stackPane.getChildren().add(text);
-        stackPane.setAlignment(Pos.CENTER);
-        stackPane.setMinSize(Screen.percentageToXDimension(100), Screen.percentageToYDimension(50)); // define the size of the stackpane layout
+        text.setFill(Color.GOLD);   //  assign the gold color to the text
+        stackPane1.getChildren().add(text); //  add the text to the stackpane therefore to the banner
+        text.setTranslateX(stackPane1.getWidth()/2);   //   centralize the text
+        text.setTranslateY(stackPane1.getHeight()/2);
 
-        this.getChildren().add(stackPane);
+        stackPane1.setMinSize(Screen.percentageToXDimension(100), Screen.percentageToYDimension(100));  //  Positioning the stackPane
+        stackPane1.setAlignment(Pos.CENTER);
+        stackPane1.setTranslateY(Screen.percentageToYDimension(-35));
+
+        this.getChildren().add(stackPane1); //add the stackPane to the view
+
+
+
+
+
 
 
         // Define layout
@@ -69,50 +70,47 @@ public class GameModeView extends Parent {
         // Add the buttons of each modes
         int i = 0;
         for(models.enums.GameMode gameMode : models.enums.GameMode.values()){
-            Button button = new Button();
-            button.setPrefSize(150,40);
-            button.setText(gameMode.toString());
-            button.setLayoutX(10);
-            button.setLayoutY(10);
-            button.setTextFill(Color.WHITE);
-            button.setStyle("-fx-background-color:#A52A2A");
+            ButtonView buttonView = new ButtonView(gameMode.toString());
+            buttonView.setLayoutX(10);
+            buttonView.setLayoutY(10);
+
 
             if(gameMode == GameMode.DYNASTY) {
-                button.setDisable(true);
+                buttonView.setDisable(true);
             }
 
-            button.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            buttonView.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) { // when the user click on the following button
                     getOnGameModeClickListener().onGameModeClickListener(gameMode); // transmit the event to the view controller callback
                 }
             });
 
-            button.setOnMouseEntered(new EventHandler<MouseEvent>() {
+            buttonView.setOnMouseEntered(new EventHandler<MouseEvent>() {
                 public void handle(MouseEvent me) {
 
                 }
             });
-            button.setOnMouseExited(new EventHandler<MouseEvent>() {
+            buttonView.setOnMouseExited(new EventHandler<MouseEvent>() {
                 public void handle(MouseEvent me) {
 
                 }
             });
-            button.setOnMousePressed(new EventHandler<MouseEvent>() {
+            buttonView.setOnMousePressed(new EventHandler<MouseEvent>() {
                 public void handle(MouseEvent me) {
-                    button.setTranslateY(2);
+                    buttonView.setTranslateY(2);
 
                 }
             });
-            button.setOnMouseReleased(new EventHandler<MouseEvent>() {
+            buttonView.setOnMouseReleased(new EventHandler<MouseEvent>() {
                 public void handle(MouseEvent me) {
-                    button.setTranslateY(-2);
+                    buttonView.setTranslateY(-2);
                 }
             });
 
 
 
-            hBox.getChildren().add(button); // add the button to the layout
+            hBox.getChildren().add(buttonView); // add the button to the layout
             i++;
         }
 
