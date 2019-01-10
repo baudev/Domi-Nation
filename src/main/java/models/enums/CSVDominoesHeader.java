@@ -1,5 +1,8 @@
 package models.enums;
 
+/**
+ * Name of the different csv file columns.
+ */
 public enum CSVDominoesHeader {
 
     NUMBER_CROWNS_PORTION_1,

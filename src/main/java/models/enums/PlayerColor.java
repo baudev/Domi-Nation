@@ -3,7 +3,7 @@ package models.enums;
 import javafx.scene.paint.Color;
 
 /**
- * Different possible colors for a player
+ * Different possible colors for a {@link models.classes.Player}.
  */
 public enum PlayerColor {
 

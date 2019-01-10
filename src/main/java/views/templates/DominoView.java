@@ -2,7 +2,9 @@ package views.templates;
 
 import helpers.Screen;
 import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -47,16 +49,16 @@ public class DominoView extends Parent {
     private void generateNumberFace() {
         this.setRectangleNumber(new Rectangle());
         this.getRectangleNumber().setFill(Color.BLACK); // set color
-        this.getRectangleNumber().setWidth(Screen.percentageToXDimension(8));
-        this.getRectangleNumber().setHeight(Screen.percentageToYDimension(5));
+        this.getRectangleNumber().setWidth(Screen.percentageToXDimension(6));
+        this.getRectangleNumber().setHeight(Screen.percentageToXDimension(3));
         this.getChildren().add(this.getRectangleNumber());
         this.setTextNumber(new Text());
         this.getTextNumber().setText(String.valueOf(domino.getNumber()));
         this.getTextNumber().setFill(Color.WHITE);
         this.getTextNumber().setStyle("-fx-font: " + Screen.percentageToXDimension(1.5) + " arial;");
-        this.getTextNumber().setX(Screen.percentageToXDimension(3.5));
-        this.getTextNumber().setY(Screen.percentageToYDimension(3.5));
         this.getChildren().add(this.getTextNumber());
+        this.getTextNumber().setX(Screen.percentageToXDimension(3) - this.getTextNumber().getBoundsInParent().getWidth());
+        this.getTextNumber().setY(Screen.percentageToXDimension(1.5) + this.getTextNumber().getBoundsInParent().getHeight() / 2);
     }
 
     // TODO Make animations for the following showing/hiding methods
@@ -96,16 +98,18 @@ public class DominoView extends Parent {
         this.getDomino().getRightPortion().getLandPortionView().setOpacity(0);
     }
 
+    /**
+     * Add KingView to the DominoView
+     */
     public void addKing() {
         if(this.getDomino().getKing() != null) {
             // the add the king on the view
             KingView kingView = this.getDomino().getKing().getKingView();
-            kingView.setTranslateX(Screen.percentageToXDimension(3.5));
-            kingView.setTranslateY(Screen.percentageToYDimension(1.5));
             this.getChildren().add(kingView);
+            kingView.setTranslateX(Screen.percentageToXDimension(3) - kingView.getBoundsInParent().getWidth() / 2);
+            kingView.setTranslateY(Screen.percentageToXDimension(1.5) - kingView.getBoundsInParent().getHeight() / 2);
         }
     }
-
 
     /**
      *

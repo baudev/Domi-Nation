@@ -1,5 +1,8 @@
 package models.enums;
 
+/**
+ * Different possible number of {@link models.classes.Player}s in the {@link models.classes.Game}.
+ */
 public enum PlayerNumber {
 
     TWO(2),

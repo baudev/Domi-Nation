@@ -3,7 +3,9 @@ import helpers.Screen;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.stage.Stage;
 import views.controllers.GameViewController;
 
@@ -18,6 +20,8 @@ public class Main extends Application {
         stage.setTitle(Config.getValue("projectName")); // set the title of the window
         Group root = new Group(); // define the root group
         Scene scene = new Scene(root, 200, 200, Color.TRANSPARENT); // define the color of the scene
+        Image image = new Image("/background.png");
+        scene.setFill(new ImagePattern(image));
         stage.setScene(scene);
         stage.setResizable(Boolean.valueOf(Config.getValue("resizable"))); // define if the window is resizable
         // define the size of the stage to be as max as possible
