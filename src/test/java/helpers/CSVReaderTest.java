@@ -4,9 +4,11 @@ import exceptions.InvalidDominoesCSVFile;
 import mockit.Mock;
 import mockit.MockUp;
 import models.classes.Domino;
+import models.classes.LandPortion;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import views.templates.DominoView;
+import views.templates.LandPortionView;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -21,6 +23,11 @@ class CSVReaderTest extends CSVReader {
         new MockUp<DominoView>() {
             @Mock
             public void $init(Domino domino) {
+            }
+        };
+        new MockUp<LandPortionView>() {
+            @Mock
+            public void $init(LandPortion landPortion) {
             }
         };
     }

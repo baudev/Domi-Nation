@@ -4,9 +4,34 @@
 [![codecov](https://codecov.io/gh/baudev/Domi-Nation/branch/dev/graph/badge.svg?token=IdG3unEbi5)](https://codecov.io/gh/baudev/Domi-Nation)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-Board game developed in Java. 
+Board game developed in Java and using the JavaFX library. This game is inspired from [KingDomino one](http://www.blueorangegames.eu/pf/kingdomino_fr/). 
 
-### Soon
+## INSTALLATION
+```
+git clone https://github.com/baudev/Domi-Nation.git
+gradle run
+```
+
+### RUN TESTS
+
+- Without coverage:
+```
+gradle check
+```
+
+- With coverage (the `view` directory was exclude):
+```
+gradle check
+gradle junitPlatformJacocoReport
+```
+
+### NOTE
+All documentation can be found in the `/docs` directory.
+
+
+### CREDITS
+
+The resource pictures are coming from the [MIT Project](https://github.com/Adam-Carmichael/KingDominoProject) of [Adam-Carmichael](https://github.com/Adam-Carmichael).
 
 ### LICENSE  
   

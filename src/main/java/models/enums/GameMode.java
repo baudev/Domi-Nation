@@ -1,5 +1,8 @@
 package models.enums;
 
+/**
+ * This is the different game mode possible.
+ */
 public enum GameMode {
 
     CLASSIC("Classic"),

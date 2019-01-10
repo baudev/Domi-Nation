@@ -1,5 +1,8 @@
 package models.enums;
 
+/**
+ * This handles the different possible rotation of a {@link models.classes.Domino} and their associated angles..
+ */
 public enum Rotation {
 
     NORMAL(0),

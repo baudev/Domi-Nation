@@ -1,7 +1,8 @@
 package exceptions;
 
 /**
- * A portion land has exceeded the max number authorized of crowns
+ * A {@link models.classes.LandPortion} has exceeded the max number authorized of crowns.
+ * @see models.classes.LandPortion#setNumberCrowns(int)
  */
 public class MaxCrownsLandPortionExceeded extends Exception {
 }
