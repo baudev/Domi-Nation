@@ -14,7 +14,7 @@ public class ButtonView extends Parent {
         StackPane stackPane = new StackPane();
         stackPane.setPrefSize(200,70);
         Rectangle buttonBackground = new Rectangle(200,70);
-        Image background = new Image("/bannerButton4.png");
+        Image background = new Image("/bannerButton.png");
         buttonBackground.setFill(new ImagePattern(background));
         buttonBackground.setTranslateY(2);
         stackPane.getChildren().add(buttonBackground);
