@@ -9,6 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
@@ -76,6 +77,29 @@ public class ColorPlayerView extends Parent {
             button.setText(String.valueOf(playerColor.toString()));
             button.setLayoutX(10);
             button.setLayoutY(10);
+
+            button.setOnMouseEntered(new EventHandler<MouseEvent>() {
+                public void handle(MouseEvent me) {
+
+                }
+            });
+            button.setOnMouseExited(new EventHandler<MouseEvent>() {
+                public void handle(MouseEvent me) {
+
+                }
+            });
+            button.setOnMousePressed(new EventHandler<MouseEvent>() {
+                public void handle(MouseEvent me) {
+                    button.setTranslateY(2);
+
+                }
+            });
+            button.setOnMouseReleased(new EventHandler<MouseEvent>() {
+                public void handle(MouseEvent me) {
+                    button.setTranslateY(-2);
+                }
+            });
+
 
             button.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
