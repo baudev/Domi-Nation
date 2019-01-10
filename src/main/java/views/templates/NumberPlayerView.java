@@ -12,6 +12,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -33,27 +36,25 @@ public class NumberPlayerView extends Parent {
         this.getChildren().add(imageView);
 
         // Define banner
-        StackPane stackPane1 = new StackPane();                 //add the banner image
-        Image imageParchemin = new Image("/parchemin.png");
-        ImageView parchemin = new ImageView(imageParchemin);
-        stackPane1.getChildren().add(parchemin);
-        stackPane1.setMinSize(Screen.percentageToXDimension(100), Screen.percentageToYDimension(100));  //positioning the banner image
-        stackPane1.setAlignment(Pos.CENTER);
-        stackPane1.setTranslateY(Screen.percentageToYDimension(-20));
-        this.getChildren().add(stackPane1);
-
-
-        // Define title
-        StackPane stackPane = new StackPane();          //add the title on the banner
+        StackPane stackPane1 = new StackPane();
+        Rectangle backgroundTitle = new Rectangle(Screen.percentageToXDimension(70),Screen.percentageToYDimension(30)); // create the rectangle that will host the banner
+        Image banner = new Image("/bannerTitleRed.png");
+        backgroundTitle.setFill(new ImagePattern(banner));  //  create a banner
+        stackPane1.getChildren().add(backgroundTitle);  //  add to the stackpane the whole banner
         Text text = new Text();
-        text.setText("Select the number of players");
+        text.setText("Select the number of player");
         text.setFont(Font.font("null", FontWeight.BOLD,35));
-        text.setTextAlignment(TextAlignment.CENTER);
-        stackPane.getChildren().add(text);
-        stackPane.setAlignment(Pos.CENTER);
-        stackPane.setMinSize(Screen.percentageToXDimension(100), Screen.percentageToYDimension(50)); // define the size of the stackpane layout
+        text.setFill(Color.GOLD);   //  assign the gold color to the text
+        stackPane1.getChildren().add(text); //  add the text to the stackpane therefore to the banner
+        text.setTranslateX(stackPane1.getWidth()/2);   //   centralize the text
+        text.setTranslateY(stackPane1.getHeight()/2);
 
-        this.getChildren().add(stackPane);
+        stackPane1.setMinSize(Screen.percentageToXDimension(100), Screen.percentageToYDimension(100));  //  Positioning the stackPane
+        stackPane1.setAlignment(Pos.CENTER);
+        stackPane1.setTranslateY(Screen.percentageToYDimension(-35));
+
+        this.getChildren().add(stackPane1); //add the stackPane to the view
+
 
         // Define layout
         HBox hBox = new HBox();  // create an Hbox to align horizontally the button
