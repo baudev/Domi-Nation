@@ -62,19 +62,31 @@ public class NumberPlayerView extends Parent {
         // Add the buttons of each possibilities
         int i = 0;
         for(PlayerNumber numberPlayer : PlayerNumber.values()){
-            Button button = new Button();
-            button.setText(String.valueOf(numberPlayer.getValue()));
-            button.setLayoutX(10);
-            button.setLayoutY(10);
+            ButtonView buttonView = new ButtonView(String.valueOf(numberPlayer.getValue()));
+            buttonView.setLayoutX(10);
+            buttonView.setLayoutY(10);
 
-            button.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            buttonView.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) { // when the user click on the following button
                     getOnPlayerNumberClickListener().onPlayerNumberClickListener(numberPlayer); // transmit the event to the view controller callback
                 }
             });
 
-            hBox.getChildren().add(button); // add the button to the layout
+            buttonView.setOnMousePressed(new EventHandler<MouseEvent>() {
+                public void handle(MouseEvent me) {
+                    buttonView.setTranslateY(2);
+
+                }
+            });
+            buttonView.setOnMouseReleased(new EventHandler<MouseEvent>() {
+                public void handle(MouseEvent me) {
+                    buttonView.setTranslateY(-2);
+                }
+            });
+
+
+            hBox.getChildren().add(buttonView); // add the button to the layout
             i++;
         }
 

@@ -68,47 +68,47 @@ public class ColorPlayerView extends Parent {
         this.getChildren().add(stackPane);
 
 
+        // Define layout
         HBox hBox = new HBox(); // create an Hbox to align horizontally the button
         hBox.setSpacing(20);    // set the space between each button
         // Add the buttons of each possibilities
         int i = 0;
         for(models.enums.PlayerColor playerColor : playerColorList){
-            Button button = new Button();
-            button.setText(String.valueOf(playerColor.toString()));
-            button.setLayoutX(10);
-            button.setLayoutY(10);
+            ButtonView buttonView = new ButtonView(String.valueOf(playerColor.toString()));
+            buttonView.setLayoutX(10);
+            buttonView.setLayoutY(10);
 
-            button.setOnMouseEntered(new EventHandler<MouseEvent>() {
+            buttonView.setOnMouseEntered(new EventHandler<MouseEvent>() {
                 public void handle(MouseEvent me) {
 
                 }
             });
-            button.setOnMouseExited(new EventHandler<MouseEvent>() {
+            buttonView.setOnMouseExited(new EventHandler<MouseEvent>() {
                 public void handle(MouseEvent me) {
 
                 }
             });
-            button.setOnMousePressed(new EventHandler<MouseEvent>() {
+            buttonView.setOnMousePressed(new EventHandler<MouseEvent>() {
                 public void handle(MouseEvent me) {
-                    button.setTranslateY(2);
+                    buttonView.setTranslateY(2);
 
                 }
             });
-            button.setOnMouseReleased(new EventHandler<MouseEvent>() {
+            buttonView.setOnMouseReleased(new EventHandler<MouseEvent>() {
                 public void handle(MouseEvent me) {
-                    button.setTranslateY(-2);
+                    buttonView.setTranslateY(-2);
                 }
             });
 
 
-            button.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            buttonView.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) { // when the user click on the following button
                     getOnPlayerColorClickListener().onPlayerColorClickListener(playerColor); // transmit the event to the view controller callback
                 }
             });
 
-            hBox.getChildren().add(button); // add the button to the layout
+            hBox.getChildren().add(buttonView); // add the button to the layout
             i++;
         }
         hBox.setMinSize(Screen.percentageToXDimension(80), Screen.percentageToYDimension(60)); // define the size of the hbox layout

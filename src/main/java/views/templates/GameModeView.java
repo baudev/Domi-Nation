@@ -69,50 +69,47 @@ public class GameModeView extends Parent {
         // Add the buttons of each modes
         int i = 0;
         for(models.enums.GameMode gameMode : models.enums.GameMode.values()){
-            Button button = new Button();
-            button.setPrefSize(150,40);
-            button.setText(gameMode.toString());
-            button.setLayoutX(10);
-            button.setLayoutY(10);
-            button.setTextFill(Color.WHITE);
-            button.setStyle("-fx-background-color:#A52A2A");
+            ButtonView buttonView = new ButtonView(gameMode.toString());
+            buttonView.setLayoutX(10);
+            buttonView.setLayoutY(10);
+
 
             if(gameMode == GameMode.DYNASTY) {
-                button.setDisable(true);
+                buttonView.setDisable(true);
             }
 
-            button.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            buttonView.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) { // when the user click on the following button
                     getOnGameModeClickListener().onGameModeClickListener(gameMode); // transmit the event to the view controller callback
                 }
             });
 
-            button.setOnMouseEntered(new EventHandler<MouseEvent>() {
+            buttonView.setOnMouseEntered(new EventHandler<MouseEvent>() {
                 public void handle(MouseEvent me) {
 
                 }
             });
-            button.setOnMouseExited(new EventHandler<MouseEvent>() {
+            buttonView.setOnMouseExited(new EventHandler<MouseEvent>() {
                 public void handle(MouseEvent me) {
 
                 }
             });
-            button.setOnMousePressed(new EventHandler<MouseEvent>() {
+            buttonView.setOnMousePressed(new EventHandler<MouseEvent>() {
                 public void handle(MouseEvent me) {
-                    button.setTranslateY(2);
+                    buttonView.setTranslateY(2);
 
                 }
             });
-            button.setOnMouseReleased(new EventHandler<MouseEvent>() {
+            buttonView.setOnMouseReleased(new EventHandler<MouseEvent>() {
                 public void handle(MouseEvent me) {
-                    button.setTranslateY(-2);
+                    buttonView.setTranslateY(-2);
                 }
             });
 
 
 
-            hBox.getChildren().add(button); // add the button to the layout
+            hBox.getChildren().add(buttonView); // add the button to the layout
             i++;
         }
 
