@@ -19,16 +19,21 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
+import models.classes.Castle;
 import models.enums.GameMode;
 import views.interfaces.OnGameModeClickListener;
 
 
-
-
+/**
+ * JavaFx View of a {@link GameMode}.
+ */
 public class GameModeView extends Parent {
 
     private OnGameModeClickListener onGameModeClickListener;
-
+    /**
+     * Generates the view of the gameMode.
+     *
+     */
     public GameModeView() {
         // Define background
 
@@ -134,16 +139,25 @@ public class GameModeView extends Parent {
 
     }
 
-    /**
+    /*
      *
      * GETTERS AND SETTERS
      *
      */
 
+    /**
+     * Gets the callback of the OnGameModeClickListener.
+     * @return Callback of the OnGameModeClickListener
+     * @see OnGameModeClickListener
+     */
     public OnGameModeClickListener getOnGameModeClickListener() {
         return onGameModeClickListener;
     }
 
+    /**
+     * Sets the callback of the OnGameModeClickListener.
+     * @param onGameModeClickListener The callback of the OnPossibilityClickListener.
+     */
     public void setOnGameModeClickListener(OnGameModeClickListener onGameModeClickListener) {
         this.onGameModeClickListener = onGameModeClickListener;
     }

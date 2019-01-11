@@ -11,7 +11,9 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import models.classes.Domino;
 import views.interfaces.OnDominoClickListener;
-
+/**
+ * JavaFX view of a {@link Domino}.
+ */
 public class DominoView extends Parent {
 
     private Domino domino;
@@ -20,6 +22,10 @@ public class DominoView extends Parent {
 
     private OnDominoClickListener onDominoClickListener;
 
+    /**
+     * Generates the view of the domino.
+     * @param domino {@link Domino} owner of the view.
+     */
     public DominoView(Domino domino) {
         this.setDomino(domino);
         generatePortionsFace();
@@ -111,7 +117,7 @@ public class DominoView extends Parent {
         }
     }
 
-    /**
+    /*
      *
      *  GETTERS AND SETTERS
      *
@@ -141,10 +147,18 @@ public class DominoView extends Parent {
         this.rectangleNumber = rectangleNumber;
     }
 
+    /**
+     * Gets the callback of the OnDominoClickListener.
+     * @return Callback of the OnDominoClickListener
+     * @see OnDominoClickListener
+     */
     public OnDominoClickListener getOnDominoClickListener() {
         return onDominoClickListener;
     }
-
+    /**
+     * Sets the callback of the OnDominoClickListener.
+     * @param onDominoClickListener The callback of the OnPossibilityClickListener.
+     */
     public void setOnDominoClickListener(OnDominoClickListener onDominoClickListener) {
         this.onDominoClickListener = onDominoClickListener;
     }
