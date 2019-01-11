@@ -6,6 +6,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Parent;
 
 import javafx.scene.control.Button;
+import javafx.scene.effect.Bloom;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -71,6 +72,20 @@ public class NumberPlayerView extends Parent {
                 @Override
                 public void handle(MouseEvent event) { // when the user click on the following button
                     getOnPlayerNumberClickListener().onPlayerNumberClickListener(numberPlayer); // transmit the event to the view controller callback
+                }
+            });
+
+            buttonView.setOnMouseEntered(new EventHandler<MouseEvent>() {
+                public void handle(MouseEvent me) {
+                    Bloom bloom = new Bloom();      //add a bloom effect when the mouse is on the button
+                    bloom.setThreshold(0.6);
+                    buttonView.setEffect(bloom);
+                }
+            });
+            buttonView.setOnMouseExited(new EventHandler<MouseEvent>() {
+                public void handle(MouseEvent me) {
+                    buttonView.setEffect(null); //  remove the bloom effect when the mouse is no longer on the button
+
                 }
             });
 
