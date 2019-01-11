@@ -11,6 +11,8 @@ import views.controllers.GameViewController;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 
 public class Main extends Application {
 
@@ -19,7 +21,7 @@ public class Main extends Application {
     }
 
     @Override
-    public void start(Stage stage) {
+    public void start(Stage stage) throws URISyntaxException, MalformedURLException {
 
         stage.setTitle(Config.getValue("projectName")); // set the title of the window
         Group root = new Group(); // define the root group
@@ -36,9 +38,8 @@ public class Main extends Application {
         stage.show(); // show the stage
         new GameViewController(root); // new GameViewController view controller
         // set a music on background
-        final File file = new File("C:\\Users\\PdN\\Music\\Symphony No. 9 _ Beethoven.mp3");
-        final Media media = new Media(file.toURI().toString());
-        final MediaPlayer mediaPlayer = new MediaPlayer(media);
+        Media media = new Media(getClass().getResource("Game_of_Thrones.mp3").toURI().toURL().toString());
+        MediaPlayer mediaPlayer = new MediaPlayer(media);
         mediaPlayer.play();
     }
 }
