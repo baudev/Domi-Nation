@@ -5,6 +5,7 @@ import helpers.Config;
 import helpers.Screen;
 import javafx.application.Application;
 import javafx.scene.Group;
+import javafx.scene.ImageCursor;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -52,5 +53,9 @@ public class Main extends Application {
         Media media = new Media(getClass().getResource("Game_of_Thrones.mp3").toURI().toURL().toString());
         mediaPlayer = new MediaPlayer(media);
         mediaPlayer.play();
+        // set a new cursor style
+        Image cursor = new Image("/cursor.png");
+        scene.setCursor(new ImageCursor(cursor));
+
     }
 }
