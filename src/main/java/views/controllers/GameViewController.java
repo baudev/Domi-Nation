@@ -126,18 +126,16 @@ public class GameViewController {
                 this.getRoot().getChildren().add(boardView);
                 switch (count) {
                     case 0:
-                        boardView.setTranslateY(Screen.percentageToYDimension(10));
                         break;
                     case 1:
-                        boardView.setTranslateY(Screen.percentageToYDimension(10));
-                        boardView.setTranslateX(Screen.percentageToXDimension(60));
+                        boardView.setTranslateX(Screen.percentageToXDimension(70));
                         break;
                     case 2:
-                        boardView.setTranslateX(Screen.percentageToXDimension(40));
+                        boardView.setTranslateY(Screen.percentageToYDimension(45));
                         break;
                     case 3:
-                        boardView.setTranslateY(Screen.percentageToYDimension(60));
-                        boardView.setTranslateX(Screen.percentageToXDimension(40));
+                        boardView.setTranslateY(Screen.percentageToYDimension(45));
+                        boardView.setTranslateX(Screen.percentageToXDimension(70));
                         break;
                 }
                 count++;
