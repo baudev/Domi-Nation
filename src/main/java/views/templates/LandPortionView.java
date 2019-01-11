@@ -10,11 +10,16 @@ import javafx.scene.shape.Rectangle;
 import models.classes.LandPortion;
 import models.enums.LandPortionType;
 
-
+/**
+ * JavaFX view of a {@link LandPortion}.
+ */
 public class LandPortionView extends Parent {
 
     private LandPortion landPortion;
-
+    /**
+     * Generates the view of the castle.
+     * @param landPortion {@link LandPortion} owner of the view.
+     */
     public LandPortionView(LandPortion landPortion) {
         this.setLandPortion(landPortion);
         addPortionType();
@@ -50,7 +55,7 @@ public class LandPortionView extends Parent {
         }
     }
 
-    /**
+    /*
      *
      *  GETTERS AND SETTERs
      *
