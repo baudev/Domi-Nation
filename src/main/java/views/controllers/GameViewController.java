@@ -30,6 +30,7 @@ public class GameViewController {
     private Game game;
 
     private Button buttonRotation;
+    private Button discardButton;
 
     /**
      * Start the GameViewController view controller which start by asking the game mode
@@ -267,16 +268,16 @@ public class GameViewController {
             }
         });
 
-        Button discardButton = new Button();
-        discardButton.setLayoutX(Screen.percentageToXDimension(55));
-        discardButton.setLayoutY(Screen.percentageToYDimension(60));
-        discardButton.setText("Discard");
-        getRoot().getChildren().add(discardButton);
-        discardButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+        setDiscardButton(new Button());
+        getDiscardButton().setLayoutX(Screen.percentageToXDimension(55));
+        getDiscardButton().setLayoutY(Screen.percentageToYDimension(60));
+        getDiscardButton().setText("Discard");
+        getRoot().getChildren().add(getDiscardButton());
+        getDiscardButton().setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 hideRotationButton(); // we remove the button rotation view
-                getRoot().getChildren().remove(discardButton);
+                getRoot().getChildren().remove(getDiscardButton());
                 switch (getGame().discardDomino()) {
                     case PICKDOMINOES:
                         pickDominoes();
@@ -294,7 +295,7 @@ public class GameViewController {
             @Override
             public void onPossibilityClickListener(Position position1, Position position2) {
                 hideRotationButton(); // we remove the button rotation view
-                getRoot().getChildren().remove(discardButton);
+                getRoot().getChildren().remove(getDiscardButton());
                 switch (getGame().playerChoosesPositionForDomino(position1, position2)) {
                     case NEXTTURNPLAYER:
                         playTurnPlayer();
@@ -343,5 +344,13 @@ public class GameViewController {
 
     public void setButtonRotation(Button buttonRotation) {
         this.buttonRotation = buttonRotation;
+    }
+
+    public Button getDiscardButton() {
+        return discardButton;
+    }
+
+    public void setDiscardButton(Button discardButton) {
+        this.discardButton = discardButton;
     }
 }
