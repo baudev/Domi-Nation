@@ -2,6 +2,7 @@ import helpers.Config;
 import helpers.Screen;
 import javafx.application.Application;
 import javafx.scene.Group;
+import javafx.scene.ImageCursor;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -15,6 +16,8 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 
 public class Main extends Application {
+
+    MediaPlayer mediaPlayer;
 
     public static void main(String[] args){
         launch(args);
@@ -39,7 +42,11 @@ public class Main extends Application {
         new GameViewController(root); // new GameViewController view controller
         // set a music on background
         Media media = new Media(getClass().getResource("Game_of_Thrones.mp3").toURI().toURL().toString());
-        MediaPlayer mediaPlayer = new MediaPlayer(media);
+        mediaPlayer = new MediaPlayer(media);
         mediaPlayer.play();
+        // set a new cursor style
+        Image cursor = new Image("/cursor.png");
+        scene.setCursor(new ImageCursor(cursor));
+
     }
 }

@@ -12,6 +12,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
@@ -22,6 +24,10 @@ import javafx.scene.text.TextAlignment;
 import models.classes.Castle;
 import models.enums.GameMode;
 import views.interfaces.OnGameModeClickListener;
+
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
 
 
 /**
@@ -35,7 +41,7 @@ public class GameModeView extends Parent {
      * Generates the view of the gameMode.
      *
      */
-    public GameModeView() {
+    public GameModeView()  {
         // Define background
 
         Image background = new Image("/kingDomino.png");
@@ -89,7 +95,7 @@ public class GameModeView extends Parent {
                 sepiaTone.setLevel(0.95);
                 buttonView.setEffect(sepiaTone);
             }
-
+            GameModeView self = this;
             buttonView.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) { // when the user click on the following button
@@ -107,13 +113,11 @@ public class GameModeView extends Parent {
             buttonView.setOnMouseExited(new EventHandler<MouseEvent>() {
                 public void handle(MouseEvent me) {
                     buttonView.setEffect(null); //  remove the bloom effect when the mouse is no longer on the button
-
                 }
             });
             buttonView.setOnMousePressed(new EventHandler<MouseEvent>() {
-                public void handle(MouseEvent me) {
+                public void handle(MouseEvent me)  {
                     buttonView.setTranslateY(2);
-
                 }
             });
             buttonView.setOnMouseReleased(new EventHandler<MouseEvent>() {
