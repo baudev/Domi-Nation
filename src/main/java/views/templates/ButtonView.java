@@ -14,7 +14,13 @@ import javafx.scene.text.Text;
  * Generates the view of the {@link ButtonView}.
  */
 public class ButtonView extends Parent {
-    public ButtonView(String buttonText,boolean smallSize) {
+
+    /**
+     * Generates the JavaFX view.
+     * @param buttonText {@link String} of the {@link javafx.scene.control.Button} to be set.
+     * @param smallSize boolean defining if the button is a small one or not.
+     */
+    public ButtonView(String buttonText, boolean smallSize) {
         StackPane stackPane = new StackPane();
         Rectangle buttonBackground;
         if(smallSize) {                     //  add a small size to the button
@@ -35,9 +41,6 @@ public class ButtonView extends Parent {
         text.setTranslateX(stackPane.getWidth()/2);
         text.setTranslateY(stackPane.getHeight()/2);
         this.getChildren().add(stackPane);
-
-
-
     }
 
 

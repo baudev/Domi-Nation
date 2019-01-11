@@ -30,6 +30,7 @@ import views.interfaces.OnGameModeClickListener;
 public class GameModeView extends Parent {
 
     private OnGameModeClickListener onGameModeClickListener;
+
     /**
      * Generates the view of the gameMode.
      *

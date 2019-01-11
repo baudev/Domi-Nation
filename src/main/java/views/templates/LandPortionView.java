@@ -57,14 +57,22 @@ public class LandPortionView extends Parent {
 
     /*
      *
-     *  GETTERS AND SETTERs
+     *  GETTERS AND SETTERS
      *
      */
 
+    /**
+     * Returns the {@link LandPortion} associated to the view.
+     * @return The {@link LandPortion} associated to the view.
+     */
     public LandPortion getLandPortion() {
         return landPortion;
     }
 
+    /**
+     * Sets the {@link LandPortion} associated to the view.
+     * @param landPortion The {@link LandPortion} associated to the view to be set.
+     */
     public void setLandPortion(LandPortion landPortion) {
         this.landPortion = landPortion;
     }

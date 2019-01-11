@@ -26,9 +26,9 @@ import views.interfaces.OnPlayerNumberClickListener;
 public class NumberPlayerView extends Parent {
 
     private OnPlayerNumberClickListener onPlayerNumberClickListener;
+
     /**
      * Generates the view of the askNumberPlayer.
-     *
      */
     public NumberPlayerView() {
         // Define background
@@ -121,6 +121,7 @@ public class NumberPlayerView extends Parent {
      * GETTERS AND SETTERS
      *
      */
+
     /**
      * Gets the callback of the OnPlayerNumberClickListener.
      * @return Callback of the OnPlayerNumberClickListener
@@ -129,6 +130,7 @@ public class NumberPlayerView extends Parent {
     public OnPlayerNumberClickListener getOnPlayerNumberClickListener() {
         return onPlayerNumberClickListener;
     }
+
     /**
      * Sets the callback of the OnPlayerNumberClickListener.
      * @param onPlayerNumberClickListener The callback of the OnPossibilityClickListener.
