@@ -22,6 +22,9 @@ import java.util.Map;
 
 import static javafx.application.Platform.exit;
 
+/**
+ * Handles the link between all JavaFX views and Core classes.
+ */
 public class GameViewController {
 
     private Group root;
@@ -31,8 +34,9 @@ public class GameViewController {
     private ButtonView discardButton;
 
     /**
-     * Start the GameViewController view controller which start by asking the game mode
-     * @param root
+     * Starts the GameViewController view controller which start by asking the game mode.
+     * @param root {@link Group} root of the JavaFX view.
+     * @see #askGameMode()
      */
     public GameViewController(Group root) {
         this.setRoot(root); // set the root group as a class attribute
@@ -40,7 +44,8 @@ public class GameViewController {
     }
 
     /**
-     * Ask which game mode should be played
+     * Asks which {@link GameMode} should be played.
+     * {@link GameMode#HARMOMY} is not playable.
      */
     private void askGameMode() {
         game = new Game(); // we create an instance of the game
@@ -59,7 +64,8 @@ public class GameViewController {
     }
 
     /**
-     * Ask the number of players
+     * Asks the number of players.
+     * If the mode if {@link GameMode#THEGREATDUEL}, then the number of players of 2.
      */
     private void askNumberPlayer() {
         // if the gameMode is great duel, then the number of players is 2
@@ -80,8 +86,8 @@ public class GameViewController {
     }
 
     /**
-     * Ask to each player the color he wants
-     * @param currentPlayerNumber
+     * Asks to each player the {@link PlayerColor} he wants.
+     * @param currentPlayerNumber Number of the current Player who choose his {@link PlayerColor}.
      */
     private void askPlayerColor(int currentPlayerNumber) {
         // we get all unused playerColors
@@ -114,7 +120,8 @@ public class GameViewController {
     }
 
     /**
-     * Initiate the game and players
+     * Initiates the {@link Game} and {@link Player}s.
+     * Then start a new turn.
      */
     private void initiateGame() {
         try {
@@ -147,7 +154,7 @@ public class GameViewController {
     }
 
     /**
-     * Pick dominoes and show them in the middle of the game board
+     * Pick {@link Domino}s and show them in the middle of the {@link Game} {@link Board}.
      */
     private void pickDominoes() {
         try {
@@ -169,6 +176,9 @@ public class GameViewController {
         }
     }
 
+    /**
+     * Asks to the current {@link Player} which {@link Domino} he wants to choose.
+     */
     private void playTurnPlayer() {
         if(this.getGame().isLastTurn()) {
             lastPlayerTurn();
@@ -206,6 +216,9 @@ public class GameViewController {
         }
     }
 
+    /**
+     * Asks to the current {@link Player} where he wants to place his last {@link Domino}(s).
+     */
     private void lastPlayerTurn() {
         switch (getGame().playerChoosesDomino(null)){
             case GAMEOVER:
@@ -220,7 +233,8 @@ public class GameViewController {
 
 
     /**
-     * Calculate the score
+     * Calculates the final {@link Score} and shows the winner(s).
+     * @see Score
      */
     private void calculateScore() {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -249,8 +263,8 @@ public class GameViewController {
     }
 
     /**
-     * Show a button to make rotate a domino
-     * @param domino
+     * Shows a button to make rotate a domino. Shows possibilities of {@link Domino} places. And shows discard button also.
+     * @param domino {@link Domino} that the current {@link Player} must place or discard.
      */
     public void showRotationButtonAndAssociatedPossibilities(Domino previousDomino, Domino domino, DominoesList newDominoesList) {
         //  we show all possible positions
@@ -341,45 +355,79 @@ public class GameViewController {
     }
 
     /**
-     * Hide the domino rotation button
+     * Hides the domino {@link Rotation} button.
+     * @see Rotation
      */
-    public void hideRotationButton() {
+    private void hideRotationButton() {
         getRoot().getChildren().remove(getButtonRotation());
     }
 
-    /**
+    /*
      *
      * GETTERS AND SETTERS
      *
+     */
+
+    /**
+     * Returns the root {@link Group} of JavaFX.
+     * @return The root {@link Group} of JavaFX.
      */
     public Group getRoot() {
         return root;
     }
 
+    /**
+     * Sets the root {@link Group} of JavaFX.
+     * @param root The root {@link Group} of JavaFX to be set.
+     */
     public void setRoot(Group root) {
         this.root = root;
     }
 
+    /**
+     * Returns the {@link Game} associated to the {@link GameViewController}.
+     * @return The {@link Game} associated to the {@link GameViewController}.
+     */
     public Game getGame() {
         return game;
     }
 
+    /**
+     * Sets the {@link Game} associated to the {@link GameViewController}.
+     * @param game The {@link Game} associated to the {@link GameViewController}.
+     */
     public void setGame(Game game) {
         this.game = game;
     }
 
+    /**
+     * Returns the {@link Rotation} {@link Button} instance.
+     * @return The {@link Rotation} {@link Button} instance.
+     */
     public ButtonView getButtonRotation() {
         return buttonRotation;
     }
 
+    /**
+     * Sets the {@link Rotation} {@link Button} instance.
+     * @param buttonRotation The {@link Rotation} {@link Button} instance to be set.
+     */
     public void setButtonRotation(ButtonView buttonRotation) {
         this.buttonRotation = buttonRotation;
     }
 
+    /**
+     * Returns the discard {@link Button} instance.
+     * @return The discard {@link Button} instance.
+     */
     public ButtonView getDiscardButton() {
         return discardButton;
     }
 
+    /**
+     * Sets the discard {@link Button} instance.
+     * @param discardButton The discard {@link Button} instance to be set.
+     */
     public void setDiscardButton(ButtonView discardButton) {
         this.discardButton = discardButton;
     }
