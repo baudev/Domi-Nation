@@ -220,6 +220,10 @@ public class GameViewController {
         }
     }
 
+
+    /**
+     * Calculate the score
+     */
     private void calculateScore() {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Game results");

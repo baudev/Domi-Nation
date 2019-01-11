@@ -9,6 +9,10 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
+/**
+ * JavaFX view of a {@link ButtonView}.
+ * Generates the view of the {@link ButtonView}.
+ */
 public class ButtonView extends Parent {
     public ButtonView(String buttonText,boolean smallSize) {
         StackPane stackPane = new StackPane();
