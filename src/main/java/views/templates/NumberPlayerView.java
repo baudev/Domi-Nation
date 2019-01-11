@@ -116,7 +116,7 @@ public class NumberPlayerView extends Parent {
         this.getChildren().add(hBox); // add the layout to the root group
     }
 
-    /**
+    /*
      *
      * GETTERS AND SETTERS
      *
