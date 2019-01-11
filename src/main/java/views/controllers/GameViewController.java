@@ -172,6 +172,7 @@ public class GameViewController {
             if (this.getGame().getTurnNumber() > 1) {
                 this.getGame().getPreviousDominoesList().getDominoesListView().setUpperPosition();
             }
+            this.getGame().getNewDominoesList().getDominoesListView().showNumberFaces();
             this.getGame().getNewDominoesList().getDominoesListView().showPortionsFaces();
         }
     }

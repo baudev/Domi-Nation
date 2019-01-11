@@ -1,6 +1,10 @@
 package views.templates;
 
 import helpers.Screen;
+import javafx.animation.FadeTransition;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -9,6 +13,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 import models.classes.Domino;
 import views.interfaces.OnDominoClickListener;
 /**
@@ -67,7 +72,7 @@ public class DominoView extends Parent {
         this.getTextNumber().setY(Screen.percentageToXDimension(1.5) + this.getTextNumber().getBoundsInParent().getHeight() / 2);
     }
 
-    // TODO Make animations for the following showing/hiding methods
+
 
     /**
      * Show the Portions face of the domino
@@ -76,6 +81,14 @@ public class DominoView extends Parent {
         this.hideNumberFace(); // we hide the number Face
         this.getDomino().getLeftPortion().getLandPortionView().setOpacity(1.0);
         this.getDomino().getRightPortion().getLandPortionView().setOpacity(1.0);
+        FadeTransition fadeTransition = new FadeTransition(Duration.millis(2700),getRectangleNumber());
+        fadeTransition.setFromValue(1.0);
+        fadeTransition.setToValue(0);
+        fadeTransition.play();
+        FadeTransition fadeTransition1 = new FadeTransition((Duration.millis(2700)),getTextNumber());
+        fadeTransition1.setFromValue(1.0);
+        fadeTransition1.setToValue(0);
+        fadeTransition1.play();
     }
 
     /**
@@ -85,7 +98,6 @@ public class DominoView extends Parent {
         this.hidePortionsFace(); // we hide the portions face
         this.getRectangleNumber().setOpacity(1.0);
         this.getTextNumber().setOpacity(1.0);
-        // TODO hide the king
     }
 
     /**
