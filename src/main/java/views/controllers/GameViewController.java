@@ -180,6 +180,14 @@ public class GameViewController {
                 domino.getDominoView().setOnDominoClickListener(new OnDominoClickListener() {
                     @Override
                     public void onDominoClickListener(Domino domino) {
+                        for(Domino domino1 : getGame().getNewDominoesList()) { // disable all clickListeners for all Dominoes
+                            domino1.getDominoView().setOnDominoClickListener(new OnDominoClickListener() {
+                                @Override
+                                public void onDominoClickListener(Domino domino) {
+
+                                }
+                            });
+                        }
                         switch (getGame().playerChoosesDomino(domino)) {
                             case PICKDOMINOES:
                                 pickDominoes();
