@@ -8,6 +8,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.stage.Stage;
 import views.controllers.GameViewController;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import java.io.File;
 
 public class Main extends Application {
 
@@ -17,6 +20,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) {
+
         stage.setTitle(Config.getValue("projectName")); // set the title of the window
         Group root = new Group(); // define the root group
         Scene scene = new Scene(root, 200, 200, Color.TRANSPARENT); // define the color of the scene
@@ -31,5 +35,10 @@ public class Main extends Application {
         stage.setHeight(Screen.getYMax());
         stage.show(); // show the stage
         new GameViewController(root); // new GameViewController view controller
+        // set a music on background
+        final File file = new File("C:\\Users\\PdN\\Music\\Symphony No. 9 _ Beethoven.mp3");
+        final Media media = new Media(file.toURI().toString());
+        final MediaPlayer mediaPlayer = new MediaPlayer(media);
+        mediaPlayer.play();
     }
 }
