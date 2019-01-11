@@ -7,6 +7,7 @@ import javafx.scene.Parent;
 
 import javafx.scene.control.Button;
 import javafx.scene.effect.Bloom;
+import javafx.scene.effect.SepiaTone;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -78,6 +79,9 @@ public class GameModeView extends Parent {
 
             if(gameMode == GameMode.DYNASTY) {
                 buttonView.setDisable(true);
+                SepiaTone sepiaTone = new SepiaTone();  //  add a sepiaTone effect on the dynasty button to show that he is disable
+                sepiaTone.setLevel(0.95);
+                buttonView.setEffect(sepiaTone);
             }
 
             buttonView.setOnMouseClicked(new EventHandler<MouseEvent>() {
