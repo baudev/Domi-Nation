@@ -64,7 +64,7 @@ public class NumberPlayerView extends Parent {
         // Add the buttons of each possibilities
         int i = 0;
         for(PlayerNumber numberPlayer : PlayerNumber.values()){
-            ButtonView buttonView = new ButtonView(String.valueOf(numberPlayer.getValue()));
+            ButtonView buttonView = new ButtonView(String.valueOf(numberPlayer.getValue()),false);
             buttonView.setLayoutX(10);
             buttonView.setLayoutY(10);
 

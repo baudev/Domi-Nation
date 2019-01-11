@@ -6,6 +6,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.effect.Bloom;
 import javafx.scene.input.MouseEvent;
 import models.classes.*;
 import models.enums.GameMode;
@@ -13,10 +14,7 @@ import models.enums.PlayerColor;
 import models.enums.PlayerNumber;
 import models.enums.Rotation;
 import views.interfaces.*;
-import views.templates.BoardView;
-import views.templates.ColorPlayerView;
-import views.templates.GameModeView;
-import views.templates.NumberPlayerView;
+import views.templates.*;
 
 import java.io.IOException;
 import java.util.List;
@@ -29,8 +27,8 @@ public class GameViewController {
     private Group root;
     private Game game;
 
-    private Button buttonRotation;
-    private Button discardButton;
+    private ButtonView buttonRotation;
+    private ButtonView discardButton;
 
     /**
      * Start the GameViewController view controller which start by asking the game mode
@@ -256,23 +254,38 @@ public class GameViewController {
         //  we show all possible positions
         getGame().getCurrentPlayer().getBoard().getPossibilities(previousDomino);
         // show rotation button
-        setButtonRotation(new Button());
-        getButtonRotation().setLayoutX(Screen.percentageToXDimension(48));
+        ButtonView buttonRotation = new ButtonView("Rotate",true);  //  add a buttonView with a small size
+        setButtonRotation(buttonRotation);
+        getButtonRotation().setLayoutX(Screen.percentageToXDimension(48));  //  positioning the button
         getButtonRotation().setLayoutY(Screen.percentageToYDimension(60));
-        getButtonRotation().setText("Rotate");
         getRoot().getChildren().add(getButtonRotation());
+        getButtonRotation().setTranslateX(-Screen.percentageToXDimension(20));
+        getButtonRotation().setTranslateY(-Screen.percentageToYDimension(6));
         getButtonRotation().setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 getGame().makeRotateDomino(previousDomino);
             }
         });
+        getButtonRotation().setOnMouseEntered(new EventHandler<MouseEvent>() {
+            public void handle(MouseEvent me) {
+                Bloom bloom = new Bloom();      //add a bloom effect when the mouse is on the button
+                bloom.setThreshold(0.6);
+                getButtonRotation().setEffect(bloom);
+            }
+        });
+        getButtonRotation().setOnMouseExited(new EventHandler<MouseEvent>() {
+            public void handle(MouseEvent me) {
+                getButtonRotation().setEffect(null); //  remove the bloom effect when the mouse is no longer on the button
 
-        setDiscardButton(new Button());
-        getDiscardButton().setLayoutX(Screen.percentageToXDimension(55));
+            }
+        });
+        ButtonView discardButton = new ButtonView("Discard",true);  //  add a ButtonView with a small size
+        setDiscardButton(discardButton);
+        getDiscardButton().setLayoutX(Screen.percentageToXDimension(55));   //  positioning the button
         getDiscardButton().setLayoutY(Screen.percentageToYDimension(60));
-        getDiscardButton().setText("Discard");
         getRoot().getChildren().add(getDiscardButton());
+        getDiscardButton().setTranslateY(-Screen.percentageToYDimension(6));
         getDiscardButton().setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
@@ -288,6 +301,21 @@ public class GameViewController {
                     case NULL:
                         break;
                 }
+            }
+
+        });
+
+        getDiscardButton().setOnMouseEntered(new EventHandler<MouseEvent>() {
+            public void handle(MouseEvent me) {
+                Bloom bloom = new Bloom();      //add a bloom effect when the mouse is on the button
+                bloom.setThreshold(0.6);
+                getDiscardButton().setEffect(bloom);
+            }
+        });
+        getDiscardButton().setOnMouseExited(new EventHandler<MouseEvent>() {
+            public void handle(MouseEvent me) {
+                getDiscardButton().setEffect(null); //  remove the bloom effect when the mouse is no longer on the button
+
             }
         });
 
@@ -338,19 +366,19 @@ public class GameViewController {
         this.game = game;
     }
 
-    public Button getButtonRotation() {
+    public ButtonView getButtonRotation() {
         return buttonRotation;
     }
 
-    public void setButtonRotation(Button buttonRotation) {
+    public void setButtonRotation(ButtonView buttonRotation) {
         this.buttonRotation = buttonRotation;
     }
 
-    public Button getDiscardButton() {
+    public ButtonView getDiscardButton() {
         return discardButton;
     }
 
-    public void setDiscardButton(Button discardButton) {
+    public void setDiscardButton(ButtonView discardButton) {
         this.discardButton = discardButton;
     }
 }

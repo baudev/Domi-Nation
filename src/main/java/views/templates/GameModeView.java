@@ -72,7 +72,7 @@ public class GameModeView extends Parent {
         // Add the buttons of each modes
         int i = 0;
         for(models.enums.GameMode gameMode : models.enums.GameMode.values()){
-            ButtonView buttonView = new ButtonView(gameMode.toString());
+            ButtonView buttonView = new ButtonView(gameMode.toString(),false);
             buttonView.setLayoutX(10);
             buttonView.setLayoutY(10);
 

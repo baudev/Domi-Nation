@@ -10,10 +10,17 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
 public class ButtonView extends Parent {
-    public ButtonView(String buttonText) {
+    public ButtonView(String buttonText,boolean smallSize) {
         StackPane stackPane = new StackPane();
+        Rectangle buttonBackground;
+        if(smallSize) {                     //  add a small size to the button
+            stackPane.setPrefSize(90,40.5);
+            buttonBackground = new Rectangle(90,40.5);
+        }
+        else{ stackPane.setPrefSize(200,70);    //  add a normal size to the button
+            buttonBackground = new Rectangle(200,70);
+        }
         stackPane.setPrefSize(200,70);
-        Rectangle buttonBackground = new Rectangle(200,70);
         Image background = new Image("/bannerButton.png");
         buttonBackground.setFill(new ImagePattern(background));
         buttonBackground.setTranslateY(2);

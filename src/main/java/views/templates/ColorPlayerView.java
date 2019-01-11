@@ -77,7 +77,7 @@ public class ColorPlayerView extends Parent {
         // Add the buttons of each possibilities
         int i = 0;
         for(models.enums.PlayerColor playerColor : playerColorList){
-            ButtonView buttonView = new ButtonView(String.valueOf(playerColor.toString()));
+            ButtonView buttonView = new ButtonView(String.valueOf(playerColor.toString()),false);
             buttonView.setLayoutX(10);
             buttonView.setLayoutY(10);
 
