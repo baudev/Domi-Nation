@@ -371,10 +371,12 @@ public class Game {
      */
     public Response discardDomino() {
         try {
-            this.getCurrentPlayer().getBoard().getBoardView().removeAllPossibilities();
+            if(!Boolean.valueOf(Config.getValue("CLImode"))) {
+                this.getCurrentPlayer().getBoard().getBoardView().removeAllPossibilities();
+                this.getPreviousDominoesList().getDominoesListView().removeDominoView(this.getPreviousDomino());
+            }
             this.getCurrentPlayer().getBoard().removeDomino(this.getPreviousDomino());
             this.getNewDominoesList().remove(this.getPreviousDomino());
-            this.getPreviousDominoesList().getDominoesListView().removeDominoView(this.getPreviousDomino());
             if(!this.isLastTurn) {
                 this.getCurrentPlayer().getBoard().addDomino(this.getNewDomino());
             }
@@ -427,7 +429,9 @@ public class Game {
             this.getCurrentPlayer().getBoard().addDomino(this.getPreviousDomino());
             this.getCurrentPlayer().getBoard().addDomino(this.getNewDomino()); // add the new domino
         } else {
-            this.getCurrentPlayer().getBoard().getBoardView().addDomino(this.getPreviousDomino());
+            if(!Boolean.valueOf(Config.getValue("CLImode"))) {
+                this.getCurrentPlayer().getBoard().getBoardView().addDomino(this.getPreviousDomino());
+            }
         }
         this.getNewDominoesList().remove(this.getPreviousDomino());
 

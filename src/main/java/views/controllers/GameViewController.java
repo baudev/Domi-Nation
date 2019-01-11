@@ -191,24 +191,23 @@ public class GameViewController {
                             domino1.getDominoView().setOnDominoClickListener(new OnDominoClickListener() {
                                 @Override
                                 public void onDominoClickListener(Domino domino) {
-
+                                    switch (getGame().playerChoosesDomino(domino)) {
+                                        case PICKDOMINOES:
+                                            pickDominoes();
+                                            break;
+                                        case NEXTTURNPLAYER:
+                                            playTurnPlayer();
+                                            break;
+                                        case SHOWPLACEPOSSIBILITIES:
+                                            Domino previousDomino = getGame().getPreviousDomino();
+                                            showRotationButtonAndAssociatedPossibilities(previousDomino, domino, getGame().getNewDominoesList());
+                                            break;
+                                        case NULL:
+                                            // nothing
+                                            break;
+                                    }
                                 }
                             });
-                        }
-                        switch (getGame().playerChoosesDomino(domino)) {
-                            case PICKDOMINOES:
-                                pickDominoes();
-                                break;
-                            case NEXTTURNPLAYER:
-                                playTurnPlayer();
-                                break;
-                            case SHOWPLACEPOSSIBILITIES:
-                                Domino previousDomino = getGame().getPreviousDomino();
-                                showRotationButtonAndAssociatedPossibilities(previousDomino, domino, getGame().getNewDominoesList());
-                                break;
-                            case NULL:
-                                // nothing
-                                break;
                         }
                     }
                 });

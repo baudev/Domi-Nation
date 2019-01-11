@@ -15,6 +15,7 @@ import java.util.Map;
 public class CLI {
 
     private Game game;
+    private int counter = 0;
 
     CLI() throws PlayerColorAlreadyUsed, MaxCrownsLandPortionExceeded, IOException, InvalidDominoesCSVFile {
         game = new Game();
@@ -28,6 +29,7 @@ public class CLI {
 
 
     private void newTurn() {
+        counter = 0;
         System.out.println("Picked dominoes");
         try {
             game.pickDominoes();
@@ -36,49 +38,46 @@ public class CLI {
         } catch (NotEnoughDominoesInGameStack notEnoughDominoesInGameStack) {
             // bug
         }
-        if(!game.isLastTurn()) {
-            playerTurn();
-        }
+        playerTurn();
     }
 
     private void playerTurn() {
         System.out.println("Player turn");
         if(game.getTurnNumber() == 1 ) {
-            int counter = 0;
-            for(Player player : game.getPlayers()) {
-                switch (game.playerChoosesDomino(game.getNewDominoesList().get(0))) {
-                    case PICKDOMINOES:
-                        System.out.println("answer pick dominoes in player turn");
-                        newTurn();
-                        break;
-                    case NEXTTURNPLAYER:
-                        System.out.println("answer next turn in player turn");
-                        playerTurn();
-                        break;
-                }
-
-                counter++;
+            Domino newDomino = game.getNewDominoesList().get(0);
+            switch (game.playerChoosesDomino(newDomino)) {
+                case PICKDOMINOES:
+                    System.out.println("answer pick dominoes in player turn");
+                    newTurn();
+                    break;
+                case NEXTTURNPLAYER:
+                    System.out.println("answer next turn in player turn");
+                    playerTurn();
+                    break;
             }
         } else if(game.isLastTurn()) {
             switch (game.playerChoosesDomino(null)){
                 case GAMEOVER:
                     System.out.println("Game ovver !!!!!!!!!!!");
+                    try {
+                        throw new Exception("Game over");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     break;
                 default:
                     positionnateHisDomino();
                     break;
             }
         } else {
-            int counter = 0;
-            for(Player player : game.getPlayers()) {
-                Response test = game.playerChoosesDomino(game.getNewDominoesList().get(0));
-                switch (test) {
-                    case SHOWPLACEPOSSIBILITIES:
-                        System.out.println("show possibilities");
-                        positionnateHisDomino();
-                        break;
-                }
-                counter++;
+            Domino newDomino = game.getNewDominoesList().get(counter);
+            counter++;
+            Response test = game.playerChoosesDomino(newDomino);
+            switch (test) {
+                case SHOWPLACEPOSSIBILITIES:
+                    System.out.println("show possibilities");
+                    positionnateHisDomino();
+                    break;
             }
         }
     }
@@ -97,13 +96,14 @@ public class CLI {
                     previousDomino.setRotation(previousDomino.getRotation().getNextRotation());
                     switch (game.playerChoosesPositionForDomino(randomPosition.get(0), randomPosition.get(1))) {
                         case PICKDOMINOES:
+                            error = false;
                             newTurn();
                             break;
                         case NEXTTURNPLAYER:
+                            error = false;
                             playerTurn();
                             break;
                     }
-                    error = false;
                 } catch (InvalidDominoPosition e) {
 
                 }
@@ -113,13 +113,18 @@ public class CLI {
 
     private List<Position> randomPositions(Domino domino) {
         List<List<Position>> allPossibilities = new ArrayList<>();
+        List<Position> randomPositions = new ArrayList<>();
         for(Rotation rotation : Rotation.values()) {
             domino.setRotation(rotation);
             List<List<Position>> positions = game.getCurrentPlayer().getBoard().getPossibilities(domino);
             allPossibilities.addAll(positions);
         }
-        List<Position> randomPositions = allPossibilities.get(Function.randInt(0, allPossibilities.size() - 1));
-        return randomPositions;
+        if(allPossibilities.size() > 0) {
+            randomPositions = allPossibilities.get(Function.randInt(0, allPossibilities.size() - 1));
+            return randomPositions;
+        } else {
+            return randomPositions;
+        }
     }
 
     private void getPossibilitiesForParticularRotation(Domino domino) {
