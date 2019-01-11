@@ -86,4 +86,20 @@ class BoardTest {
         domino.setRotation(Rotation.LEFT);
         assertTrue(board.isPossibleToPlaceDomino(new Position(5, 5 + 2), new Position(5, 5 + 1), domino));
     }
+
+    @Test
+    void test() throws MaxCrownsLandPortionExceeded, InvalidDominoPosition {
+        Board board = new Board(GameMode.CLASSIC, PlayerColor.YELLOW);
+        Domino domino2 = new Domino(new LandPortion(1, LandPortionType.FORET), new LandPortion(1, LandPortionType.FORET), 1);
+        domino2.setRotation(Rotation.RIGHT);
+        domino2.getLeftPortion().setPosition(new Position(4, 5));
+        domino2.getRightPortion().setPosition(new Position(4, 4));
+        board.addDomino(domino2);
+        Domino domino = new Domino(new LandPortion(1, LandPortionType.FORET), new LandPortion(1, LandPortionType.MINE), 1);
+        domino.setRotation(Rotation.RIGHT);
+        domino.getLeftPortion().setPosition(new Position(3, 5));
+        domino.getRightPortion().setPosition(new Position(3, 4));
+        board.addDomino(domino);
+        //List test = board.getPossibilities(domino);
+    }
 }

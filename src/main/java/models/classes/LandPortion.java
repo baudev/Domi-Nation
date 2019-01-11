@@ -107,6 +107,9 @@ public class LandPortion {
      * @see LandPortionView
      */
     public LandPortionView getLandPortionView() {
+        if(Boolean.valueOf(Config.getValue("CLImode"))){
+            return null;
+        }
         if(landPortionView == null) {
             // we generate a new view
             this.setLandPortionView(new LandPortionView(this));

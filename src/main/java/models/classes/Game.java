@@ -2,6 +2,7 @@ package models.classes;
 
 import exceptions.*;
 import helpers.CSVReader;
+import helpers.Config;
 import helpers.Function;
 import models.enums.GameMode;
 import models.enums.PlayerColor;
@@ -401,8 +402,10 @@ public class Game {
      *          {@link Response#PICKDOMINOES} if a new turn must be started. A new line of {@link Domino}s must be picked.
      * @see LandPortion
      */
-    public Response playerChoosesPositionForDomino(Position position1, Position position2) {
-        this.getCurrentPlayer().getBoard().getBoardView().removeAllPossibilities();
+    public Response playerChoosesPositionForDomino(Position position1, Position position2) throws InvalidDominoPosition {
+        if(!Boolean.valueOf(Config.getValue("CLImode"))){
+            this.getCurrentPlayer().getBoard().getBoardView().removeAllPossibilities();
+        }
         switch (this.getPreviousDomino().getRotation()) {
             case NORMAL:
             case INVERSE:
@@ -415,20 +418,16 @@ public class Game {
                 this.getPreviousDomino().getRightPortion().setPosition(position1);
                 break;
         }
-        try {
-            /*
-             * IMPORTANT
-             * We remove the domino from the board as it was already stored in it with empty position. As the position are now set for this domino, we will not be able to add it (by checking if the position are right).
-             */
-            if(!this.isLastTurn) {
-                this.getCurrentPlayer().getBoard().removeDomino(this.getPreviousDomino());
-                this.getCurrentPlayer().getBoard().addDomino(this.getPreviousDomino());
-                this.getCurrentPlayer().getBoard().addDomino(this.getNewDomino()); // add the new domino
-            } else {
-                this.getCurrentPlayer().getBoard().getBoardView().addDomino(this.getPreviousDomino());
-            }
-        } catch (InvalidDominoPosition invalidDominoPosition) {
-            invalidDominoPosition.printStackTrace(); // TODO handle this case
+        /*
+         * IMPORTANT
+         * We remove the domino from the board as it was already stored in it with empty position. As the position are now set for this domino, we will not be able to add it (by checking if the position are right).
+         */
+        if(!this.isLastTurn) {
+            this.getCurrentPlayer().getBoard().removeDomino(this.getPreviousDomino());
+            this.getCurrentPlayer().getBoard().addDomino(this.getPreviousDomino());
+            this.getCurrentPlayer().getBoard().addDomino(this.getNewDomino()); // add the new domino
+        } else {
+            this.getCurrentPlayer().getBoard().getBoardView().addDomino(this.getPreviousDomino());
         }
         this.getNewDominoesList().remove(this.getPreviousDomino());
 

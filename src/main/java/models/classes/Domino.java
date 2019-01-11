@@ -1,6 +1,7 @@
 package models.classes;
 
 import exceptions.MaxCrownsLandPortionExceeded;
+import helpers.Config;
 import models.enums.Rotation;
 import views.templates.DominoView;
 
@@ -107,6 +108,9 @@ public class Domino {
      * @see DominoView
      */
     public DominoView getDominoView() {
+        if(Boolean.valueOf(Config.getValue("CLImode"))){
+            return null;
+        }
         if(dominoView == null) {
             this.setDominoView(new DominoView(this));
         }
@@ -138,7 +142,9 @@ public class Domino {
         this.king = king;
         if(king != null) {
             king.setPlaced(true); // the domino is now placed
-            this.getDominoView().addKing(); // add the king to the view
+            if(!Boolean.valueOf(Config.getValue("CLImode"))){
+                this.getDominoView().addKing(); // add the king to the view
+            }
         }
     }
 
@@ -174,6 +180,8 @@ public class Domino {
         }
         this.rotation = rotation;
         // we make rotate the view
-        this.getDominoView().setRotate(rotation.getDegree());
+        if(!Boolean.valueOf(Config.getValue("CLImode"))){
+            this.getDominoView().setRotate(rotation.getDegree());
+        }
     }
 }

@@ -29,6 +29,20 @@ public enum Rotation {
         return null; // TODO throw exception
     }
 
+    public Rotation getNextRotation() {
+        switch (this) {
+            case NORMAL:
+                return RIGHT;
+            case RIGHT:
+                return INVERSE;
+            case INVERSE:
+                return LEFT;
+            case LEFT:
+                return NORMAL;
+        }
+        return null;
+    }
+
     /**
      *
      * GETTERS AND SETTERS

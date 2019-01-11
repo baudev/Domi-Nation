@@ -2,6 +2,7 @@ package models.classes;
 
 import exceptions.InvalidDominoPosition;
 import exceptions.MaxCrownsLandPortionExceeded;
+import helpers.Config;
 import models.enums.GameMode;
 import models.enums.LandPortionType;
 import models.enums.PlayerColor;
@@ -90,7 +91,9 @@ public class Board {
                 position1 = position2;
                 position2 = tempPosition;
             }
-            this.getBoardView().addPossibility(position1, position2);
+            if(!Boolean.valueOf(Config.getValue("CLImode"))){
+                this.getBoardView().addPossibility(position1, position2);
+            }
         }
         return listEmptyPlaces;
     }
@@ -445,7 +448,9 @@ public class Board {
             if(!isPossibleToPlaceDomino(new Position(domino.getLeftPortion().getPosition().getX(), domino.getLeftPortion().getPosition().getY()), new Position(domino.getRightPortion().getPosition().getX(), domino.getRightPortion().getPosition().getY()), domino)) {
                 throw new InvalidDominoPosition();
             }
-            this.getBoardView().addDomino(domino);
+            if(!Boolean.valueOf(Config.getValue("CLImode"))){
+                this.getBoardView().addDomino(domino);
+            }
         }
         this.dominoes.add(domino);
     }
@@ -533,6 +538,9 @@ public class Board {
      *          if the view was already created, the associated instance of {@link BoardView}.
      */
     public BoardView getBoardView() {
+        if(Boolean.valueOf(Config.getValue("CLImode"))){
+            return null;
+        }
         if(boardView == null) {
             this.setBoardView(new BoardView(this));
         }

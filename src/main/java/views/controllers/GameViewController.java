@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-import static javafx.application.Platform.exit;
 
 /**
  * Handles the link between all JavaFX views and Core classes.
@@ -338,7 +337,7 @@ public class GameViewController {
 
         getGame().getCurrentPlayer().getBoard().getBoardView().setOnPossibilityClickListener(new OnPossibilityClickListener() {
             @Override
-            public void onPossibilityClickListener(Position position1, Position position2) {
+            public void onPossibilityClickListener(Position position1, Position position2) throws InvalidDominoPosition {
                 hideRotationButton(); // we remove the button rotation view
                 getRoot().getChildren().remove(getDiscardButton());
                 switch (getGame().playerChoosesPositionForDomino(position1, position2)) {

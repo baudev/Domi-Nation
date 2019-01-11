@@ -46,6 +46,7 @@ public class CSVReader {
                 Domino domino = new Domino(landPortion1, landPortion2, dominoNumber);
                 dominoes.add(domino);
             } catch (Exception e){
+                e.printStackTrace();
                 throw new InvalidDominoesCSVFile();
             }
         }

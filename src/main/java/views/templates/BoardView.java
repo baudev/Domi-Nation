@@ -1,5 +1,6 @@
 package views.templates;
 
+import exceptions.InvalidDominoPosition;
 import helpers.Screen;
 import javafx.event.EventHandler;
 import javafx.scene.Parent;
@@ -91,7 +92,11 @@ public class BoardView extends Parent {
         rectangle.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                getOnPossibilityClickListener().onPossibilityClickListener(position1, position2);
+                try {
+                    getOnPossibilityClickListener().onPossibilityClickListener(position1, position2);
+                } catch (InvalidDominoPosition invalidDominoPosition) {
+                    invalidDominoPosition.printStackTrace();
+                }
             }
         });
         this.getPossiblePositions().add(rectangle);

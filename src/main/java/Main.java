@@ -1,3 +1,6 @@
+import exceptions.InvalidDominoesCSVFile;
+import exceptions.MaxCrownsLandPortionExceeded;
+import exceptions.PlayerColorAlreadyUsed;
 import helpers.Config;
 import helpers.Screen;
 import javafx.application.Application;
@@ -14,10 +17,18 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 
+import java.io.IOException;
+
 public class Main extends Application {
 
-    public static void main(String[] args){
-        launch(args);
+    MediaPlayer mediaPlayer;
+
+    public static void main(String[] args) throws IOException, MaxCrownsLandPortionExceeded, InvalidDominoesCSVFile, PlayerColorAlreadyUsed {
+        if(Boolean.valueOf(Config.getValue("CLImode"))) {
+            new CLI();
+        } else {
+            launch(args);
+        }
     }
 
     @Override
@@ -39,7 +50,7 @@ public class Main extends Application {
         new GameViewController(root); // new GameViewController view controller
         // set a music on background
         Media media = new Media(getClass().getResource("Game_of_Thrones.mp3").toURI().toURL().toString());
-        MediaPlayer mediaPlayer = new MediaPlayer(media);
+        mediaPlayer = new MediaPlayer(media);
         mediaPlayer.play();
     }
 }
