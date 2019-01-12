@@ -1,4 +1,4 @@
-package views.controllers;
+package controllers;
 
 import exceptions.*;
 import helpers.Screen;
@@ -24,7 +24,7 @@ import java.util.Map;
 /**
  * Handles the link between all JavaFX views and Core classes.
  */
-public class GameViewController {
+public class GameController {
 
     private Group root;
     private Game game;
@@ -33,11 +33,11 @@ public class GameViewController {
     private ButtonView discardButton;
 
     /**
-     * Starts the GameViewController view controller which start by asking the game mode.
+     * Starts the GameController view controller which start by asking the game mode.
      * @param root {@link Group} root of the JavaFX view.
      * @see #askGameMode()
      */
-    public GameViewController(Group root) {
+    public GameController(Group root) {
         this.setRoot(root); // set the root group as a class attribute
         askGameMode();
     }
@@ -385,16 +385,16 @@ public class GameViewController {
     }
 
     /**
-     * Returns the {@link Game} associated to the {@link GameViewController}.
-     * @return The {@link Game} associated to the {@link GameViewController}.
+     * Returns the {@link Game} associated to the {@link GameController}.
+     * @return The {@link Game} associated to the {@link GameController}.
      */
     public Game getGame() {
         return game;
     }
 
     /**
-     * Sets the {@link Game} associated to the {@link GameViewController}.
-     * @param game The {@link Game} associated to the {@link GameViewController}.
+     * Sets the {@link Game} associated to the {@link GameController}.
+     * @param game The {@link Game} associated to the {@link GameController}.
      */
     public void setGame(Game game) {
         this.game = game;

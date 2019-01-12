@@ -11,10 +11,10 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.stage.Stage;
-import views.controllers.GameViewController;
+import controllers.GameController;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-import java.io.File;
+
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 
@@ -48,7 +48,7 @@ public class Main extends Application {
         stage.setWidth(Screen.getXMax());
         stage.setHeight(Screen.getYMax());
         stage.show(); // show the stage
-        new GameViewController(root); // new GameViewController view controller
+        new GameController(root); // new GameController view controller
         // set a music on background
         Media media = new Media(getClass().getResource("Game_of_Thrones.mp3").toURI().toURL().toString());
         mediaPlayer = new MediaPlayer(media);
