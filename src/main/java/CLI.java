@@ -8,7 +8,6 @@ import models.enums.Rotation;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,7 +33,7 @@ public class CLI {
         try {
             game.pickDominoes();
         } catch (NoMoreDominoInGameStack noMoreDominoInGameStack) {
-            System.out.println("Dernier tour !!");
+            System.out.println("Last turn!!");
         } catch (NotEnoughDominoesInGameStack notEnoughDominoesInGameStack) {
             // bug
         }
@@ -59,14 +58,13 @@ public class CLI {
             switch (game.playerChoosesDomino(null)){
                 case GAMEOVER:
                     System.out.println("Game ovver !!!!!!!!!!!");
-                    try {
-                        throw new Exception("Game over");
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    Map<Player, Integer> scores = Score.getScores(game);
+                    for(Map.Entry<Player, Integer> entry : scores.entrySet()) {
+                        System.out.println(entry.getKey().getPlayerColor().toString() + " : " + entry.getValue());
                     }
                     break;
                 default:
-                    positionnateHisDomino();
+                    positionForHisDomino();
                     break;
             }
         } else {
@@ -76,14 +74,13 @@ public class CLI {
             switch (test) {
                 case SHOWPLACEPOSSIBILITIES:
                     System.out.println("show possibilities");
-                    positionnateHisDomino();
+                    positionForHisDomino();
                     break;
             }
         }
     }
 
-    private void positionnateHisDomino() {
-        System.out.println("Positionnate");
+    private void positionForHisDomino() {
         Domino previousDomino = game.getPreviousDomino();
         List<Position> randomPosition = randomPositions(previousDomino);
         if(randomPosition.size() == 0) {
