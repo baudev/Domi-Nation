@@ -6,6 +6,8 @@
 
 Board game developed in Java and using the JavaFX library. This game is inspired from [KingDomino one](http://www.blueorangegames.eu/pf/kingdomino_fr/). 
 
+![](https://user-images.githubusercontent.com/29781702/96864101-35ff2500-1468-11eb-929b-a4e6e8167c5c.png)
+
 ## INSTALLATION
 ```
 git clone https://github.com/baudev/Domi-Nation.git
