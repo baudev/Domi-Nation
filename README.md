@@ -26,7 +26,7 @@ gradle junitPlatformJacocoReport
 ```
 
 ### NOTE
-All documentation can be found in the `/docs` directory.
+All documentation can be found in the `/docs` directory or at https://baudev.github.io/Domi-Nation/.
 
 
 ### CREDITS
